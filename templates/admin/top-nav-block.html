@@ -1,0 +1,71 @@
+<script type="text/javascript">
+  $(function() {
+    $("#ap_bind").on('click', function() {
+      document.body.style.overflow = 'hidden';
+      document.body.style.height = '100%';
+      $(".mask").show();
+      $("#bind_codes").show();
+      $.get("/api/vendors/setup/bind", function(data) {
+        // alert(data);
+        $("#ap_img").attr("src", data);
+      })
+    });
+    $("#ap_close").on("click", function() {
+      $(".mask").hide();
+      $("#bind_codes").hide();
+      document.body.style.overflow = 'auto';
+    });
+    $("#ap_setting").on("click", function() {
+      location.href = "/vendors/setup"
+    })
+  });
+</script>
+
+<!-- top navigation -->
+<div class="top_nav">
+
+  <div class="nav_menu">
+    <nav class="" role="navigation">
+      <div class="nav toggle">
+        <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+      </div>
+
+      <ul class="nav navbar-nav navbar-right">
+        <!-- <h5 style="margin-left:30%;">管理员</h5> -->
+        <li class="">
+          <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+{% if admin.has_key('avatarUrl') %}
+            <img src="{{ admin['avatarUrl'] }}" alt="">{{ admin['nickname'] }}
+{% else %}
+            <img src="" alt="">
+{% end %}
+            <span class=" fa fa-angle-down"></span>
+            <span style="border-radius:10px;border:1px solid #2a3f54;padding:1px 3px;background-color:#2a3f54;color:white;">管理员</span>
+          </a>
+
+          <ul class="dropdown-menu dropdown-usermenu animated fadeInDown pull-right">
+            <!-- <li><a href="javascript:;">基本信息</a></li> -->
+            <li>
+              <a href="javascript:;" id="ap_setting">
+                <i class="fa fa-gear pull-left"></i>&nbsp <span>个人信息设置</span>
+              </a>
+            </li>
+
+            <form method="POST" action="/auth/logout">
+              <li><button type="submit">
+                <i class="fa fa-sign-out pull-left"></i>&nbsp 退出</button>
+              </li>
+            </form>
+          </ul>
+        </li>
+        <li>
+          <a class="user-profile dropdown-toggle" aria-expanded="false">
+            Welcome !
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+</div>
+<!-- /top navigation -->

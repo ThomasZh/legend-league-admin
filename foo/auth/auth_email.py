@@ -233,5 +233,6 @@ class AuthLogoutHandler(AuthorizationHandler):
         response = http_client.fetch(url, method="DELETE", headers={"Authorization":"Bearer "+access_token})
         logging.info("got response %r", response.body)
         self.clear_cookie("access_token")
+        self.clear_cookie("expires_at")
 
-        self.redirect("/auth/welcome");
+        self.redirect("/");

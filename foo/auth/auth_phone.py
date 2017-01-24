@@ -68,7 +68,25 @@ class AuthPhoneLoginHandler(BaseHandler):
             response = http_client.fetch(url, method="POST", body=_json)
             logging.info("got response %r", response.body)
             session_ticket = json_decode(response.body)
+
+            # is admin
+            try:
+                url = "http://api.7x24hs.com/leagues/"+LEAGUE_ID+"/myinfo"
+                http_client = HTTPClient()
+                headers={"Authorization":"Bearer "+session_ticket['access_token']}
+                response = http_client.fetch(url, method="GET", headers=headers)
+                logging.info("got response %r", response.body)
+            except:
+                err_title = str( sys.exc_info()[0] );
+                err_detail = str( sys.exc_info()[1] );
+                logging.error("error: %r info: %r", err_title, err_detail)
+                if err_detail == 'HTTP 404: Not Found':
+                    err_msg = "您不是联盟的管理员!"
+                    self.render('auth/phone-login.html', err_msg=err_msg)
+                    return
+
             self.set_secure_cookie("access_token", session_ticket['access_token'])
+            self.set_secure_cookie("expires_at", str(session_ticket['expires_at']))
         except:
             err_title = str( sys.exc_info()[0] );
             err_detail = str( sys.exc_info()[1] );
@@ -78,7 +96,7 @@ class AuthPhoneLoginHandler(BaseHandler):
                 self.render('auth/phone-login.html', err_msg=err_msg)
                 return
 
-        self.redirect('/auth/welcome')
+        self.redirect('/')
 
 
 class AuthPhoneRegisterHandler(BaseHandler):
@@ -118,7 +136,6 @@ class AuthPhoneRegisterHandler(BaseHandler):
 
         err_msg = "注册成功，请登录!"
         self.render('auth/phone-register.html', err_msg=err_msg)
-
 
 
 class AuthPhoneLostPwdHandler(BaseHandler):

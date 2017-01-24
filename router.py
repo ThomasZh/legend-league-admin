@@ -10,14 +10,15 @@ import tornado.web
 from foo import comm
 from foo.auth import auth_email
 from foo.auth import auth_phone
+from foo.admin import work_sheet
 
 
 def map():
 
     config = [
 
-        (r'/', getattr(auth_email, 'AuthWelcomeHandler')),
-        
+        (r'/', getattr(work_sheet, 'AdminIndexHandler')),
+
         (r'/auth/email/login', getattr(auth_email, 'AuthEmailLoginHandler')),
         (r'/auth/email/register', getattr(auth_email, 'AuthEmailRegisterHandler')),
         (r'/auth/email/forgot-pwd', getattr(auth_email, 'AuthEmailForgotPwdHandler')),
@@ -28,6 +29,8 @@ def map():
         (r'/auth/phone/register', getattr(auth_phone, 'AuthPhoneRegisterHandler')),
         (r'/auth/phone/verify-code', getattr(auth_phone, 'AuthPhoneVerifyCodeHandler')),
         (r'/auth/phone/lost-pwd', getattr(auth_phone, 'AuthPhoneLostPwdHandler')),
+
+        (r'/admin/index', getattr(work_sheet, 'AdminIndexHandler')),
 
         # comm
         ('.*', getattr(comm, 'PageNotFoundHandler'))

@@ -1,0 +1,110 @@
+<style>
+  .mask {
+    position: absolute;
+    ;
+    ;
+    left: 0;
+    top: 0;
+    background-color: #666;
+    opacity: 0.5;
+    display: none;
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+  }
+
+  #bind_codes {
+    width: 250px;
+    height: 250px;
+    display: none;
+    border-radius: 5px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -100px;
+    margin-top: -100px;
+    background-color: white;
+    color: #1ABB9C;
+    z-index: 1000;
+  }
+
+  #ap_close {
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    color: #73879C;
+    position: absolute;
+    right: 3px;
+    top: 5px;
+    ;
+    cursor: pointer;
+  }
+
+  #ap_close:hover {
+    color: red;
+  }
+
+  #ap_cont {
+    width: 80%;
+    margin: auto;
+  }
+
+  #ap_cont p {
+    margin: 15px 0 0 0;
+  }
+
+  #ap_img {
+    width: 200px;
+    height: 200px;
+    margin-top: -3px;
+  }
+</style>
+<!-- sidebar menu -->
+<div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+
+  <div class="menu_section">
+    <h3>&nbsp</h3>
+    <br />
+    <ul class="nav side-menu">
+      <li><a><i class="fa fa-bar-chart"></i> 报表 <span class="fa fa-chevron-down"></span></a>
+        <ul class="nav child_menu" style="display: none">
+          <li><a href="/vendors/portal/activity">活动</a></li>
+          <li><a href="/vendors/portal/symbol">社区</a></li>
+          <li><a href="/vendors/portal/customer">会员</a></li>
+        </ul>
+      </li>
+      <li><a><i class="fa fa-paw"></i> 活动 <span class="fa fa-chevron-down"></span></a>
+        <ul class="nav child_menu" style="display: none">
+          <li><a href="/vendors/activitys/create/step1">创建活动</a></li>
+          <li><a href="/vendors/activitys/draft">草稿箱</a></li>
+          <li><a href="/vendors/activitys/recruit">招募中</a></li>
+          <li><a href="/vendors/activitys/doing">活动中</a></li>
+          <li><a href="/vendors/activitys/completed">已完成</a></li>
+          <li><a href="/vendors/activitys/canceled">已取消</a></li>
+          <li><a href="/vendors/activitys/category">标签</a></li>
+          <li><a href="/vendors/activitys/hot">热门</a></li>
+        </ul>
+      </li>
+      <li><a><i class="fa fa-male"></i> 会员 <span class="fa fa-chevron-down"></span></a>
+        <ul class="nav child_menu" style="display: none">
+          <li><a href="/vendors/customers">会员</a></li>
+        </ul>
+      </li>
+      <li><a><i class="fa fa-cny"></i> 账户 <span class="fa fa-chevron-down"></span></a>
+        <ul class="nav child_menu" style="display: none">
+          <li><a href="/vendors/balance">余额</a></li>
+        </ul>
+      </li>
+      <li><a><i class="fa fa-gear"></i> 配置 <span class="fa fa-chevron-down"></span></a>
+        <ul class="nav child_menu" style="display: none">
+          <li><a href="/vendors/setup/vendor-info">俱乐部</a></li>
+          <li><a href="/vendors/setup/wx-show">微信公众号配置</a></li>
+          <!-- <li><a href="/vendors/setup/administrators">管理员</a></li> -->
+          <li><a href="/vendors/setup/hha">免责声明</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+</div>
+<!-- /sidebar menu -->
