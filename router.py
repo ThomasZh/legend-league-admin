@@ -31,6 +31,7 @@ def map():
         (r'/auth/phone/lost-pwd', getattr(auth_phone, 'AuthPhoneLostPwdHandler')),
 
         (r'/admin/index', getattr(work_sheet, 'AdminIndexHandler')),
+        (r'/profile/edit', getattr(work_sheet, 'ProfileEditHandler')),
 
         # comm
         ('.*', getattr(comm, 'PageNotFoundHandler'))

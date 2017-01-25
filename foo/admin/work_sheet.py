@@ -48,3 +48,29 @@ class AdminIndexHandler(AuthorizationHandler):
         admin = self.get_myinfo_basic()
         self.render('admin/index.html',
                 admin=admin)
+
+
+class ProfileEditHandler(AuthorizationHandler):
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def get(self):
+        logging.info(self.request)
+        admin = self.get_myinfo_basic()
+        self.render('admin/profile-edit.html',
+                admin=admin)
+
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def post(self):
+        logging.info(self.request)
+        access_token = self.get_secure_cookie("access_token")
+        nickname = self.get_argument("nickname", "")
+        avatar = self.get_argument("avatar", "")
+        logging.info("try update myinfo nickname:[%r] avatar:[%r]", nickname, avatar)
+
+        url = "http://api.7x24hs.com/myinfo"
+        http_client = HTTPClient()
+        headers = {"Authorization":"Bearer "+access_token}
+        _json = json_encode({"nickname":nickname, "avatar":avatar})
+        response = http_client.fetch(url, method="PUT", headers=headers, body=_json)
+        logging.info("got response.body %r", response.body)
+
+        self.redirect("/")

@@ -52,23 +52,23 @@
           <div class="clearfix"></div>
 
           <!-- menu profile quick info -->
-          {% module Template("admin/menu-prile-quick-info-block.html", admin=admin) %}
+          {% module Template("admin/block-menu-prile-quick-info.html", admin=admin) %}
           <!-- /menu profile quick info -->
           <br />
 
           <!-- sidebar menu -->
-          {% module Template("admin/sidebar-menu-block.html") %}
+          {% module Template("admin/block-sidebar-menu.html") %}
           <!-- /sidebar menu -->
           <br />
 
           <!-- /menu footer buttons -->
-          {% module Template("admin/menu-footer-block.html") %}
+          {% module Template("admin/block-menu-footer.html") %}
           <!-- /menu footer buttons -->
         </div>
       </div>
 
       <!-- top navigation -->
-      {% module Template("admin/top-nav-block.html", admin=admin) %}
+      {% module Template("admin/block-top-nav.html", admin=admin) %}
       <!-- /top navigation -->
 
       <!-- page content -->
@@ -527,17 +527,14 @@
             </div>
           </div>
         </div>
+
+        <!-- footer content -->
+        {% module Template("admin/block-footer.html") %}
+        <!-- /footer content -->
+
       </div>
       <!-- /page content -->
 
-      <!-- footer content -->
-      <footer>
-        <div class="pull-right">
-          Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a>
-        </div>
-        <div class="clearfix"></div>
-      </footer>
-      <!-- /footer content -->
     </div>
   </div>
 
