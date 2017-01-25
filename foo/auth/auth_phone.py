@@ -71,6 +71,15 @@ class AuthPhoneLoginHandler(BaseHandler):
 
             # is admin
             try:
+                # 添加此帐号到联盟的普通用户帐号表中
+                url = "http://api.7x24hs.com/leagues/"+LEAGUE_ID+"/myinfo"
+                http_client = HTTPClient()
+                _json = json_encode({"filter":"user"})
+                headers={"Authorization":"Bearer "+session_ticket['access_token']}
+                response = http_client.fetch(url, method="PUT", headers=headers, body=_json)
+                logging.info("got response %r", response.body)
+
+                # 校验是否为联盟管理员
                 url = "http://api.7x24hs.com/leagues/"+LEAGUE_ID+"/myinfo"
                 http_client = HTTPClient()
                 headers={"Authorization":"Bearer "+session_ticket['access_token']}
@@ -84,6 +93,10 @@ class AuthPhoneLoginHandler(BaseHandler):
                     err_msg = "您不是联盟的管理员!"
                     self.render('auth/phone-login.html', err_msg=err_msg)
                     return
+                else:
+                    err_msg = "系统故障, 请稍后尝试!"
+                    self.render('auth/phone-login.html', err_msg=err_msg)
+                    return
 
             self.set_secure_cookie("access_token", session_ticket['access_token'])
             self.set_secure_cookie("expires_at", str(session_ticket['expires_at']))
@@ -93,6 +106,10 @@ class AuthPhoneLoginHandler(BaseHandler):
             logging.error("error: %r info: %r", err_title, err_detail)
             if err_detail == 'HTTP 404: Not Found':
                 err_msg = "手机号码或密码不正确!"
+                self.render('auth/phone-login.html', err_msg=err_msg)
+                return
+            else:
+                err_msg = "系统故障, 请稍后尝试!"
                 self.render('auth/phone-login.html', err_msg=err_msg)
                 return
 

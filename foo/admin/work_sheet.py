@@ -45,8 +45,6 @@ class AdminIndexHandler(AuthorizationHandler):
     @tornado.web.authenticated  # if no session, redirect to login page
     def get(self):
         logging.info(self.request)
-        club = {'name':'legend-league', 'avatarUrl':''}
-        admin = {'account_id':'123', 'nickname':'thomas', 'avatarUrl':''}
+        admin = self.get_myinfo_basic()
         self.render('admin/index.html',
-                club=club,
                 admin=admin)

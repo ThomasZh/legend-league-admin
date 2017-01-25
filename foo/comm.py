@@ -212,6 +212,17 @@ class BaseHandler(tornado.web.RequestHandler):
         code = session_code['code']
         return code
 
+    def get_myinfo_basic(self):
+        access_token = self.get_secure_cookie("access_token")
+
+        url = "http://api.7x24hs.com/myinfo?filter=basic"
+        http_client = HTTPClient()
+        headers={"Authorization":"Bearer "+access_token}
+        response = http_client.fetch(url, method="GET", headers=headers)
+        myinfo = json_decode(response.body)
+        logging.info("got myinfo %r", myinfo)
+        return myinfo
+
     def write_error(self, status_code, **kwargs):
         host = self.request.headers['Host']
         logging.info("got host %r", host)

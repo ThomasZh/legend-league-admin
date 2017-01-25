@@ -57,13 +57,26 @@ INSERT INTO league (_id, _name) VALUES ('f24794c7e1d511e68c0aa45e60efbf2d', 'leg
   ''  MariaDB>use legend;
   '' MariaDB>show tables;
 
-CREATE TABLE league_admin (
-  league_id char(32) NOT NULL DEFAULT '0000000000000000000000000000000',
-  account_id char(32) NOT NULL DEFAULT '0000000000000000000000000000000',
-  create_time bigint(19) NOT NULL DEFAULT 0,
-  _status int(8) NOT NULL DEFAULT 0,
-  _rank int(8) NOT NULL DEFAULT 0,
-  PRIMARY KEY (account_id, league_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  CREATE TABLE league_admin (
+    league_id char(32) NOT NULL DEFAULT '0000000000000000000000000000000',
+    account_id char(32) NOT NULL DEFAULT '0000000000000000000000000000000',
+    create_time bigint(19) NOT NULL DEFAULT '0',
+    _status int(8) NOT NULL DEFAULT '0',
+    _rank int(8) NOT NULL DEFAULT '0',
+    PRIMARY KEY (account_id, league_id)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO league_admin (league_id, account_id) VALUES ('f24794c7e1d511e68c0aa45e60efbf2d', '128be5bee0a411e69c5200163e023e51');
+  // 创建超级管理员帐号到联盟中
+  INSERT INTO league_admin (league_id, account_id, create_time, _rank)
+  VALUES ('f24794c7e1d511e68c0aa45e60efbf2d', '128be5bee0a411e69c5200163e023e51', 1485245086, 999);
+
+  CREATE TABLE `league_user` (
+    `league_id` char(32) NOT NULL,
+    `account_id` char(32) NOT NULL,
+    `create_time` bigint(19) NOT NULL DEFAULT '0',
+    PRIMARY KEY (`league_id`,`account_id`)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+  // 创建超级管理员帐号同时要添加普通用户帐号在这个联盟中
+  INSERT INTO league_user (league_id, account_id, create_time)
+  VALUES ('f24794c7e1d511e68c0aa45e60efbf2d', '128be5bee0a411e69c5200163e023e51', 1485245086);
