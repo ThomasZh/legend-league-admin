@@ -66,7 +66,7 @@ class ProfileEditHandler(AuthorizationHandler):
         avatar = self.get_argument("avatar", "")
         logging.info("try update myinfo nickname:[%r] avatar:[%r]", nickname, avatar)
 
-        url = "http://api.7x24hs.com/myinfo"
+        url = "http://api.7x24hs.com/api/myinfo"
         http_client = HTTPClient()
         headers = {"Authorization":"Bearer "+access_token}
         _json = json_encode({"nickname":nickname, "avatar":avatar})
@@ -74,3 +74,23 @@ class ProfileEditHandler(AuthorizationHandler):
         logging.info("got response.body %r", response.body)
 
         self.redirect("/")
+
+
+class AdministratorsHandler(AuthorizationHandler):
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def get(self):
+        logging.info(self.request)
+        access_token = self.get_secure_cookie("access_token")
+        admin = self.get_myinfo_basic()
+
+        params = {"idx":0, "limit":20}
+        url = url_concat("http://api.7x24hs.com/api/leagues/"+LEAGUE_ID+"/administrators", params)
+        http_client = HTTPClient()
+        headers = {"Authorization":"Bearer "+access_token}
+        response = http_client.fetch(url, method="GET", headers=headers)
+        logging.info("got response.body %r", response.body)
+        administrators = json_decode(response.body)
+
+        self.render('admin/administrators.html',
+                admin=admin,
+                administrators=administrators)

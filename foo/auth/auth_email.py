@@ -59,7 +59,7 @@ class AuthEmailLoginHandler(BaseHandler):
         try:
             code = self.get_code()
 
-            url = "http://api.7x24hs.com/auth/token"
+            url = "http://api.7x24hs.com/api/auth/token"
             http_client = HTTPClient()
             data = {"code":code,
                     "login":email,
@@ -73,7 +73,7 @@ class AuthEmailLoginHandler(BaseHandler):
             # is admin
             try:
                 # 添加此帐号到联盟的普通用户帐号表中
-                url = "http://api.7x24hs.com/leagues/"+LEAGUE_ID+"/myinfo"
+                url = "http://api.7x24hs.com/api/leagues/"+LEAGUE_ID+"/myinfo"
                 http_client = HTTPClient()
                 _json = json_encode({"filter":"user"})
                 headers={"Authorization":"Bearer "+session_ticket['access_token']}
@@ -81,7 +81,7 @@ class AuthEmailLoginHandler(BaseHandler):
                 logging.info("got response %r", response.body)
 
                 # 校验是否为联盟管理员
-                url = "http://api.7x24hs.com/leagues/"+LEAGUE_ID+"/myinfo"
+                url = "http://api.7x24hs.com/api/leagues/"+LEAGUE_ID+"/myinfo"
                 http_client = HTTPClient()
                 headers={"Authorization":"Bearer "+session_ticket['access_token']}
                 response = http_client.fetch(url, method="GET", headers=headers)
@@ -125,7 +125,7 @@ class AuthEmailRegisterHandler(BaseHandler):
         try:
             code = self.get_code()
 
-            url = "http://api.7x24hs.com/auth/accounts"
+            url = "http://api.7x24hs.com/api/auth/accounts"
             http_client = HTTPClient()
             data = {"code":code,
                     "login":email,
@@ -162,7 +162,7 @@ class AuthEmailForgotPwdHandler(BaseHandler):
         try:
             code = self.get_code()
 
-            url = "http://api.7x24hs.com/auth/email/forgot-pwd"
+            url = "http://api.7x24hs.com/api/auth/email/forgot-pwd"
             http_client = HTTPClient()
             data = {"code":code,
                     "email":email}
@@ -207,7 +207,7 @@ class AuthEmailResetPwdHandler(BaseHandler):
         try:
             code = self.get_code()
 
-            url = "http://api.7x24hs.com/auth/email/reset-pwd"
+            url = "http://api.7x24hs.com/api/auth/email/reset-pwd"
             http_client = HTTPClient()
             data = {"code":code,
                     "email":email,
@@ -255,7 +255,7 @@ class AuthLogoutHandler(AuthorizationHandler):
         access_token = self.get_secure_cookie("access_token")
 
         # logout
-        url = "http://api.7x24hs.com/auth/token"
+        url = "http://api.7x24hs.com/api/auth/token"
         http_client = HTTPClient()
         response = http_client.fetch(url, method="DELETE", headers={"Authorization":"Bearer "+access_token})
         logging.info("got response %r", response.body)

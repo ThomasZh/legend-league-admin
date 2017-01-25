@@ -19,19 +19,20 @@ def map():
 
         (r'/', getattr(work_sheet, 'AdminIndexHandler')),
 
-        (r'/auth/email/login', getattr(auth_email, 'AuthEmailLoginHandler')),
-        (r'/auth/email/register', getattr(auth_email, 'AuthEmailRegisterHandler')),
-        (r'/auth/email/forgot-pwd', getattr(auth_email, 'AuthEmailForgotPwdHandler')),
-        (r'/auth/email/reset-pwd', getattr(auth_email, 'AuthEmailResetPwdHandler')),
-        (r'/auth/welcome', getattr(auth_email, 'AuthWelcomeHandler')),
-        (r'/auth/logout', getattr(auth_email, 'AuthLogoutHandler')),
-        (r'/auth/phone/login', getattr(auth_phone, 'AuthPhoneLoginHandler')),
-        (r'/auth/phone/register', getattr(auth_phone, 'AuthPhoneRegisterHandler')),
-        (r'/auth/phone/verify-code', getattr(auth_phone, 'AuthPhoneVerifyCodeHandler')),
-        (r'/auth/phone/lost-pwd', getattr(auth_phone, 'AuthPhoneLostPwdHandler')),
+        (r'/admin/auth/email/login', getattr(auth_email, 'AuthEmailLoginHandler')),
+        (r'/admin/auth/email/register', getattr(auth_email, 'AuthEmailRegisterHandler')),
+        (r'/admin/auth/email/forgot-pwd', getattr(auth_email, 'AuthEmailForgotPwdHandler')),
+        (r'/admin/auth/email/reset-pwd', getattr(auth_email, 'AuthEmailResetPwdHandler')),
+        (r'/admin/auth/welcome', getattr(auth_email, 'AuthWelcomeHandler')),
+        (r'/admin/auth/logout', getattr(auth_email, 'AuthLogoutHandler')),
+        (r'/admin/auth/phone/login', getattr(auth_phone, 'AuthPhoneLoginHandler')),
+        (r'/admin/auth/phone/register', getattr(auth_phone, 'AuthPhoneRegisterHandler')),
+        (r'/admin/auth/phone/verify-code', getattr(auth_phone, 'AuthPhoneVerifyCodeHandler')),
+        (r'/admin/auth/phone/lost-pwd', getattr(auth_phone, 'AuthPhoneLostPwdHandler')),
 
-        (r'/admin/index', getattr(work_sheet, 'AdminIndexHandler')),
-        (r'/profile/edit', getattr(work_sheet, 'ProfileEditHandler')),
+        (r'/admin', getattr(work_sheet, 'AdminIndexHandler')),
+        (r'/admin/profile/edit', getattr(work_sheet, 'ProfileEditHandler')),
+        (r'/admin/administrators', getattr(work_sheet, 'AdministratorsHandler')),
 
         # comm
         ('.*', getattr(comm, 'PageNotFoundHandler'))

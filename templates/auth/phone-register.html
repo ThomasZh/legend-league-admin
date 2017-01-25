@@ -22,7 +22,7 @@
     <div class="logo">register</div>
     <!-- Main Form -->
     <div class="login-form-1">
-      <form id="register-form" class="text-left" method="POST" action="/auth/phone/register">
+      <form id="register-form" class="text-left" method="POST" action="/admin/auth/phone/register">
         {% if err_msg %}
         <div class="login-form-main-message show error">
           {{ err_msg }}
@@ -49,7 +49,7 @@
           <button type="submit" class="login-button"><i class="fa fa-chevron-right"></i></button>
         </div>
         <div class="etc-login-form">
-          <p>already have an account? <a href="/auth/phone/login">login here</a></p>
+          <p>already have an account? <a href="/admin/auth/phone/login">login here</a></p>
         </div>
       </form>
     </div>

@@ -22,7 +22,7 @@
     <div class="logo">login</div>
     <!-- Main Form -->
     <div class="login-form-1">
-      <form id="login-form" class="text-left" method="POST" action="/auth/phone/login">
+      <form id="login-form" class="text-left" method="POST" action="/admin/auth/phone/login">
         <fieldset>
           {% if err_msg %}
           <div class="login-form-main-message show error">
@@ -55,8 +55,8 @@
             </button> {% end %}
           </div>
           <div class="etc-login-form">
-            <p>forgot your password? <a href="/auth/phone/lost-pwd">click here</a></p>
-            <p>new user? <a href="/auth/phone/register">create new account</a></p>
+            <p>forgot your password? <a href="/admin/auth/phone/lost-pwd">click here</a></p>
+            <p>new user? <a href="/admin/auth/phone/register">create new account</a></p>
           </div>
         </fieldset>
       </form>

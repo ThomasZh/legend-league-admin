@@ -201,7 +201,7 @@ class PageNotFoundHandler(tornado.web.RequestHandler):
 
 class BaseHandler(tornado.web.RequestHandler):
     def get_code(self):
-        url = "http://api.7x24hs.com/auth/code"
+        url = "http://api.7x24hs.com/api/auth/code"
         http_client = HTTPClient()
         data = {"appid":"7x24hs:blog",
                 "app_secret":"2518e11b3bc89ebec594350d5739f29e"}
@@ -215,7 +215,7 @@ class BaseHandler(tornado.web.RequestHandler):
     def get_myinfo_basic(self):
         access_token = self.get_secure_cookie("access_token")
 
-        url = "http://api.7x24hs.com/myinfo?filter=basic"
+        url = "http://api.7x24hs.com/api/myinfo?filter=basic"
         http_client = HTTPClient()
         headers={"Authorization":"Bearer "+access_token}
         response = http_client.fetch(url, method="GET", headers=headers)

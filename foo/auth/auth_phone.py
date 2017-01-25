@@ -58,7 +58,7 @@ class AuthPhoneLoginHandler(BaseHandler):
         try:
             code = self.get_code()
 
-            url = "http://api.7x24hs.com/auth/token"
+            url = "http://api.7x24hs.com/api/auth/token"
             http_client = HTTPClient()
             data = {"code":code,
                     "login":phone,
@@ -72,7 +72,7 @@ class AuthPhoneLoginHandler(BaseHandler):
             # is admin
             try:
                 # 添加此帐号到联盟的普通用户帐号表中
-                url = "http://api.7x24hs.com/leagues/"+LEAGUE_ID+"/myinfo"
+                url = "http://api.7x24hs.com/api/leagues/"+LEAGUE_ID+"/myinfo"
                 http_client = HTTPClient()
                 _json = json_encode({"filter":"user"})
                 headers={"Authorization":"Bearer "+session_ticket['access_token']}
@@ -80,7 +80,7 @@ class AuthPhoneLoginHandler(BaseHandler):
                 logging.info("got response %r", response.body)
 
                 # 校验是否为联盟管理员
-                url = "http://api.7x24hs.com/leagues/"+LEAGUE_ID+"/myinfo"
+                url = "http://api.7x24hs.com/api/leagues/"+LEAGUE_ID+"/myinfo"
                 http_client = HTTPClient()
                 headers={"Authorization":"Bearer "+session_ticket['access_token']}
                 response = http_client.fetch(url, method="GET", headers=headers)
@@ -132,7 +132,7 @@ class AuthPhoneRegisterHandler(BaseHandler):
         try:
             code = self.get_code()
 
-            url = "http://api.7x24hs.com/auth/accounts"
+            url = "http://api.7x24hs.com/api/auth/accounts"
             http_client = HTTPClient()
             data = {"code":code,
                     "login":phone,
@@ -171,7 +171,7 @@ class AuthPhoneLostPwdHandler(BaseHandler):
         try:
             code = self.get_code()
 
-            url = "http://api.7x24hs.com/auth/phone/reset-pwd"
+            url = "http://api.7x24hs.com/api/auth/phone/reset-pwd"
             http_client = HTTPClient()
             data = {"code":code,
                     "phone":phone,
@@ -217,7 +217,7 @@ class AuthPhoneVerifyCodeHandler(BaseHandler):
         try:
             code = self.get_code()
 
-            url = "http://api.7x24hs.com/auth/phone/verify-code"
+            url = "http://api.7x24hs.com/api/auth/phone/verify-code"
             http_client = HTTPClient()
             data = {"code":code,
                     "phone":phone}
