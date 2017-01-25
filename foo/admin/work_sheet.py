@@ -83,14 +83,6 @@ class AdministratorsHandler(AuthorizationHandler):
         access_token = self.get_secure_cookie("access_token")
         admin = self.get_myinfo_basic()
 
-        params = {"idx":0, "limit":20}
-        url = url_concat("http://api.7x24hs.com/api/leagues/"+LEAGUE_ID+"/administrators", params)
-        http_client = HTTPClient()
-        headers = {"Authorization":"Bearer "+access_token}
-        response = http_client.fetch(url, method="GET", headers=headers)
-        logging.info("got response.body %r", response.body)
-        administrators = json_decode(response.body)
-
         self.render('admin/administrators.html',
                 admin=admin,
-                administrators=administrators)
+                league_id=LEAGUE_ID)
