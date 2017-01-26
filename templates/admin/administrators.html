@@ -102,12 +102,14 @@
                             <th>
                               <input type="checkbox" id="check-all" class="flat">
                             </th>
-                            <th class="column-title">ID </th>
-                            <th class="column-title">Rank </th>
-                            <th class="column-title">Status </th>
-                            <th class="column-title no-link last"><span class="nobr">Action</span>
+                            <th class="column-title">头像 </th>
+                            <th class="column-title">昵称 </th>
+                            <th class="column-title">联系方式 </th>
+                            <th class="column-title">级别 </th>
+                            <th class="column-title">状态 </th>
+                            <th class="column-title no-link last"><span class="nobr">操作</span>
                             </th>
-                            <th class="bulk-actions" colspan="7">
+                            <th class="bulk-actions" colspan="1">
                               <a class="antoo" style="color:#fff; font-weight:500;">Bulk Actions ( <span class="action-cnt"> </span> ) <i class="fa fa-chevron-down"></i></a>
                             </th>
                           </tr>
@@ -148,12 +150,11 @@
                             <th>
                               <input type="checkbox" id="check-all" class="flat">
                             </th>
-                            <th class="column-title">ID </th>
-                            <th class="column-title">Avatar </th>
-                            <th class="column-title">Nickname </th>
-                            <th class="column-title no-link last"><span class="nobr">Action</span>
+                            <th class="column-title">头像 </th>
+                            <th class="column-title">昵称 </th>
+                            <th class="column-title no-link last"><span class="nobr">操作</span>
                             </th>
-                            <th class="bulk-actions" colspan="7">
+                            <th class="bulk-actions" colspan="1">
                               <a class="antoo" style="color:#fff; font-weight:500;">Bulk Actions ( <span class="action-cnt"> </span> ) <i class="fa fa-chevron-down"></i></a>
                             </th>
                           </tr>
@@ -211,7 +212,11 @@
       template: '\
         <tr class="even pointer">\
           <td class="a-center "><input type="checkbox" class="flat" name="table_records"></td>\
-          <td class=" ">{{! admin.account_id }}</td>\
+          <td class=" "><img :src="admin.avatar" class="avatar" alt="avatar"></td>\
+          <td class=" ">{{! admin.nickname }}</td>\
+          <td class=" ">\
+            <span v-for="login in admin.logins">{{! login }}</span><br />\
+          </td>\
           <td class=" ">{{! admin._rank }}</td>\
           <td class=" ">{{! admin._status }}</td>\
           <td class="last"><a v-if="admin._rank < 99" v-on:click="demoteToUser" type="button" class="btn btn-round btn-sm btn-danger">删除</a></td>\
@@ -250,7 +255,6 @@
       template: '\
         <tr class="even pointer">\
           <td class="a-center "><input type="checkbox" class="flat" name="table_records"></td>\
-          <td class=" ">{{! user.account_id }}</td>\
           <td class=" "><img :src="user.avatar" class="avatar" alt="avatar"></td>\
           <td class=" ">{{! user.nickname }}</td>\
           <td class="last"><a v-on:click="promoteToAdmin" type="button" class="btn btn-round btn-sm btn-success">添加</a></td>\
