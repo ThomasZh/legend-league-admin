@@ -86,3 +86,15 @@ class AdministratorsHandler(AuthorizationHandler):
         self.render('admin/administrators.html',
                 admin=admin,
                 league_id=LEAGUE_ID)
+
+
+class TodoListHandler(AuthorizationHandler):
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def get(self):
+        logging.info(self.request)
+
+        admin = self.get_myinfo_basic()
+
+        self.render('admin/todo-list.html',
+                admin=admin,
+                league_id=LEAGUE_ID)

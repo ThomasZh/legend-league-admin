@@ -33,6 +33,7 @@ def map():
         (r'/admin', getattr(work_sheet, 'AdminIndexHandler')),
         (r'/admin/profile/edit', getattr(work_sheet, 'ProfileEditHandler')),
         (r'/admin/administrators', getattr(work_sheet, 'AdministratorsHandler')),
+        (r'/admin/todo-list', getattr(work_sheet, 'TodoListHandler')),
 
         # comm
         ('.*', getattr(comm, 'PageNotFoundHandler'))
