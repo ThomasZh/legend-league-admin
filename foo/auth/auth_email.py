@@ -255,7 +255,7 @@ class AuthLogoutHandler(AuthorizationHandler):
         access_token = self.get_secure_cookie("access_token")
 
         # logout
-        url = "http://api.7x24hs.com/api/auth/token"
+        url = "http://api.7x24hs.com/api/auth/tokens"
         http_client = HTTPClient()
         response = http_client.fetch(url, method="DELETE", headers={"Authorization":"Bearer "+access_token})
         logging.info("got response %r", response.body)

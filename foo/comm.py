@@ -201,7 +201,7 @@ class PageNotFoundHandler(tornado.web.RequestHandler):
 
 class BaseHandler(tornado.web.RequestHandler):
     def get_code(self):
-        url = "http://api.7x24hs.com/api/auth/code"
+        url = "http://api.7x24hs.com/api/auth/codes"
         http_client = HTTPClient()
         data = {"appid":"7x24hs:blog",
                 "app_secret":"2518e11b3bc89ebec594350d5739f29e"}
