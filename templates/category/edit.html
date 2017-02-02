@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <!-- Meta, title, CSS, favicons, etc. -->
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Cache-Control" content="no-cache">
+
+  <title>璟天俱乐部</title>
+
+  <!-- Bootstrap core CSS -->
+
+  <link href="{{ static_url('gentelella/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
+  <link href="{{ static_url('gentelella/fontawesome/css/font-awesome.min.css') }}" rel="stylesheet">
+  <link href="{{ static_url('gentelella/animate.css/animate.min.css') }}" rel="stylesheet">
+
+  <!-- Custom styling plus plugins -->
+  <link href="{{ static_url('css/custom.css') }}" rel="stylesheet">
+  <link href="{{ static_url('gentelella/iCheck/skins/flat/green.css') }}" rel="stylesheet">
+  <script src="{{ static_url('gentelella/jquery/dist/jquery.min.js') }}"></script>
+
+  <!-- Custom styling plus plugins -->
+  <link href="{{ static_url('gentelella/css/maps/jquery-jvectormap-2.0.3.css') }}" rel="stylesheet" type="text/css" />
+  <link href="{{ static_url('gentelella/css/floatexamples.css') }}" rel="stylesheet" type="text/css" />
+  <script src="{{ static_url('gentelella/nprogress/nprogress.js') }}"></script>
+
+  <!--[if lt IE 9]>
+        <script src="../assets/js/ie8-responsive-file-warning.js"></script>
+        <![endif]-->
+
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+  <link rel="stylesheet" href="{{ static_url('upyun/css/fileinput.min.css') }}" />
+
+</head>
+
+<body class="nav-md">
+  <div class="container body">
+    <div class="main_container">
+      <div class="col-md-3 left_col">
+        <div class="left_col scroll-view">
+          <div class="navbar nav_title" style="border: 0;">
+            <a href="/" class="site_title"><i class="fa fa-support"></i> <span>璟天俱乐部</span></a>
+          </div>
+
+          <div class="clearfix"></div>
+
+          <!-- menu profile quick info -->
+          {% module Template("admin/block-menu-prile-quick-info.html", admin=admin) %}
+          <!-- /menu profile quick info -->
+          <br />
+
+          <!-- sidebar menu -->
+          {% module Template("admin/block-sidebar-menu.html") %}
+          <!-- /sidebar menu -->
+          <br />
+
+          <!-- /menu footer buttons -->
+          {% module Template("admin/block-menu-footer.html") %}
+          <!-- /menu footer buttons -->
+        </div>
+      </div>
+
+      <!-- top navigation -->
+      {% module Template("admin/block-top-nav.html", admin=admin) %}
+      <!-- /top navigation -->
+
+      <!-- page content -->
+      <div class="right_col" role="main">
+
+        <div class="">
+          <div style="height:auto;" class="page-title">
+            <div class="title_left">
+              <h3>分类</h3>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <div class="row">
+
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>编辑</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+
+                    <form id="create-form" class="form-horizontal form-label-left" enctype="multipart/form-data" onsubmit="return false;">
+
+                      <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="title">标题 <span class="required">*</span>
+                          </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input type="text" id="title" name="title" value="{{ category['title'] }}" class="form-control col-md-7 col-xs-12">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="img">背景图片 <span class="required">*</span>
+                          </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input type="file" id="file" name="file" class="form-control col-md-7 col-xs-12">
+                          <input id="img" name="img" value="{{ category['img'] }}" type="hidden" />
+                          <small style="color:red;">图片大小：125px * 125px </small>
+                        </div>
+                      </div>
+                  </div>
+
+                  <!-- <div class="ln_solid"></div> -->
+                  <div class="form-group">
+                    <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                      <button type="submit" class="btn btn-success">保存</button>
+                    </div>
+                  </div>
+
+                  </form>
+
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- footer content -->
+        {% module Template("admin/block-footer.html") %}
+        <!-- /footer content -->
+
+      </div>
+      <!-- /page content -->
+
+    </div>
+  </div>
+
+  <script src="{{ static_url('gentelella/bootstrap/dist/js/bootstrap.min.js') }}" type="text/javascript"></script>
+  <!-- gauge js -->
+  <script src="{{ static_url('gentelella/gauge.js/dist/gauge.min.js') }}" type="text/javascript"></script>
+  <!-- chart js -->
+  <script src="{{ static_url('gentelella/Chart.js/dist/chart.min.js') }}" type="text/javascript"></script>
+  <!-- bootstrap progress js -->
+  <script src="{{ static_url('gentelella/bootstrap-progressbar/bootstrap-progressbar.min.js') }}" type="text/javascript"></script>
+  <script src="{{ static_url('gentelella/js/nicescroll/jquery.nicescroll.min.js') }}" type="text/javascript"></script>
+  <!-- icheck -->
+  <script src="{{ static_url('gentelella/iCheck/icheck.min.js') }}" type="text/javascript"></script>
+  <!-- daterangepicker -->
+  <script src="{{ static_url('gentelella/moment/min/moment.min.js') }}" type="text/javascript"></script>
+  <script src="{{ static_url('gentelella/bootstrap-daterangepicker/daterangepicker.js') }}" type="text/javascript"></script>
+
+  <script src="{{ static_url('js/custom.js') }}" type="text/javascript"></script>
+  <script type="text/javascript" src="{{ static_url('js/json2.js') }}"></script>
+  <script type="text/javascript" src="{{ static_url('js/jquery.validate.min.js') }}"></script>
+
+  <!-- fileinput -->
+  <script src="{{ static_url('upyun/js/fileinput.min.js') }}"></script>
+  <script src="{{ static_url('upyun/js/spark-md5.min.js') }}"></script>
+  <script src="{{ static_url('upyun/js/async.js') }}"></script>
+  <script src="{{ static_url('upyun/js/upyun-mu.js') }}"></script>
+
+  <script>
+    // with plugin options
+    $("#file").fileinput({
+      'showCaption': false, //是否显示标题
+      'showUpload': false, //是否显示上传按钮
+      'showRemove': false, //拖到图片区域
+      'initialPreview': ['<img src="{{ category['img'] }}" class="file-preview-image" alt="Old picture" title="Old picture">'],
+    });
+    var element1 = document.getElementById("file");
+    element1.addEventListener("change", uploadHandle, false);
+
+    function uploadHandle() {
+      var file = document.getElementById('file').files[0];
+      //alert(file.name);
+      var imgUrl = uploadUpyun(file, 'file');
+      document.getElementById("img").value = imgUrl;
+    }
+
+    function uuid() {
+      var s = [];
+      var hexDigits = "0123456789abcdef";
+      for (var i = 0; i < 36; i++) {
+        s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
+      }
+      s[14] = "4"; // bits 12-15 of the time_hi_and_version field to 0010
+      s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1); // bits 6-7 of the clock_seq_hi_and_reserved to 01
+      s[8] = s[13] = s[18] = s[23] = "-";
+
+      var uuid = s.join("");
+      return uuid;
+    }
+
+    function uploadUpyun(file, elementId) {
+      var ext = '.' + file.name.split('.').pop();
+
+      var config = {
+        // 空间名称
+        bucket: 'tripc2c-club-title',
+        // 上传请求过期时间
+        expiration: parseInt((new Date().getTime() + 3600000) / 1000),
+        // 尽量不要使用直接传表单 API 的方式，以防泄露造成安全隐患
+        form_api_secret: 'CRKAOsKHGbbCnU+yztBxUT0bYR0='
+      };
+
+      var instance = new Sand(config);
+      var options = {
+        'notify_url': 'http://upyun.com'
+      };
+      instance.setOptions(options);
+      instance.setElementId(elementId);
+
+      var d = new Date();
+      var month = d.getMonth() + 1;
+      var filename = '/articles/bg/' + d.getFullYear() + '/' + month + '/' + d.getDate() + '/' + uuid() + ext;
+      console.log(filename);
+      instance.upload(filename);
+
+      return 'https://tripc2c-club-title.b0.upaiyun.com' + filename;
+    }
+
+    //initialize the validator function
+
+    validator.message['date'] = 'not a real date';
+
+    // validate a field on "blur" event, a 'select' on 'change' event & a '.reuired' classed multifield on 'keyup':
+    $('form')
+      .on('blur', 'input[required], input.optional, select.required', validator.checkField)
+      .on('change', 'select.required', validator.checkField)
+      .on('keypress', 'input[required][pattern]', validator.keypress);
+
+    $('.multi.required')
+      .on('keyup blur', 'input', function() {
+        validator.checkField.apply($(this).siblings().last()[0]);
+      });
+
+    // bind the validation to the form submit event
+    //$('#send').click('submit');//.prop('disabled', true);
+
+    $('form').submit(function(e) {
+      e.preventDefault();
+      var submit = true;
+      // evaluate the form using generic validaing
+      if (!validator.checkAll($(this))) {
+        submit = false;
+      }
+
+      if (submit) {
+        this.submit();
+      }
+      return false;
+    });
+
+    /* FOR DEMO ONLY */
+    $('#vfields').change(function() {
+      $('form').toggleClass('mode2');
+    }).prop('checked', false);
+
+    $('#alerts').change(function() {
+      validator.defaults.alerts = (this.checked) ? false : true;
+      if (this.checked)
+        $('form .alert').remove();
+    }).prop('checked', false);
+  </script>
+
+  <script>
+    $(function() {
+      // Create Form
+      //----------------------------------------------
+      // Validation
+      $("#create-form").validate({
+        rules: {
+          title: {
+            required: true,
+          },
+          img: {
+            required: true,
+          },
+        },
+        errorClass: "form-invalid",
+        submitHandler: function(form) {
+          console.log('create article');
+
+          var title = $("#title").val();
+          var img = $("#img").val();
+          var data = {
+            "title": title,
+            "img": img,
+          };
+          var json = JSON.stringify(data);
+          console.log(json);
+
+          $.ajax({
+            type: "PUT",
+            url: "/api/categories/{{ category['_id'] }}",
+            data: json,
+            dataType: "json",
+            contentType: 'application/json',
+            success: function(data, status, xhr) {
+              location.href = "/admin/categories/index";
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+              console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
+              if (XMLHttpRequest.status == 200) {
+                location.href = "/admin/categories/index";
+              } else {
+                $('.lostpwd-form-main-message').addClass('show error').html(XMLHttpRequest.status + ": 服务器异常,请稍后重试!");
+              }
+            },
+            complete: function(XMLHttpRequest, textStatus) {
+              this; // 调用本次AJAX请求时传递的options参数
+            }
+          });
+        }
+      });
+    });
+  </script>
+
+</body>
+
+</html>

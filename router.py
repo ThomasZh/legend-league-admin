@@ -11,6 +11,7 @@ from foo import comm
 from foo.auth import auth_email
 from foo.auth import auth_phone
 from foo.admin import work_sheet
+from foo.admin import category
 
 
 def map():
@@ -34,6 +35,10 @@ def map():
         (r'/admin/profile/edit', getattr(work_sheet, 'ProfileEditHandler')),
         (r'/admin/administrators', getattr(work_sheet, 'AdministratorsHandler')),
         (r'/admin/todo-list', getattr(work_sheet, 'TodoListHandler')),
+
+        (r'/admin/categories/create', getattr(category, 'CategoriesCreateHandler')),
+        (r'/admin/categories/index', getattr(category, 'CategoriesIndexHandler')),
+        (r'/admin/categories/edit', getattr(category, 'CategoriesEditHandler')),
 
         # comm
         ('.*', getattr(comm, 'PageNotFoundHandler'))
