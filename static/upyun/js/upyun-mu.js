@@ -2,7 +2,7 @@
 (function() {
     var _config = {
         api: 'http://m0.api.upyun.com/',
-        chunkSize: 1048576
+        chunkSize: 104857
     };
 
     function _extend(dst, src) {
@@ -116,6 +116,7 @@
                         end = ((start + chunkSize) >= file.size) ? file.size : start + chunkSize;
                     var blobPacket = blobSlice.call(file, start, end);
                     fileReader.readAsArrayBuffer(blobPacket);
+                    //alert(blobPacket);
                 }
                 loadNext();
             },
@@ -254,6 +255,181 @@
         });
     } //end of upload...
 
+
+    function upload_blob(path, blob) {
+        var self = this;
+
+        async.waterfall([
+
+            function(callback) {
+                var chunkInfo = {
+                    chunksHash: {}
+                };
+
+                var blobSlice = File.prototype.slice || File.prototype.mozSlice || File.prototype.webkitSlice;
+                var chunkSize = _config.chunkSize;
+                var chunks = Math.ceil(blob.size / chunkSize);
+                var currentChunk = 0;
+                var spark = new SparkMD5.ArrayBuffer();
+                var frOnload = function(e) {
+                    chunkInfo.chunksHash[currentChunk] = SparkMD5.ArrayBuffer.hash(e.target.result);
+                    spark.append(e.target.result);
+                    currentChunk++;
+                    if (currentChunk < chunks) {
+                        loadNext();
+                    } else {
+                        chunkInfo.entire = spark.end();
+                        chunkInfo.chunksNum = chunks;
+                        chunkInfo.file_size = blob.size;
+                        callback(null, chunkInfo);
+                        return;
+                    }
+                };
+                var frOnerror = function() {
+                    console.warn("oops, something went wrong.");
+                };
+
+                function loadNext() {
+                    var fileReader = new FileReader();
+                    fileReader.onload = frOnload;
+                    fileReader.onerror = frOnerror;
+                    var start = currentChunk * chunkSize,
+                        end = ((start + chunkSize) >= blob.size) ? blob.size : start + chunkSize;
+                    var blobPacket = blobSlice.call(blob, start, end);
+                    fileReader.readAsArrayBuffer(blobPacket);
+                }
+                loadNext();
+            },
+            function(chunkInfo, callback) {
+                var options = {
+                    'path': path,
+                    'expiration': _config.expiration,
+                    'file_blocks': chunkInfo.chunksNum,
+                    'file_size': chunkInfo.file_size,
+                    'file_hash': chunkInfo.entire
+                };
+
+                _extend(options, self.options);
+
+                if (self._signature) {
+                    var signature = self._signature;
+                } else {
+                    var signature = calcSign(options, _config.form_api_secret);
+                }
+                console.log(signature);
+                var policy = btoa(JSON.stringify(options));
+                var paramsData = {
+                    policy: policy,
+                    signature: signature
+                };
+                var urlencParams = formatParams(paramsData);
+                var request = new XMLHttpRequest();
+                request.open('POST', _config.api + _config.bucket + '/');
+                request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                request.onload = function(e) {
+                    if (request.status == 200) {
+                        if (JSON.parse(request.response).status.indexOf(0) < 0) {
+                            return callback(new Error('file already exists'));
+                        }
+
+                        callback(null, chunkInfo, request.response);
+                    } else {
+                        request.send(urlencParams);
+                    }
+                };
+                request.send(urlencParams);
+            },
+            function(chunkInfo, res, callback) {
+                res = JSON.parse(res);
+
+                var chunkSize = _config.chunkSize;
+
+                var _status = res.status;
+                var result;
+                async.until(function() {
+                    return checkBlocks(_status).length <= 0;
+                }, function(callback) {
+                    var idx = checkBlocks(_status)[0];
+                    var start = idx * chunkSize,
+                        end = ((start + chunkSize) >= blob.size) ? blob.size : start + chunkSize;
+                    var packet = blob.slice(start, end);
+
+                    var options = {
+                        'save_token': res.save_token,
+                        'expiration': _config.expiration,
+                        'block_index': idx,
+                        'block_hash': chunkInfo.chunksHash[idx]
+                    };
+
+                    var signature = calcSign(options, res.token_secret);
+                    var policy = btoa(JSON.stringify(options));
+
+                    var formDataPart = new FormData();
+                    formDataPart.append('policy', policy);
+                    formDataPart.append('signature', signature);
+                    formDataPart.append('file', packet);
+
+                    var request = new XMLHttpRequest();
+                    request.onreadystatechange = function(e) {
+                        if (e.currentTarget.readyState === 4 && e.currentTarget.status == 200) {
+                            _status = JSON.parse(e.currentTarget.response).status;
+                            result = request.response;
+                            callback(null);
+                        }
+                    };
+                    request.open('POST', _config.api + _config.bucket + '/', false);
+                    request.send(formDataPart);
+
+                }, function(err) {
+                    if (err) {
+                        callback(err);
+                    }
+                    callback(null, chunkInfo, result);
+                });
+            },
+            function(chunkInfo, res, callback) {
+                res = JSON.parse(res);
+
+                var options = {
+                    'save_token': res.save_token,
+                    'expiration': _config.expiration
+                };
+
+                var signature = calcSign(options, res.token_secret);
+                var policy = btoa(JSON.stringify(options));
+                var formParams = {
+                    policy: policy,
+                    signature: signature
+                };
+                var formParamsUrlenc = formatParams(formParams);
+                var request = new XMLHttpRequest();
+                request.open('POST', _config.api + _config.bucket + '/');
+                request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                request.onload = function(e) {
+                    if (request.status == 200) {
+                        callback(null, request.response);
+                    } else {
+                        callback(null, request.response);
+                    }
+                };
+                request.send(formParamsUrlenc);
+            }
+        ], function(err, res) {
+            if (err) {
+                var event = new CustomEvent('error', {
+                    'detail': err
+                });
+                document.dispatchEvent(event);
+                return;
+            }
+            var event = new CustomEvent('uploaded', {
+                'detail': JSON.parse(res)
+            });
+            document.dispatchEvent(event);
+        });
+    } //end of upload...
+
+
     function Sand(config) {
         _extend(_config, config);
 
@@ -270,6 +446,7 @@
         };
 
         this.upload = upload;
+        this.upload_blob = upload_blob;
     }
 
     // bind the construct fn. to global
