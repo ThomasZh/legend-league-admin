@@ -78,7 +78,7 @@
         <div class="">
           <div style="height:auto;" class="page-title">
             <div class="title_left">
-              <h3>分类</h3>
+              <h3>多媒体文件</h3>
             </div>
 
             <div class="clearfix"></div>
@@ -88,41 +88,36 @@
               <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2>列表</h2>
+                    <h2>草稿箱</h2>
                     <ul class="nav navbar-right panel_toolbox">
-                    	<li><a href="/admin/categories/create" class="btn btn-success btn-xs">
-                        <i class="fa fa-plus"></i> 添加 </a>
-                    	</li>
                     </ul>
                     <div class="clearfix"></div>
                   </div>
                   <div class="x_content">
 
-                    <div class="table-responsive">
-                      <table class="table table-striped jambo_table bulk_action">
-                        <thead>
-                          <tr class="headings">
-                            <th class="column-title">图像 </th>
-                            <th class="column-title">标题 </th>
-                            <th class="column-title no-link last"><span class="nobr">操作</span>
-                            </th>
-                            <th class="bulk-actions" colspan="1">
-                              <a class="antoo" style="color:#fff; font-weight:500;">Bulk Actions ( <span class="action-cnt"> </span> ) <i class="fa fa-chevron-down"></i></a>
-                            </th>
-                          </tr>
-                        </thead>
-
-                        <tbody>
-                          {% for category in categories %}
-                          <tr class="even pointer">
-                            <td class=" "><img src="{{ category['img'] }}" class="avatar" alt="avatar"></td>
-                            <td class=" ">{{ category['title'] }}</td>
-                            <td class="last"><a href="/admin/categories/edit?id={{ category['_id'] }}" type="button" class="btn btn-round btn-sm btn-info">编辑</a></td>
-                          </tr>
-                          {% end %}
-                        </tbody>
-                      </table>
+                    {% for multimedia in multimedias %}
+                    <div class="col-md-3 col-xs-12 widget widget_tally_box">
+                      <div class="x_panel ui-ribbon-container fixed_height_360">
+                        <div class="x_content">
+                          <div class="thumbnail">
+                            <div class="image view view-first">
+                              <a href="#">
+                                <img style="width: 100%; display: block;" src="{{ multimedia['url'] }}" alt="image" />
+                              </a>
+                            </div>
+                          </div>
+                          <p>{{ multimedia['publish_time'] }}</p>
+                          <div class="divider"></div>
+                          <p>
+                            <a onclick="delete('{{ multimedia['_id'] }}')" class="btn ap_del btn-danger btn-xs">
+                              <i class="fa fa-trash-o"></i> 删除 </a>
+                            <a onclick="publish('{{ multimedia['_id'] }}')" class="btn btn-success btn-xs">
+                              <i class="fa fa-pencil"></i> 发布 </a>
+                          </p>
+                        </div>
+                      </div>
                     </div>
+                    {% end %}
 
                   </div>
                 </div>
@@ -159,6 +154,33 @@
   <script src="{{ static_url('js/custom.js') }}" type="text/javascript"></script>
   <script type="text/javascript" src="{{ static_url('js/json2.js') }}"></script>
   <script type="text/javascript" src="{{ static_url('js/jquery.validate.min.js') }}"></script>
+
+  <script>
+  function publish(id){
+    console.log(id);
+
+    $.ajax({
+      type: "POST",
+      url: "/api/multimedias/"+id+"/publish",
+      dataType: "json",
+      contentType: 'application/json',
+      success: function(data, status, xhr) {
+        location.href = "/admin/multimedias/publish";
+      },
+      error: function(XMLHttpRequest, textStatus, errorThrown) {
+        console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
+        if (XMLHttpRequest.status == 200) {
+          location.href = "/admin/multimedias/publish";
+        } else {
+          $('.lostpwd-form-main-message').addClass('show error').html(XMLHttpRequest.status + ": 服务器异常,请稍后重试!");
+        }
+      },
+      complete: function(XMLHttpRequest, textStatus) {
+        this; // 调用本次AJAX请求时传递的options参数
+      }
+    });
+  }
+  </script>
 
 </body>
 

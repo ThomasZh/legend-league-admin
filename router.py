@@ -35,6 +35,8 @@ def map():
         (r'/admin/profile/edit', getattr(work_sheet, 'ProfileEditHandler')),
         (r'/admin/administrators', getattr(work_sheet, 'AdministratorsHandler')),
         (r'/admin/todo-list', getattr(work_sheet, 'TodoListHandler')),
+        (r'/admin/multimedias/draft', getattr(work_sheet, 'MultimediasDraftHandler')),
+        (r'/admin/multimedias/publish', getattr(work_sheet, 'MultimediasPublishHandler')),
 
         (r'/admin/categories/create', getattr(category, 'CategoriesCreateHandler')),
         (r'/admin/categories/index', getattr(category, 'CategoriesIndexHandler')),

@@ -98,3 +98,45 @@ class TodoListHandler(AuthorizationHandler):
         self.render('admin/todo-list.html',
                 admin=admin,
                 league_id=LEAGUE_ID)
+
+
+class MultimediasDraftHandler(AuthorizationHandler):
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def get(self):
+        logging.info(self.request)
+        access_token = self.get_secure_cookie("access_token")
+
+        params = {"filter":"league", "league_id":LEAGUE_ID, "status":"draft"}
+        url = url_concat("http://api.7x24hs.com/api/multimedias", params)
+        http_client = HTTPClient()
+        response = http_client.fetch(url, method="GET")
+        logging.info("got response %r", response.body)
+        multimedias = json_decode(response.body)
+
+        admin = self.get_myinfo_basic()
+
+        self.render('admin/multimedias-draft.html',
+                admin=admin,
+                league_id=LEAGUE_ID,
+                multimedias=multimedias)
+
+
+class MultimediasPublishHandler(AuthorizationHandler):
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def get(self):
+        logging.info(self.request)
+        access_token = self.get_secure_cookie("access_token")
+
+        params = {"filter":"league", "league_id":LEAGUE_ID, "status":"publish"}
+        url = url_concat("http://api.7x24hs.com/api/multimedias", params)
+        http_client = HTTPClient()
+        response = http_client.fetch(url, method="GET")
+        logging.info("got response %r", response.body)
+        multimedias = json_decode(response.body)
+
+        admin = self.get_myinfo_basic()
+
+        self.render('admin/multimedias-publish.html',
+                admin=admin,
+                league_id=LEAGUE_ID,
+                multimedias=multimedias)
