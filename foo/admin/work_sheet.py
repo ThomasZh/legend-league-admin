@@ -88,6 +88,27 @@ class AdministratorsHandler(AuthorizationHandler):
                 league_id=LEAGUE_ID)
 
 
+class ClubsHandler(AuthorizationHandler):
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def get(self):
+        logging.info(self.request)
+        access_token = self.get_secure_cookie("access_token")
+
+        url = "http://api.7x24hs.com/api/leagues/"+LEAGUE_ID+"/clubs"
+        http_client = HTTPClient()
+        headers = {"Authorization":"Bearer "+access_token}
+        response = http_client.fetch(url, method="GET", headers=headers)
+        logging.info("got response.body %r", response.body)
+        clubs = json_decode(response.body)
+
+        admin = self.get_myinfo_basic()
+
+        self.render('admin/clubs.html',
+                admin=admin,
+                clubs=clubs,
+                league_id=LEAGUE_ID)
+
+
 class TodoListHandler(AuthorizationHandler):
     @tornado.web.authenticated  # if no session, redirect to login page
     def get(self):
@@ -98,6 +119,126 @@ class TodoListHandler(AuthorizationHandler):
         self.render('admin/todo-list.html',
                 admin=admin,
                 league_id=LEAGUE_ID)
+
+
+class ArticlesSceneryHandler(AuthorizationHandler):
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def get(self):
+        logging.info(self.request)
+        access_token = self.get_secure_cookie("access_token")
+
+        # sceneries(景点)
+        params = {"filter":"league", "league_id":LEAGUE_ID, "status":"all", "category":"9b876004e94711e69b1c00163e023e51", "idx":0, "limit":20}
+        url = url_concat("http://api.7x24hs.com/api/articles", params)
+        http_client = HTTPClient()
+        response = http_client.fetch(url, method="GET")
+        logging.info("got response %r", response.body)
+        articles = json_decode(response.body)
+        for article in articles:
+            article['publish_time'] = timestamp_friendly_date(article['publish_time'])
+
+        admin = self.get_myinfo_basic()
+
+        self.render('admin/articles-scenery.html',
+                admin=admin,
+                league_id=LEAGUE_ID,
+                articles=articles)
+
+
+class ArticlesNewsHandler(AuthorizationHandler):
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def get(self):
+        logging.info(self.request)
+        access_token = self.get_secure_cookie("access_token")
+
+        # news(新闻)
+        params = {"filter":"league", "league_id":LEAGUE_ID, "status":"all", "category":"0e9a3c68e94511e6b40600163e023e51", "idx":0, "limit":20}
+        url = url_concat("http://api.7x24hs.com/api/articles", params)
+        http_client = HTTPClient()
+        response = http_client.fetch(url, method="GET")
+        logging.info("got response %r", response.body)
+        articles = json_decode(response.body)
+        for article in articles:
+            article['publish_time'] = timestamp_friendly_date(article['publish_time'])
+
+        admin = self.get_myinfo_basic()
+
+        self.render('admin/articles-news.html',
+                admin=admin,
+                league_id=LEAGUE_ID,
+                articles=articles)
+
+
+class ArticlesJourneyHandler(AuthorizationHandler):
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def get(self):
+        logging.info(self.request)
+        access_token = self.get_secure_cookie("access_token")
+
+        # journey(游记)
+        params = {"filter":"league", "league_id":LEAGUE_ID, "status":"all", "category":"0e9a3c68e94511e6b40600163e023e51", "idx":0, "limit":20}
+        url = url_concat("http://api.7x24hs.com/api/articles", params)
+        http_client = HTTPClient()
+        response = http_client.fetch(url, method="GET")
+        logging.info("got response %r", response.body)
+        articles = json_decode(response.body)
+        for article in articles:
+            article['publish_time'] = timestamp_friendly_date(article['publish_time'])
+
+        admin = self.get_myinfo_basic()
+
+        self.render('admin/articles-journey.html',
+                admin=admin,
+                league_id=LEAGUE_ID,
+                articles=articles)
+
+
+class ArticlesPopularHandler(AuthorizationHandler):
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def get(self):
+        logging.info(self.request)
+        access_token = self.get_secure_cookie("access_token")
+
+        # popular(流行)
+        params = {"filter":"league", "league_id":LEAGUE_ID, "status":"all", "category":"6af3e348eac011e6bf5000163e023e51", "idx":0, "limit":20}
+        url = url_concat("http://api.7x24hs.com/api/articles", params)
+        http_client = HTTPClient()
+        response = http_client.fetch(url, method="GET")
+        logging.info("got response %r", response.body)
+        articles = json_decode(response.body)
+        for article in articles:
+            article['publish_time'] = timestamp_friendly_date(article['publish_time'])
+
+        admin = self.get_myinfo_basic()
+
+        self.render('admin/articles-popular.html',
+                admin=admin,
+                league_id=LEAGUE_ID,
+                articles=articles)
+
+
+class ArticlesHotHandler(AuthorizationHandler):
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def get(self):
+        logging.info(self.request)
+        access_token = self.get_secure_cookie("access_token")
+
+        # hot(热门)
+        params = {"filter":"league", "league_id":LEAGUE_ID, "status":"all", "category":"6340864ceac011e6bf5000163e023e51", "idx":0, "limit":20}
+        url = url_concat("http://api.7x24hs.com/api/articles", params)
+        http_client = HTTPClient()
+        response = http_client.fetch(url, method="GET")
+        logging.info("got response %r", response.body)
+        articles = json_decode(response.body)
+        for article in articles:
+            article['publish_time'] = timestamp_friendly_date(article['publish_time'])
+
+        admin = self.get_myinfo_basic()
+
+        self.render('admin/articles-hot.html',
+                admin=admin,
+                league_id=LEAGUE_ID,
+                articles=articles)
 
 
 class MultimediasDraftHandler(AuthorizationHandler):

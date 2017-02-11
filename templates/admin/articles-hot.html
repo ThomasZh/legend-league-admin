@@ -78,7 +78,7 @@
         <div class="">
           <div style="height:auto;" class="page-title">
             <div class="title_left">
-              <h3>多媒体文件</h3>
+              <h3>文章</h3>
             </div>
 
             <div class="clearfix"></div>
@@ -88,29 +88,38 @@
               <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2>已发布</h2>
+                    <h2>热门</h2>
                     <ul class="nav navbar-right panel_toolbox">
                     </ul>
                     <div class="clearfix"></div>
                   </div>
                   <div class="x_content">
 
-                    {% for multimedia in multimedias %}
+                    {% for article in articles %}
                     <div class="col-md-3 col-xs-12 widget widget_tally_box">
                       <div class="x_panel ui-ribbon-container fixed_height_360">
                         <div class="x_content">
                           <div class="thumbnail">
                             <div class="image view view-first">
-                              <a href="#">
-                                <img style="width: 100%; display: block;" src="{{ multimedia['url'] }}" alt="image" />
+                              <a href="/ops/articles/edit?id={{ article['_id'] }}">
+                                <img style="width: 100%; display: block;" src="{{ article['img'] }}" alt="image" />
                               </a>
                             </div>
                           </div>
-                          <p>{{ multimedia['publish_time'] }}</p>
+                          <p>{{ article['title'] }}</p>
+                          <p>
+                            {% for category in article['categories'] %}
+                              {{ category['title'] }}&nbsp;
+                            {% end %}
+                          </p>
+                          <p>{{ article['create_time'] }}</p>
                           <div class="divider"></div>
                           <p>
-                            <a onclick="unpublish('{{ multimedia['_id'] }}')" class="btn ap_del btn-danger btn-xs">
-                              <i class="fa fa-trash-o"></i> 草稿箱 </a>
+                            {% if article['_status'] == 0 %}
+                            <a href="#" class="btn ap_del btn-danger btn-xs">草稿箱 </a>
+                            {% elif article['_status'] == 100 %}
+                            <a href="#" class="btn btn-success btn-xs">公开 </a>
+                            {% end %}
                           </p>
                         </div>
                       </div>
@@ -154,21 +163,21 @@
   <script type="text/javascript" src="{{ static_url('js/jquery.validate.min.js') }}"></script>
 
   <script>
-  function unpublish(id){
+  function publish(id){
     console.log(id);
 
     $.ajax({
       type: "POST",
-      url: "/api/multimedias/"+id+"/unpublish",
+      url: "/api/articles/"+id+"/publish",
       dataType: "json",
       contentType: 'application/json',
       success: function(data, status, xhr) {
-        location.href = "/admin/multimedias/draft";
+        location.href = "/ops/articles/publish";
       },
       error: function(XMLHttpRequest, textStatus, errorThrown) {
         console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
         if (XMLHttpRequest.status == 200) {
-          location.href = "/admin/multimedias/draft";
+          location.href = "/ops/articles/publish";
         } else {
           $('.lostpwd-form-main-message').addClass('show error').html(XMLHttpRequest.status + ": 服务器异常,请稍后重试!");
         }

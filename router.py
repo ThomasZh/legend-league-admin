@@ -34,6 +34,7 @@ def map():
         (r'/admin', getattr(work_sheet, 'AdminIndexHandler')),
         (r'/admin/profile/edit', getattr(work_sheet, 'ProfileEditHandler')),
         (r'/admin/administrators', getattr(work_sheet, 'AdministratorsHandler')),
+        (r'/admin/clubs', getattr(work_sheet, 'ClubsHandler')),
         (r'/admin/todo-list', getattr(work_sheet, 'TodoListHandler')),
         (r'/admin/multimedias/draft', getattr(work_sheet, 'MultimediasDraftHandler')),
         (r'/admin/multimedias/publish', getattr(work_sheet, 'MultimediasPublishHandler')),
@@ -41,6 +42,12 @@ def map():
         (r'/admin/categories/create', getattr(category, 'CategoriesCreateHandler')),
         (r'/admin/categories/index', getattr(category, 'CategoriesIndexHandler')),
         (r'/admin/categories/edit', getattr(category, 'CategoriesEditHandler')),
+
+        (r'/admin/articles/scenery', getattr(work_sheet, 'ArticlesSceneryHandler')),
+        (r'/admin/articles/news', getattr(work_sheet, 'ArticlesNewsHandler')),
+        (r'/admin/articles/journey', getattr(work_sheet, 'ArticlesJourneyHandler')),
+        (r'/admin/articles/popular', getattr(work_sheet, 'ArticlesPopularHandler')),
+        (r'/admin/articles/hot', getattr(work_sheet, 'ArticlesHotHandler')),
 
         # comm
         ('.*', getattr(comm, 'PageNotFoundHandler'))
