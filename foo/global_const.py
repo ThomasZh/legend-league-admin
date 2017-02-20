@@ -20,13 +20,6 @@
 API_HOST = "127.0.0.1"
 API_PORT = "8009"
 
-# mongodb
-MONGO_HOST = "127.0.0.1"
-MONGO_PORT = 27017
-MONGO_DB = "oauth2"
-MONGO_USR = "admin"
-MONGO_PWD = "123456"
-
 TOKEN_EXPIRES_IN = 7200 # 2hours
 LEAGUE_ID = "f24794c7e1d511e68c0aa45e60efbf2d"
 
