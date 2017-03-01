@@ -128,7 +128,7 @@ class ArticlesSceneryHandler(AuthorizationHandler):
         access_token = self.get_secure_cookie("access_token")
 
         # sceneries(景点)
-        params = {"filter":"league", "league_id":LEAGUE_ID, "status":"all", "category":"9b876004e94711e69b1c00163e023e51", "idx":0, "limit":20}
+        params = {"filter":"league", "league_id":LEAGUE_ID, "status":"all", "category":"41c057a6f73411e69a3c00163e023e51", "idx":0, "limit":20}
         url = url_concat("http://api.7x24hs.com/api/articles", params)
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
@@ -152,7 +152,7 @@ class ArticlesNewsHandler(AuthorizationHandler):
         access_token = self.get_secure_cookie("access_token")
 
         # news(新闻)
-        params = {"filter":"league", "league_id":LEAGUE_ID, "status":"all", "category":"0e9a3c68e94511e6b40600163e023e51", "idx":0, "limit":20}
+        params = {"filter":"league", "league_id":LEAGUE_ID, "status":"all", "category":"30a56cb8f73411e69a3c00163e023e51", "idx":0, "limit":20}
         url = url_concat("http://api.7x24hs.com/api/articles", params)
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
@@ -176,7 +176,7 @@ class ArticlesJourneyHandler(AuthorizationHandler):
         access_token = self.get_secure_cookie("access_token")
 
         # journey(游记)
-        params = {"filter":"league", "league_id":LEAGUE_ID, "status":"all", "category":"0e9a3c68e94511e6b40600163e023e51", "idx":0, "limit":20}
+        params = {"filter":"league", "league_id":LEAGUE_ID, "status":"all", "category":"01d6120cf73411e69a3c00163e023e51", "idx":0, "limit":20}
         url = url_concat("http://api.7x24hs.com/api/articles", params)
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
@@ -200,7 +200,7 @@ class ArticlesPopularHandler(AuthorizationHandler):
         access_token = self.get_secure_cookie("access_token")
 
         # popular(流行)
-        params = {"filter":"league", "league_id":LEAGUE_ID, "status":"all", "category":"6af3e348eac011e6bf5000163e023e51", "idx":0, "limit":20}
+        params = {"filter":"league", "league_id":LEAGUE_ID, "status":"all", "category":"3801d62cf73411e69a3c00163e023e51", "idx":0, "limit":20}
         url = url_concat("http://api.7x24hs.com/api/articles", params)
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
@@ -224,7 +224,7 @@ class ArticlesHotHandler(AuthorizationHandler):
         access_token = self.get_secure_cookie("access_token")
 
         # hot(热门)
-        params = {"filter":"league", "league_id":LEAGUE_ID, "status":"all", "category":"6340864ceac011e6bf5000163e023e51", "idx":0, "limit":20}
+        params = {"filter":"league", "league_id":LEAGUE_ID, "status":"all", "category":"1b86ad38f73411e69a3c00163e023e51", "idx":0, "limit":20}
         url = url_concat("http://api.7x24hs.com/api/articles", params)
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
