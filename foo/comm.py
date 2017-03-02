@@ -252,17 +252,35 @@ class BaseHandler(tornado.web.RequestHandler):
 class AuthorizationHandler(BaseHandler):
     def get_current_user(self):
         access_token = self.get_secure_cookie("access_token")
+        logging.info("got access_token %r from cookie", access_token)
         if not access_token:
             return None
         else:
-            logging.info("got access_token %r from cookie", access_token)
             expires_at = self.get_secure_cookie("expires_at")
+            logging.info("got expires_at %r from cookie", expires_at)
             if not expires_at:
                 return None
             else:
-                logging.info("got expires_at %r from cookie", expires_at)
-                _timestamp = int(time.time())
-                if int(expires_at) > _timestamp:
-                    return access_token
-                else:
+                # Logic: refresh_token
+                refresh_token = self.get_secure_cookie("refresh_token")
+                if not refresh_token:
                     return None
+                else:
+                    try:
+                        url = "http://api.7x24hs.com/api/auth/tokens"
+                        http_client = HTTPClient()
+                        headers={"Authorization":"Bearer "+refresh_token}
+                        data = {"action":"refresh"}
+                        _json = json_encode(data)
+                        logging.info("request %r body %r", url, _json)
+                        response = http_client.fetch(url, method="POST", headers=headers, body=_json)
+                        logging.info("got response %r", response.body)
+                        session_ticket = json_decode(response.body)
+
+                        self.set_secure_cookie("access_token", session_ticket['access_token'])
+                        self.set_secure_cookie("expires_at", str(session_ticket['expires_at']))
+                        self.set_secure_cookie("refresh_token", session_ticket['refresh_token'])
+                        return session_ticket['access_token']
+                    except:
+                        return None
+                return None
