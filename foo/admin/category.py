@@ -47,7 +47,7 @@ class CategoriesIndexHandler(AuthorizationHandler):
         logging.info(self.request)
         admin = self.get_myinfo_basic()
 
-        url = "http://api.7x24hs.com/api/categories"
+        url = "http://api.7x24hs.com/api/leagues/"+LEAGUE_ID+"/categories"
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
         logging.info("got response.body %r", response.body)
@@ -64,6 +64,7 @@ class CategoriesCreateHandler(AuthorizationHandler):
         logging.info(self.request)
         admin = self.get_myinfo_basic()
         self.render('category/create.html',
+                league_id=LEAGUE_ID,
                 admin=admin)
 
 

@@ -298,7 +298,7 @@
 
           $.ajax({
             type: "POST",
-            url: "/api/categories",
+            url: "/api/leagues/{{ league_id }}/categories",
             data: json,
             dataType: "json",
             contentType: 'application/json',
