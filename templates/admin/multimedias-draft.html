@@ -93,33 +93,17 @@
                     </ul>
                     <div class="clearfix"></div>
                   </div>
-                  <div class="x_content">
+                  <div class="x_content" id="x_Box">
+                  </div>
+                  <div class="clearfix"></div>
+                  <div class="col-md-5 col-sm-12 col-xs-12 center-margin">
+                    <button class="btn btn-success" type="button" id="prev">上一页</button>
+                    <span class="pageBox"></span>
 
-                    {% for multimedia in multimedias %}
-                    <div class="col-md-3 col-xs-12 widget widget_tally_box">
-                      <div class="x_panel ui-ribbon-container fixed_height_360">
-                        <div class="x_content">
-                          <div class="thumbnail">
-                            <div class="image view view-first">
-                              <a href="#">
-                                <img style="width: 100%; display: block;" src="{{ multimedia['url'] }}" alt="image" />
-                              </a>
-                            </div>
-                          </div>
-                          <p>{{ multimedia['publish_time'] }}</p>
-                          <div class="divider"></div>
-                          <p>
-                            <a onclick="delete('{{ multimedia['_id'] }}')" class="btn ap_del btn-danger btn-xs">
-                              <i class="fa fa-trash-o"></i> 删除 </a>
-                            <a onclick="publish('{{ multimedia['_id'] }}')" class="btn btn-success btn-xs">
-                              <i class="fa fa-pencil"></i> 公开 </a>
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                    {% end %}
+                    <button class="btn btn-success" type="button" id="next">下一页</button>
 
                   </div>
+
                 </div>
               </div>
             </div>
@@ -180,6 +164,133 @@
       }
     });
   }
+  </script>
+  <script>
+          function getLocalTime(nS) { //时间戳转换
+             return new Date(parseInt(nS) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
+          };
+
+          var preAllow = true;   // when ajax not completed, cannot do the next request
+          var limit = 8;//每页显示数
+          var currentPage = 0;//当前页
+          var total_page = 0;//总页数
+          function query(pageNum) {
+            $.get("/api/multimedias-pagination?filter=league&league_id={{ league_id }}&status=draft&page=1&limit="+limit+"",function(data,status){
+                  console.log(data);
+                  currentPage = 1;
+              var pageData = data.data;
+                  total_page = data.total_pgae;//总页
+              // num = ajaxobj.length;
+              for (var i in pageData) {
+
+                var inner_html = '<div class="col-md-3 col-xs-12 widget widget_tally_box">';
+                inner_html += '<div class="x_panel ui-ribbon-container fixed_height_360">';
+                inner_html += '<div class="x_content">';
+                inner_html += '<div class="thumbnail">';
+                inner_html += '<div class="image view view-first">';
+                inner_html += '<a href="/ops/articles/edit?id='+pageData[i]._id+'">';
+                inner_html += '<img style="width: 100%; display: block;" src="'+pageData[i].url+'" alt="image" />';
+                inner_html += '</a></div></div>';
+                inner_html += '<p>'+getLocalTime(pageData[i].publish_time)+'</p>';
+                inner_html += '<div class="divider"></div>'
+                inner_html += '<p>';
+                inner_html += '<a onclick="publish(\''+pageData[i]._id+'\')" class="btn ap_del btn-success btn-xs">公开 </a>';
+                inner_html += '</p></div></div></div>';
+
+                $('#x_Box').append(inner_html);
+                // member_num += 1;
+              };
+            if(total_page>5){
+                for (var k=1;k<=5;k++){
+                  var inner_html = '<button class="btn btn-info" type="button" id="num'+k+'">'+k+'</button>';
+                  $(".pageBox").append(inner_html);
+                };
+              }else if(total_page<=5){
+                for (var k=1;k<=total_page;k++){
+                  var inner_html = '<button class="btn btn-info" type="button" id="num'+k+'">'+k+'</button>';
+                  $(".pageBox").append(inner_html);
+                };
+              }
+              $("#num1").addClass("on");
+              preAllow = true;
+            });
+          };
+
+          function gotoPage(pageNum) {
+            $.get("/api/multimedias-pagination?filter=league&league_id={{ league_id }}&status=draft&page="+pageNum+"&limit="+limit+"",function(data,status){
+                  console.log(data);
+                  currentPage = pageNum;
+              var pageData = data.data;
+                  total_page = data.total_pgae;//总页
+              $('#x_Box').html("");
+
+              for (var i in pageData) {
+
+                var inner_html = '<div class="col-md-3 col-xs-12 widget widget_tally_box">';
+                inner_html += '<div class="x_panel ui-ribbon-container fixed_height_360">';
+                inner_html += '<div class="x_content">';
+                inner_html += '<div class="thumbnail">';
+                inner_html += '<div class="image view view-first">';
+                inner_html += '<a href="/ops/articles/edit?id='+pageData[i]._id+'">';
+                inner_html += '<img style="width: 100%; display: block;" src="'+pageData[i].url+'" alt="image" />';
+                inner_html += '</a></div></div>';
+                inner_html += '<p>'+getLocalTime(pageData[i].publish_time)+'</p>';
+                inner_html += '<div class="divider"></div>'
+                inner_html += '<p>';
+                inner_html += '<a onclick="publish(\''+pageData[i]._id+'\')" class="btn ap_del btn-success btn-xs">公开 </a>';
+                inner_html += '</p></div></div></div>';
+
+                $('#x_Box').append(inner_html);
+                // member_num += 1;
+              };
+
+              pageNext = parseInt((currentPage-1)/5) + 1;
+
+                start = (pageNext-1)*5+1;
+                end = pageNext*5;
+                if(end > total_page){
+                  end = total_page;
+                }
+
+                $(".pageBox").html("");
+                for (var k=start;k<=end;k++){
+                  var inner_html = '<button class="btn btn-info" type="button" id="num'+k+'">'+k+'</button>';
+
+                  $(".pageBox").append(inner_html);
+                };
+                 $("#num"+currentPage).addClass("on").siblings().removeClass("on");
+
+
+            });
+
+          };
+
+          $(function(){
+            query();
+            $(document).on('click','.pageBox > button',function(){
+              var num = $(this).text();
+              gotoPage(num);
+              //  $(this).addClass("current").siblings().removeClass("current");
+            })
+
+            $("#prev").on("click",function(){
+                if(currentPage<=1){
+
+                }else{
+                    gotoPage(--currentPage);
+                    // $("#num"+currentPage).addClass("current").siblings().removeClass("current");
+                }
+            });
+
+            $("#next").on("click",function(){
+                if(currentPage>=total_page){
+
+                }else{
+                    gotoPage(++currentPage);
+                    // $("#num"+currentPage).addClass("current").siblings().removeClass("current");
+                }
+            })
+          });
   </script>
 
 </body>
