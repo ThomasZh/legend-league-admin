@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <!-- Meta, title, CSS, favicons, etc. -->
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Cache-Control" content="no-cache">
+
+  <title>传奇联盟</title>
+
+  <!-- Bootstrap core CSS -->
+
+  <link href="{{ static_url('gentelella/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
+  <link href="{{ static_url('gentelella/fontawesome/css/font-awesome.min.css') }}" rel="stylesheet">
+  <link href="{{ static_url('gentelella/animate.css/animate.min.css') }}" rel="stylesheet">
+
+  <!-- Custom styling plus plugins -->
+  <link href="{{ static_url('css/custom.css') }}" rel="stylesheet">
+  <link href="{{ static_url('gentelella/iCheck/skins/flat/green.css') }}" rel="stylesheet">
+  <script src="{{ static_url('gentelella/jquery/dist/jquery.min.js') }}"></script>
+
+  <!-- Custom styling plus plugins -->
+  <link href="{{ static_url('gentelella/css/maps/jquery-jvectormap-2.0.3.css') }}" rel="stylesheet" type="text/css" />
+  <link href="{{ static_url('gentelella/css/floatexamples.css') }}" rel="stylesheet" type="text/css" />
+  <script src="{{ static_url('gentelella/nprogress/nprogress.js') }}"></script>
+
+  <!--[if lt IE 9]>
+        <script src="../assets/js/ie8-responsive-file-warning.js"></script>
+        <![endif]-->
+
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+  <link rel="stylesheet" href="{{ static_url('upyun/css/fileinput.min.css') }}" />
+
+</head>
+
+<body class="nav-md">
+  <div class="container body">
+    <div class="main_container">
+      <div class="col-md-3 left_col">
+        <div class="left_col scroll-view">
+          <div class="navbar nav_title" style="border: 0;">
+            <a href="/" class="site_title"><i class="fa fa-support"></i> <span>传奇联盟</span></a>
+          </div>
+
+          <div class="clearfix"></div>
+
+          <!-- menu profile quick info -->
+          {% module Template("admin/block-menu-prile-quick-info.html", admin=admin) %}
+          <!-- /menu profile quick info -->
+          <br />
+
+          <!-- sidebar menu -->
+          {% module Template("admin/block-sidebar-menu.html") %}
+          <!-- /sidebar menu -->
+          <br />
+
+          <!-- /menu footer buttons -->
+          {% module Template("admin/block-menu-footer.html") %}
+          <!-- /menu footer buttons -->
+        </div>
+      </div>
+
+      <!-- top navigation -->
+      {% module Template("admin/block-top-nav.html", admin=admin) %}
+      <!-- /top navigation -->
+
+      <!-- page content -->
+      <div class="right_col" role="main">
+
+        <div class="">
+          <div style="height:auto;" class="page-title">
+            <div class="title_left">
+              <h3>文章</h3>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <div class="row">
+
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>活动</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content" id="x_Box">
+                  </div>
+                  <div class="clearfix"></div>
+                  <div class="col-md-5 col-sm-12 col-xs-12 center-margin">
+                    <button class="btn btn-success" type="button" id="prev">上一页</button>
+                    <span class="pageBox"></span>
+
+                    <button class="btn btn-success" type="button" id="next">下一页</button>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- footer content -->
+        {% module Template("admin/block-footer.html") %}
+        <!-- /footer content -->
+
+      </div>
+      <!-- /page content -->
+
+    </div>
+  </div>
+
+  <script src="{{ static_url('gentelella/bootstrap/dist/js/bootstrap.min.js') }}" type="text/javascript"></script>
+  <!-- gauge js -->
+  <script src="{{ static_url('gentelella/gauge.js/dist/gauge.min.js') }}" type="text/javascript"></script>
+  <!-- chart js -->
+  <script src="{{ static_url('gentelella/Chart.js/dist/chart.min.js') }}" type="text/javascript"></script>
+  <!-- bootstrap progress js -->
+  <script src="{{ static_url('gentelella/bootstrap-progressbar/bootstrap-progressbar.min.js') }}" type="text/javascript"></script>
+  <script src="{{ static_url('gentelella/js/nicescroll/jquery.nicescroll.min.js') }}" type="text/javascript"></script>
+  <!-- icheck -->
+  <script src="{{ static_url('gentelella/iCheck/icheck.min.js') }}" type="text/javascript"></script>
+  <!-- daterangepicker -->
+  <script src="{{ static_url('gentelella/moment/min/moment.min.js') }}" type="text/javascript"></script>
+  <script src="{{ static_url('gentelella/bootstrap-daterangepicker/daterangepicker.js') }}" type="text/javascript"></script>
+
+  <script src="{{ static_url('js/custom.js') }}" type="text/javascript"></script>
+  <script type="text/javascript" src="{{ static_url('js/json2.js') }}"></script>
+  <script type="text/javascript" src="{{ static_url('js/jquery.validate.min.js') }}"></script>
+
+  <script>
+  function publish(id){
+    console.log(id);
+
+    $.ajax({
+      type: "POST",
+      url: "/api/articles/"+id+"/publish",
+      dataType: "json",
+      contentType: 'application/json',
+      success: function(data, status, xhr) {
+        location.href = "/ops/articles/publish";
+      },
+      error: function(XMLHttpRequest, textStatus, errorThrown) {
+        console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
+        if (XMLHttpRequest.status == 200) {
+          location.href = "/ops/articles/publish";
+        } else {
+          $('.lostpwd-form-main-message').addClass('show error').html(XMLHttpRequest.status + ": 服务器异常,请稍后重试!");
+        }
+      },
+      complete: function(XMLHttpRequest, textStatus) {
+        this; // 调用本次AJAX请求时传递的options参数
+      }
+    });
+  }
+  </script>
+  <script>
+          function getLocalTime(nS) { //时间戳转换
+             return new Date(parseInt(nS) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
+          };
+
+          var preAllow = true;   // when ajax not completed, cannot do the next request
+          var limit = 8;//每页显示数
+          var currentPage = 0;//当前页
+          var total_page = 0;//总页数
+          function query(pageNum) {
+            $.get("/api/articles-pagination?filter=league&league_id={{ league_id }}&status=publish&category={{ category_id }}&page=1&limit="+limit+"",function(data,status){
+                  console.log(data);
+                  currentPage = 1;
+              var pageData = data.data;
+                  total_page = data.total_pgae;//总页
+              // num = ajaxobj.length;
+              for (var i in pageData) {
+
+                var inner_html = '<div class="col-md-3 col-xs-12 widget widget_tally_box">';
+                inner_html += '<div class="x_panel ui-ribbon-container fixed_height_360">';
+                inner_html += '<div class="x_content">';
+                inner_html += '<div class="thumbnail">';
+                inner_html += '<div class="image view view-first">';
+                inner_html += '<a href="/ops/articles/edit?id='+pageData[i]._id+'">';
+                inner_html += '<img style="width: 100%; display: block;" src="'+pageData[i].img+'" alt="image" />';
+                inner_html += '</a></div></div>';
+                inner_html += '<p>'+pageData[i].title+'</p>';
+                inner_html += '<p>';
+                for (var j in pageData[i].categories){
+                  inner_html += pageData[i].categories[j].title + '&nbsp;';
+                }
+                inner_html += '</p>';
+                inner_html += '<p>'+getLocalTime(pageData[i].publish_time)+'</p>';
+                inner_html += '<div class="divider"></div>'
+                inner_html += '<p>';
+                    if(pageData[i]._status == 0){
+                      inner_html += '<a href="#" class="btn ap_del btn-danger btn-xs">草稿箱 </a>';
+                    }else if(pageData[i]._status == 100){
+                      inner_html += '<a href="#" class="btn btn-success btn-xs">查看 </a>';
+                    }
+                inner_html += '</p></div></div></div>';
+
+                $('#x_Box').append(inner_html);
+                // member_num += 1;
+              };
+            if(total_page>5){
+                for (var k=1;k<=5;k++){
+                  var inner_html = '<button class="btn btn-info" type="button" id="num'+k+'">'+k+'</button>';
+                  $(".pageBox").append(inner_html);
+                };
+              }else if(total_page<=5){
+                for (var k=1;k<=total_page;k++){
+                  var inner_html = '<button class="btn btn-info" type="button" id="num'+k+'">'+k+'</button>';
+                  $(".pageBox").append(inner_html);
+                };
+              }
+              $("#num1").addClass("on");
+              preAllow = true;
+            });
+          };
+
+          function gotoPage(pageNum) {
+            $.get("/api/articles-pagination?filter=league&league_id={{ league_id }}&status=publish&category={{ category_id }}&page="+pageNum+"&limit="+limit+"",function(data,status){
+                  console.log(data);
+                  currentPage = pageNum;
+              var pageData = data.data;
+                  total_page = data.total_pgae;//总页
+              $('#x_Box').html("");
+
+              for (var i in pageData) {
+
+                var inner_html = '<div class="col-md-3 col-xs-12 widget widget_tally_box">';
+                inner_html += '<div class="x_panel ui-ribbon-container fixed_height_360">';
+                inner_html += '<div class="x_content">';
+                inner_html += '<div class="thumbnail">';
+                inner_html += '<div class="image view view-first">';
+                inner_html += '<a href="/ops/articles/edit?id='+pageData[i]._id+'">';
+                inner_html += '<img style="width: 100%; display: block;" src="'+pageData[i].img+'" alt="image" />';
+                inner_html += '</a></div></div>';
+                inner_html += '<p>'+pageData[i].title+'</p>';
+                inner_html += '<p>';
+                for (var j in pageData[i].categories){
+                  inner_html += pageData[i].categories[j].title + '&nbsp;';
+                }
+                inner_html += '</p>';
+                inner_html += '<p>'+getLocalTime(pageData[i].publish_time)+'</p>';
+                inner_html += '<div class="divider"></div>'
+                inner_html += '<p>';
+                    if(pageData[i]._status == 0){
+                      inner_html += '<a href="#" class="btn ap_del btn-danger btn-xs">草稿箱 </a>';
+                    }else if(pageData[i]._status == 100){
+                      inner_html += '<a href="#" class="btn btn-success btn-xs">查看 </a>';
+                    }
+                inner_html += '</p></div></div></div>';
+
+                $('#x_Box').append(inner_html);
+                // member_num += 1;
+              };
+
+              pageNext = parseInt((currentPage-1)/5) + 1;
+
+                start = (pageNext-1)*5+1;
+                end = pageNext*5;
+                if(end > total_page){
+                  end = total_page;
+                }
+
+                $(".pageBox").html("");
+                for (var k=start;k<=end;k++){
+                  var inner_html = '<button class="btn btn-info" type="button" id="num'+k+'">'+k+'</button>';
+
+                  $(".pageBox").append(inner_html);
+                };
+                 $("#num"+currentPage).addClass("on").siblings().removeClass("on");
+
+
+            });
+
+          };
+
+          $(function(){
+            query();
+            $(document).on('click','.pageBox > button',function(){
+              var num = $(this).text();
+              gotoPage(num);
+              //  $(this).addClass("current").siblings().removeClass("current");
+            })
+
+            $("#prev").on("click",function(){
+                if(currentPage<=1){
+
+                }else{
+                    gotoPage(--currentPage);
+                    // $("#num"+currentPage).addClass("current").siblings().removeClass("current");
+                }
+            });
+
+            $("#next").on("click",function(){
+                if(currentPage>=total_page){
+
+                }else{
+                    gotoPage(++currentPage);
+                    // $("#num"+currentPage).addClass("current").siblings().removeClass("current");
+                }
+            })
+          });
+  </script>
+
+</body>
+
+</html>
