@@ -94,18 +94,10 @@ class ClubsHandler(AuthorizationHandler):
         logging.info(self.request)
         access_token = self.get_secure_cookie("access_token")
 
-        url = "http://api.7x24hs.com/api/leagues/"+LEAGUE_ID+"/clubs"
-        http_client = HTTPClient()
-        headers = {"Authorization":"Bearer "+access_token}
-        response = http_client.fetch(url, method="GET", headers=headers)
-        logging.info("got response.body %r", response.body)
-        clubs = json_decode(response.body)
-
         admin = self.get_myinfo_basic()
 
         self.render('admin/clubs.html',
                 admin=admin,
-                clubs=clubs,
                 league_id=LEAGUE_ID)
 
 
@@ -119,6 +111,32 @@ class TodoListHandler(AuthorizationHandler):
         self.render('admin/todo-list.html',
                 admin=admin,
                 league_id=LEAGUE_ID)
+
+
+class TodoDetailHandler(AuthorizationHandler):
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def get(self):
+        logging.info(self.request)
+        access_token = self.get_secure_cookie("access_token")
+
+        id = self.get_argument("id","")
+
+        admin = self.get_myinfo_basic()
+
+        url = "http://api.7x24hs.com/api/leagues/"+LEAGUE_ID+"/franchises/"+id
+        http_client = HTTPClient()
+        headers={"Authorization":"Bearer "+access_token}
+        response = http_client.fetch(url, method="GET", headers=headers)
+        logging.info("got response %r", response.body)
+        franchise= json_decode(response.body)
+        franchise['create_time'] = timestamp_datetime(franchise['create_time'])
+        if not franchise['club'].has_key('img'):
+            franchise['club']['img'] = ''
+
+        self.render('admin/todo-detail.html',
+                admin=admin,
+                league_id=LEAGUE_ID,
+                franchise=franchise)
 
 
 class ArticlesActivityHandler(AuthorizationHandler):

@@ -105,7 +105,7 @@
                             <th class="column-title">头像 </th>
                             <th class="column-title">昵称 </th>
                             <th class="column-title">联系方式 </th>
-                            <th class="column-title">俱乐部信息 </th>
+                            <th class="column-title">俱乐部名称 </th>
                             <th class="column-title">状态 </th>
                             <th class="column-title">申请日期 </th>
                             <th class="column-title no-link last"><span class="nobr">操作</span>
@@ -116,10 +116,19 @@
                           </tr>
                         </thead>
 
-                        <tbody>
-                          <tr class="even pointer" is="oneFranchise" v-for="(franchise,idx) in franchises" v-bind:franchise="franchise" v-bind:idx="idx"></tr>
+                        <tbody id="x_Box">
+
                         </tbody>
+
                       </table>
+                      <div class="clearfix"></div>
+                      <div class="col-md-5 col-sm-12 col-xs-12 center-margin">
+                        <button class="btn btn-success" type="button" id="prev">上一页</button>
+                        <span class="pageBox"></span>
+
+                        <button class="btn btn-success" type="button" id="next">下一页</button>
+
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -157,125 +166,240 @@
   <script src="{{ static_url('js/vue-2.1.4.js') }}" type="text/javascript"></script>
 
   <script>
-    Vue.component('oneFranchise', {
-      template: '\
-        <tr class="even pointer">\
-          <td class="a-center "><input type="checkbox" class="flat" name="table_records"></td>\
-          <td class=" "><img :src="franchise.avatar" class="avatar" alt="avatar"></td>\
-          <td class=" ">{{! franchise.nickname }}</td>\
-          <td class=" ">\
-            <span v-for="login in franchise.logins">{{! login }}</span><br />\
-          </td>\
-          <td class=" ">{{! franchise._id }}</td>\
-          <td class=" ">\
-            <span v-if="franchise._status == 0">待审批</span>\
-            <span v-if="franchise._status == 20">接受</span>\
-            <span v-if="franchise._status == 10">拒绝</span>\
-          </td>\
-          <td class=" ">{{! franchise.create_time }}</td>\
-          <td class="last">\
-            <a v-on:click="review" type="button" class="btn btn-round btn-sm btn-info">查看详情</a>\
-            <a v-if="franchise._status == 0" v-on:click="accept" type="button" class="btn btn-round btn-sm btn-success">接受</a>\
-            <a v-if="franchise._status == 0" v-on:click="reject" type="button" class="btn btn-round btn-sm btn-danger">拒绝</a>\
-          </td>\
-        </tr>',
-      props: ['franchise', 'idx'],
-      methods: {
-        review: function() {},
-        accept: function() {
-          var _self = this;
-          data = {
-            "action": "accept"
-          }
-          var json = JSON.stringify(data);
+          function getLocalTime(nS) { //时间戳转换
+             return new Date(parseInt(nS) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
+          };
 
-          $.ajax({
-            type: "PUT",
-            url: "/api/leagues/{{ league_id }}/franchises/" + _self.franchise._id,
-            dataType: "json",
-            data: json,
-            contentType: 'application/json',
-            success: function(data, status, xhr) {
-              _self.franchise._status = 20
-            },
-            error: function(XMLHttpRequest, textStatus, errorThrown) {
-              console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
-              if (XMLHttpRequest.status == 200) {
-                _self.franchise._status = 20
+          var preAllow = true;   // when ajax not completed, cannot do the next request
+          var limit = 8;//每页显示数
+          var currentPage = 0;//当前页
+          var total_page = 0;//总页数
+          function query(pageNum) {
+            $.get("/api/leagues/{{ league_id }}/franchises?filter=league&page=1&limit="+limit+"",function(data,status){
+                  data = JSON.parse(data);
+                  console.log(data);
+                  currentPage = 1;
+              var pageData = data.data;
+                  total_page = data.total_pgae;//总页
+              // num = ajaxobj.length;
+              for (var i in pageData) {
+
+                var inner_html = '<tr class="even pointer" is="oneFranchise">';
+                inner_html += '<td class="a-center "><input type="checkbox" class="flat" name="table_records"></td>';
+                inner_html += '<td class=" ">';
+                inner_html += '<img src="'+pageData[i].avatar+'" class="avatar" alt="avatar">';
+                inner_html += '</td>';
+                inner_html += '<td class=" ">'+pageData[i].nickname+'</td>';
+                inner_html += '<td class=" ">'+pageData[i].club.phone+'</td>';
+                inner_html += '<td class=" "><span>'+pageData[i].club.name+'</span><br /></td>';
+                inner_html += '<td class=" " id="status'+pageData[i]._id+'">';
+                  if(pageData[i]._status == 0){
+                    inner_html += '<span>待审批</span>';
+                  }else if(pageData[i]._status == 20){
+                    inner_html += '<span>通过</span>';
+                  }
+                  else if(pageData[i]._status == 10){
+                    inner_html += '<span>拒绝</span>';
+                  }
+
+                inner_html += '</td>';
+                inner_html += '<td class=" ">'+getLocalTime(pageData[i].create_time)+'</td>';
+                inner_html += '<td class="last" id="'+pageData[i]._id+'">';
+                    if(pageData[i]._status == 0){
+                      inner_html += '<a type="button" onclick="review(\''+ pageData[i]._id + '\')" class="btn btn-round btn-sm btn-info">查看详情</a>'
+                      inner_html += '<a type="button" onclick="accept()" class="btn btn-round btn-sm btn-success">接受</a>';
+                      inner_html += '<a type="button" onclick="reject(\''+ pageData[i]._id + '\')" class="btn btn-round btn-sm btn-danger">拒绝</a>';
+                    }else {
+                      inner_html += '<a type="button" onclick="review(\''+ pageData[i]._id + '\')" class="btn btn-round btn-sm btn-info">查看详情</a>'
+                    }
+                inner_html += '</td>';
+                inner_html += '</tr>';
+
+                $('#x_Box').append(inner_html);
+                // member_num += 1;
+              };
+            if(total_page>5){
+                for (var k=1;k<=5;k++){
+                  var inner_html = '<button class="btn btn-info" type="button" id="num'+k+'">'+k+'</button>';
+                  $(".pageBox").append(inner_html);
+                };
+              }else if(total_page<=5){
+                for (var k=1;k<=total_page;k++){
+                  var inner_html = '<button class="btn btn-info" type="button" id="num'+k+'">'+k+'</button>';
+                  $(".pageBox").append(inner_html);
+                };
               }
-            },
-            complete: function(XMLHttpRequest, textStatus) {
-              this; // 调用本次AJAX请求时传递的options参数
-            }
-          });
-        },
-        reject: function() {
-          var _self = this;
-          data = {
-            "action": "reject"
-          }
-          var json = JSON.stringify(data);
+              $("#num1").addClass("on");
 
-          $.ajax({
-            type: "PUT",
-            url: "/api/leagues/{{ league_id }}/franchises/" + _self.franchise._id,
-            dataType: "json",
-            data: json,
-            contentType: 'application/json',
-            success: function(data, status, xhr) {
-              _self.franchise._status = 10
-            },
-            error: function(XMLHttpRequest, textStatus, errorThrown) {
-              console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
-              if (XMLHttpRequest.status == 200) {
-                _self.franchise._status = 10
-              }
-            },
-            complete: function(XMLHttpRequest, textStatus) {
-              this; // 调用本次AJAX请求时传递的options参数
-            }
-          });
-        }
-      }
-    });
+            });
+          };
 
-    new Vue({
-      el: '#mgmt-table',
-      data: {
-        franchises: [],
-        franchise_num: 0,
-      },
-      created: function() {
-        this.queryFranchises(0, 20);
-      },
-      methods: {
-        queryFranchises: function(idx, limit) {
-          var _self = this;
+          function gotoPage(pageNum) {
+            $.get("/api/leagues/{{ league_id }}/franchises?filter=league&page="+ pageNum +"&limit="+limit+"",function(data,status){
+                  console.log(data);
+                  currentPage = pageNum;
+              var pageData = data.data;
+                  total_page = data.total_pgae;//总页
+              $('#x_Box').html("");
 
-          $.ajax({
-            type: "GET",
-            url: "/api/leagues/{{ league_id }}/franchises?filter=league&idx=" + idx + "&limit=" + limit,
-            dataType: "json",
-            contentType: 'application/json',
-            success: function(data, status, xhr) {
-              console.log(data);
-              _self.franchises = data;
-              _self.franchise_num += data.length;
-            },
-            error: function(XMLHttpRequest, textStatus, errorThrown) {
-              console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
-            },
-            complete: function(XMLHttpRequest, textStatus) {
-              this; // 调用本次AJAX请求时传递的options参数
-            }
+              for (var i in pageData) {
+
+                var inner_html = '<tr class="even pointer" is="oneFranchise">';
+                inner_html += '<td class="a-center "><input type="checkbox" class="flat" name="table_records"></td>';
+                inner_html += '<td class=" ">';
+                inner_html += '<img src="'+pageData[i].avatar+'" class="avatar" alt="avatar">';
+                inner_html += '</td>';
+                inner_html += '<td class=" ">'+pageData[i].nickname+'</td>';
+                inner_html += '<td class=" ">'+pageData[i].club.phone+'</td>';
+                inner_html += '<td class=" "><span>'+pageData[i].club.name+'</span><br /></td>';
+                inner_html += '<td class="status" id="status'+pageData[i]._id+'">';
+                  if(pageData[i]._status == 0){
+                    inner_html += '<span>待审批</span>';
+                  }else if(pageData[i]._status == 20){
+                    inner_html += '<span>通过</span>';
+                  }
+                  else if(pageData[i]._status == 10){
+                    inner_html += '<span>拒绝</span>';
+                  }
+
+                inner_html += '</td>';
+                inner_html += '<td class=" ">'+getLocalTime(pageData[i].create_time)+'</td>';
+                inner_html += '<td class="last" id="'+pageData[i]._id+'">';
+                    if(pageData[i]._status == 0){
+                      inner_html += '<a type="button" onclick="accept(\''+ pageData[i]._id + '\')" class="btn btn-round btn-sm btn-success">接受</a>';
+                      inner_html += '<a type="button" onclick="reject(\''+ pageData[i]._id + '\')" class="btn btn-round btn-sm btn-danger">拒绝</a>';
+                    }else {
+                      inner_html += '<a type="button" onclick="review(\''+ pageData[i]._id + '\')" class="btn btn-round btn-sm btn-info">查看详情</a>'
+                    }
+                inner_html += '</td>';
+                inner_html += '</tr>';
+
+                $('#x_Box').append(inner_html);
+                // member_num += 1;
+              };
+
+              pageNext = parseInt((currentPage-1)/5) + 1;
+
+                start = (pageNext-1)*5+1;
+                end = pageNext*5;
+                if(end > total_page){
+                  end = total_page;
+                }
+
+                $(".pageBox").html("");
+                for (var k=start;k<=end;k++){
+                  var inner_html = '<button class="btn btn-info" type="button" id="num'+k+'">'+k+'</button>';
+
+                  $(".pageBox").append(inner_html);
+                };
+                 $("#num"+currentPage).addClass("on").siblings().removeClass("on");
+
+
+            });
+
+          };
+
+          $(function(){
+            query();
+            $(document).on('click','.pageBox > button',function(){
+              var num = $(this).text();
+              gotoPage(num);
+              //  $(this).addClass("current").siblings().removeClass("current");
+            })
+
+            $("#prev").on("click",function(){
+                if(currentPage<=1){
+
+                }else{
+                    gotoPage(--currentPage);
+                    // $("#num"+currentPage).addClass("current").siblings().removeClass("current");
+                }
+            });
+
+            $("#next").on("click",function(){
+                if(currentPage>=total_page){
+
+                }else{
+                    gotoPage(++currentPage);
+                    // $("#num"+currentPage).addClass("current").siblings().removeClass("current");
+                }
+            })
           });
-        },
-      }
-    });
   </script>
 
+<script type="text/javascript">
+
+  function accept(id){
+
+    var _self = this;
+    data = {
+      "action": "accept"
+    }
+    var json = JSON.stringify(data);
+
+    $.ajax({
+      type: "PUT",
+      url: "/api/leagues/{{ league_id }}/franchises/"+id,
+      dataType: "json",
+      data: json,
+      contentType: 'application/json',
+      success: function(data, status, xhr) {
+        console.log("XMLHttpRequest.xhr:" + xhr);
+        if (status == "success") {
+          $("#"+id).html('<a type="button" id="newSetBtn" class="btn btn-round btn-sm btn-info">查看详情</a>');
+          $("#status"+id).html('<span>通过</span>');
+        }
+      },
+      error: function(XMLHttpRequest, textStatus, errorThrown) {
+        // console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
+        // if (XMLHttpRequest.status == 200) {
+        //   _self.franchise._status = 20
+        // }
+      },
+      complete: function(XMLHttpRequest, textStatus) {
+        this; // 调用本次AJAX请求时传递的options参数
+      }
+    });
+  };
+
+  function reject(id){
+
+    var _self = this;
+    data = {
+      "action": "reject"
+    }
+    var json = JSON.stringify(data);
+
+    $.ajax({
+      type: "PUT",
+      url: "/api/leagues/{{ league_id }}/franchises/"+ id,
+      dataType: "json",
+      data: json,
+      contentType: 'application/json',
+      success: function(data, status, xhr) {
+        console.log("XMLHttpRequest.xhr:" + xhr);
+        if (status == "success") {
+          $("#"+id).html('<a type="button" id="newSetBtn" class="btn btn-round btn-sm btn-info">查看详情</a>');
+          $("#status"+id).html('<span>拒绝</span>');
+        }
+      },
+      error: function(XMLHttpRequest, textStatus, errorThrown) {
+        console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
+      },
+      complete: function(XMLHttpRequest, textStatus) {
+        this; // 调用本次AJAX请求时传递的options参数
+      }
+    });
+
+  };
+  function review(id){
+    location.href="/admin/todo-detail?id="+id  //详情
+  };
+  $(document).on("click","#newSetBtn",function(){
+    var id = $(this).parent().attr("id");
+    review(id)
+  })
+</script>
+
 </body>
-
-</html>
-
 </html>

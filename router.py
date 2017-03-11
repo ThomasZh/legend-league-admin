@@ -36,6 +36,7 @@ def map():
         (r'/admin/administrators', getattr(work_sheet, 'AdministratorsHandler')),
         (r'/admin/clubs', getattr(work_sheet, 'ClubsHandler')),
         (r'/admin/todo-list', getattr(work_sheet, 'TodoListHandler')),
+        (r'/admin/todo-detail', getattr(work_sheet, 'TodoDetailHandler')),
         (r'/admin/multimedias/draft', getattr(work_sheet, 'MultimediasDraftHandler')),
         (r'/admin/multimedias/publish', getattr(work_sheet, 'MultimediasPublishHandler')),
 
