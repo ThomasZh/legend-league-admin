@@ -13,7 +13,8 @@
   <title>传奇联盟</title>
 
   <!-- Bootstrap core CSS -->
-
+  <link rel="stylesheet" href="{{ static_url('weui/lib/weui.min.css') }}">
+  <link rel="stylesheet" href="{{ static_url('weui/css/jquery-weui.css') }}">
   <link href="{{ static_url('gentelella/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
   <link href="{{ static_url('gentelella/fontawesome/css/font-awesome.min.css') }}" rel="stylesheet">
   <link href="{{ static_url('gentelella/animate.css/animate.min.css') }}" rel="stylesheet">
@@ -134,7 +135,8 @@
   <!-- daterangepicker -->
   <script src="{{ static_url('gentelella/moment/min/moment.min.js') }}" type="text/javascript"></script>
   <script src="{{ static_url('gentelella/bootstrap-daterangepicker/daterangepicker.js') }}" type="text/javascript"></script>
-
+  <!-- alert Scripts -->
+  <script src="{{ static_url('weui/lib/fastclick.js') }}"></script>
   <script src="{{ static_url('js/custom.js') }}" type="text/javascript"></script>
   <script type="text/javascript" src="{{ static_url('js/json2.js') }}"></script>
   <script type="text/javascript" src="{{ static_url('js/jquery.validate.min.js') }}"></script>
@@ -176,7 +178,8 @@
           var total_page = 0;//总页数
           function query(pageNum) {
             $.get("/api/multimedias-pagination?filter=league&league_id={{ league_id }}&status=draft&page=1&limit="+limit+"",function(data,status){
-                  console.log(data);
+                  // console.log(data);
+                  data = JSON.parse(data);
                   currentPage = 1;
               var pageData = data.data;
                   total_page = data.total_pgae;//总页
@@ -218,7 +221,8 @@
 
           function gotoPage(pageNum) {
             $.get("/api/multimedias-pagination?filter=league&league_id={{ league_id }}&status=draft&page="+pageNum+"&limit="+limit+"",function(data,status){
-                  console.log(data);
+                  // console.log(data);
+                  data = JSON.parse(data);
                   currentPage = pageNum;
               var pageData = data.data;
                   total_page = data.total_pgae;//总页
