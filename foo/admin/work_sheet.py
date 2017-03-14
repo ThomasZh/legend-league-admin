@@ -45,7 +45,9 @@ class AdminIndexHandler(AuthorizationHandler):
     @tornado.web.authenticated  # if no session, redirect to login page
     def get(self):
         logging.info(self.request)
-        admin = self.get_myinfo_basic()
+        
+        admin = self.get_admin_info()
+
         self.render('admin/index.html',
                 admin=admin)
 
@@ -54,7 +56,9 @@ class ProfileEditHandler(AuthorizationHandler):
     @tornado.web.authenticated  # if no session, redirect to login page
     def get(self):
         logging.info(self.request)
-        admin = self.get_myinfo_basic()
+
+        admin = self.get_admin_info()
+
         self.render('admin/profile-edit.html',
                 admin=admin)
 
@@ -65,6 +69,8 @@ class ProfileEditHandler(AuthorizationHandler):
         nickname = self.get_argument("nickname", "")
         avatar = self.get_argument("avatar", "")
         logging.info("try update myinfo nickname:[%r] avatar:[%r]", nickname, avatar)
+
+        admin = self.get_admin_info()
 
         url = "http://api.7x24hs.com/api/myinfo"
         http_client = HTTPClient()
@@ -81,11 +87,11 @@ class AdministratorsHandler(AuthorizationHandler):
     def get(self):
         logging.info(self.request)
         access_token = self.get_secure_cookie("access_token")
-        admin = self.get_myinfo_basic()
+
+        admin = self.get_admin_info()
 
         self.render('admin/administrators.html',
-                admin=admin,
-                league_id=LEAGUE_ID)
+                admin=admin)
 
 
 class FranchisesHandler(AuthorizationHandler):
@@ -94,11 +100,10 @@ class FranchisesHandler(AuthorizationHandler):
         logging.info(self.request)
         access_token = self.get_secure_cookie("access_token")
 
-        admin = self.get_myinfo_basic()
+        admin = self.get_admin_info()
 
         self.render('admin/franchises.html',
-                admin=admin,
-                league_id=LEAGUE_ID)
+                admin=admin)
 
 
 class SuppliersHandler(AuthorizationHandler):
@@ -107,11 +112,10 @@ class SuppliersHandler(AuthorizationHandler):
         logging.info(self.request)
         access_token = self.get_secure_cookie("access_token")
 
-        admin = self.get_myinfo_basic()
+        admin = self.get_admin_info()
 
         self.render('admin/suppliers.html',
-                admin=admin,
-                league_id=LEAGUE_ID)
+                admin=admin)
 
 
 class TodoListHandler(AuthorizationHandler):
@@ -119,11 +123,10 @@ class TodoListHandler(AuthorizationHandler):
     def get(self):
         logging.info(self.request)
 
-        admin = self.get_myinfo_basic()
+        admin = self.get_admin_info()
 
         self.render('admin/todo-list.html',
-                admin=admin,
-                league_id=LEAGUE_ID)
+                admin=admin)
 
 
 class TodoDetailHandler(AuthorizationHandler):
@@ -131,12 +134,11 @@ class TodoDetailHandler(AuthorizationHandler):
     def get(self):
         logging.info(self.request)
         access_token = self.get_secure_cookie("access_token")
-
         id = self.get_argument("id","")
 
-        admin = self.get_myinfo_basic()
+        admin = self.get_admin_info()
 
-        url = "http://api.7x24hs.com/api/leagues/"+LEAGUE_ID+"/franchises/"+id
+        url = "http://api.7x24hs.com/api/leagues/"+admin['league_id']+"/franchises/"+id
         http_client = HTTPClient()
         headers={"Authorization":"Bearer "+access_token}
         response = http_client.fetch(url, method="GET", headers=headers)
@@ -148,7 +150,6 @@ class TodoDetailHandler(AuthorizationHandler):
 
         self.render('admin/todo-detail.html',
                 admin=admin,
-                league_id=LEAGUE_ID,
                 franchise=franchise)
 
 
@@ -160,6 +161,8 @@ class ArticlesIndexHandler(AuthorizationHandler):
         logging.info("got category_id %r from argument", category_id)
         access_token = self.get_secure_cookie("access_token")
 
+        admin = self.get_admin_info()
+
         # query category_name by category_id
         url = "http://api.7x24hs.com/api/categories/" + category_id
         http_client = HTTPClient()
@@ -167,7 +170,7 @@ class ArticlesIndexHandler(AuthorizationHandler):
         logging.info("got response %r", response.body)
         category = json_decode(response.body)
 
-        params = {"filter":"league", "league_id":LEAGUE_ID, "status":"publish", "category":category_id, "idx":0, "limit":20}
+        params = {"filter":"league", "league_id":admin['league_id'], "status":"publish", "category":category_id, "idx":0, "limit":20}
         url = url_concat("http://api.7x24hs.com/api/articles", params)
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
@@ -175,196 +178,11 @@ class ArticlesIndexHandler(AuthorizationHandler):
         articles = json_decode(response.body)
         for article in articles:
             article['publish_time'] = timestamp_friendly_date(article['publish_time'])
-
-        admin = self.get_myinfo_basic()
 
         self.render('admin/articles-publish.html',
                 admin=admin,
-                league_id=LEAGUE_ID,
                 articles=articles,
                 category=category)
-
-
-class ArticlesActivityHandler(AuthorizationHandler):
-    @tornado.web.authenticated  # if no session, redirect to login page
-    def get(self):
-        logging.info(self.request)
-        access_token = self.get_secure_cookie("access_token")
-        category_id = '0bbf89e2f73411e69a3c00163e023e51'
-
-        # sceneries(活动)
-        params = {"filter":"league", "league_id":LEAGUE_ID, "status":"all", "category":category_id, "idx":0, "limit":20}
-        url = url_concat("http://api.7x24hs.com/api/articles", params)
-        http_client = HTTPClient()
-        response = http_client.fetch(url, method="GET")
-        logging.info("got response %r", response.body)
-        articles = json_decode(response.body)
-        for article in articles:
-            article['publish_time'] = timestamp_friendly_date(article['publish_time'])
-
-        admin = self.get_myinfo_basic()
-
-        self.render('admin/articles-activity.html',
-                admin=admin,
-                league_id=LEAGUE_ID,
-                articles=articles,
-                category_id=category_id)
-
-
-class ArticlesTripRouterHandler(AuthorizationHandler):
-    @tornado.web.authenticated  # if no session, redirect to login page
-    def get(self):
-        logging.info(self.request)
-        access_token = self.get_secure_cookie("access_token")
-        category_id = '8853422e03a911e7998c00163e023e51'
-
-        # sceneries(线路)
-        params = {"filter":"league", "league_id":LEAGUE_ID, "status":"all", "category":category_id, "idx":0, "limit":20}
-        url = url_concat("http://api.7x24hs.com/api/articles", params)
-        http_client = HTTPClient()
-        response = http_client.fetch(url, method="GET")
-        logging.info("got response %r", response.body)
-        articles = json_decode(response.body)
-        for article in articles:
-            article['publish_time'] = timestamp_friendly_date(article['publish_time'])
-
-        admin = self.get_myinfo_basic()
-
-        self.render('admin/articles-triprouter.html',
-                admin=admin,
-                league_id=LEAGUE_ID,
-                articles=articles,
-                category_id=category_id)
-
-
-class ArticlesSceneryHandler(AuthorizationHandler):
-    @tornado.web.authenticated  # if no session, redirect to login page
-    def get(self):
-        logging.info(self.request)
-        access_token = self.get_secure_cookie("access_token")
-        category_id = '41c057a6f73411e69a3c00163e023e51'
-
-        # sceneries(景点)
-        params = {"filter":"league", "league_id":LEAGUE_ID, "status":"all", "category":category_id, "idx":0, "limit":20}
-        url = url_concat("http://api.7x24hs.com/api/articles", params)
-        http_client = HTTPClient()
-        response = http_client.fetch(url, method="GET")
-        logging.info("got response %r", response.body)
-        articles = json_decode(response.body)
-        for article in articles:
-            article['publish_time'] = timestamp_friendly_date(article['publish_time'])
-
-        admin = self.get_myinfo_basic()
-
-        self.render('admin/articles-scenery.html',
-                admin=admin,
-                league_id=LEAGUE_ID,
-                articles=articles,
-                category_id=category_id)
-
-
-class ArticlesNewsHandler(AuthorizationHandler):
-    @tornado.web.authenticated  # if no session, redirect to login page
-    def get(self):
-        logging.info(self.request)
-        access_token = self.get_secure_cookie("access_token")
-        category_id = '30a56cb8f73411e69a3c00163e023e51'
-
-        # news(新闻)
-        params = {"filter":"league", "league_id":LEAGUE_ID, "status":"all", "category":category_id, "idx":0, "limit":20}
-        url = url_concat("http://api.7x24hs.com/api/articles", params)
-        http_client = HTTPClient()
-        response = http_client.fetch(url, method="GET")
-        logging.info("got response %r", response.body)
-        articles = json_decode(response.body)
-        for article in articles:
-            article['publish_time'] = timestamp_friendly_date(article['publish_time'])
-
-        admin = self.get_myinfo_basic()
-
-        self.render('admin/articles-news.html',
-                admin=admin,
-                league_id=LEAGUE_ID,
-                articles=articles,
-                category_id=category_id)
-
-
-class ArticlesJourneyHandler(AuthorizationHandler):
-    @tornado.web.authenticated  # if no session, redirect to login page
-    def get(self):
-        logging.info(self.request)
-        access_token = self.get_secure_cookie("access_token")
-        category_id = '01d6120cf73411e69a3c00163e023e51'
-
-        # journey(游记)
-        params = {"filter":"league", "league_id":LEAGUE_ID, "status":"all", "category":category_id, "idx":0, "limit":20}
-        url = url_concat("http://api.7x24hs.com/api/articles", params)
-        http_client = HTTPClient()
-        response = http_client.fetch(url, method="GET")
-        logging.info("got response %r", response.body)
-        articles = json_decode(response.body)
-        for article in articles:
-            article['publish_time'] = timestamp_friendly_date(article['publish_time'])
-
-        admin = self.get_myinfo_basic()
-
-        self.render('admin/articles-journey.html',
-                admin=admin,
-                league_id=LEAGUE_ID,
-                articles=articles,
-                category_id=category_id)
-
-
-class ArticlesPopularHandler(AuthorizationHandler):
-    @tornado.web.authenticated  # if no session, redirect to login page
-    def get(self):
-        logging.info(self.request)
-        access_token = self.get_secure_cookie("access_token")
-        category_id = '3801d62cf73411e69a3c00163e023e51'
-
-        # popular(流行)
-        params = {"filter":"league", "league_id":LEAGUE_ID, "status":"all", "category":category_id, "idx":0, "limit":20}
-        url = url_concat("http://api.7x24hs.com/api/articles", params)
-        http_client = HTTPClient()
-        response = http_client.fetch(url, method="GET")
-        logging.info("got response %r", response.body)
-        articles = json_decode(response.body)
-        for article in articles:
-            article['publish_time'] = timestamp_friendly_date(article['publish_time'])
-
-        admin = self.get_myinfo_basic()
-
-        self.render('admin/articles-popular.html',
-                admin=admin,
-                league_id=LEAGUE_ID,
-                articles=articles,
-                category_id=category_id)
-
-
-class ArticlesHotHandler(AuthorizationHandler):
-    @tornado.web.authenticated  # if no session, redirect to login page
-    def get(self):
-        logging.info(self.request)
-        access_token = self.get_secure_cookie("access_token")
-        category_id = '1b86ad38f73411e69a3c00163e023e51'
-
-        # hot(热门)
-        params = {"filter":"league", "league_id":LEAGUE_ID, "status":"all", "category":category_id, "idx":0, "limit":20}
-        url = url_concat("http://api.7x24hs.com/api/articles", params)
-        http_client = HTTPClient()
-        response = http_client.fetch(url, method="GET")
-        logging.info("got response %r", response.body)
-        articles = json_decode(response.body)
-        for article in articles:
-            article['publish_time'] = timestamp_friendly_date(article['publish_time'])
-
-        admin = self.get_myinfo_basic()
-
-        self.render('admin/articles-hot.html',
-                admin=admin,
-                league_id=LEAGUE_ID,
-                articles=articles,
-                category_id=category_id)
 
 
 class MultimediasDraftHandler(AuthorizationHandler):
@@ -373,18 +191,17 @@ class MultimediasDraftHandler(AuthorizationHandler):
         logging.info(self.request)
         access_token = self.get_secure_cookie("access_token")
 
-        params = {"filter":"league", "league_id":LEAGUE_ID, "status":"draft"}
+        admin = self.get_admin_info()
+
+        params = {"filter":"league", "league_id":admin['league_id'], "status":"draft"}
         url = url_concat("http://api.7x24hs.com/api/multimedias", params)
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
         logging.info("got response %r", response.body)
         multimedias = json_decode(response.body)
 
-        admin = self.get_myinfo_basic()
-
         self.render('admin/multimedias-draft.html',
                 admin=admin,
-                league_id=LEAGUE_ID,
                 multimedias=multimedias)
 
 
@@ -394,16 +211,15 @@ class MultimediasPublishHandler(AuthorizationHandler):
         logging.info(self.request)
         access_token = self.get_secure_cookie("access_token")
 
-        params = {"filter":"league", "league_id":LEAGUE_ID, "status":"publish"}
+        admin = self.get_admin_info()
+
+        params = {"filter":"league", "league_id":admin['league_id'], "status":"publish"}
         url = url_concat("http://api.7x24hs.com/api/multimedias", params)
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
         logging.info("got response %r", response.body)
         multimedias = json_decode(response.body)
 
-        admin = self.get_myinfo_basic()
-
         self.render('admin/multimedias-publish.html',
                 admin=admin,
-                league_id=LEAGUE_ID,
                 multimedias=multimedias)

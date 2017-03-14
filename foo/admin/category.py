@@ -45,9 +45,10 @@ class CategoriesIndexHandler(AuthorizationHandler):
     @tornado.web.authenticated  # if no session, redirect to login page
     def get(self):
         logging.info(self.request)
-        admin = self.get_myinfo_basic()
 
-        url = "http://api.7x24hs.com/api/leagues/"+LEAGUE_ID+"/categories"
+        admin = self.get_admin_info()
+
+        url = "http://api.7x24hs.com/api/leagues/"+admin['league_id']+"/categories"
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
         logging.info("got response.body %r", response.body)
@@ -62,7 +63,9 @@ class CategoriesCreateHandler(AuthorizationHandler):
     @tornado.web.authenticated  # if no session, redirect to login page
     def get(self):
         logging.info(self.request)
-        admin = self.get_myinfo_basic()
+
+        admin = self.get_admin_info()
+
         self.render('category/create.html',
                 league_id=LEAGUE_ID,
                 admin=admin)
@@ -74,13 +77,14 @@ class CategoriesEditHandler(AuthorizationHandler):
         logging.info(self.request)
         category_id = self.get_argument("id", "")
 
+        admin = self.get_admin_info()
+
         url = "http://api.7x24hs.com/api/categories/"+category_id
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
         logging.info("got response.body %r", response.body)
         category = json_decode(response.body)
 
-        admin = self.get_myinfo_basic()
         self.render('category/edit.html',
                 admin=admin,
                 category=category)

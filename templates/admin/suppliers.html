@@ -10,7 +10,7 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Cache-Control" content="no-cache">
 
-  <title>传奇联盟</title>
+  <title>{{ admin['league_name'] }}</title>
 
   <!-- Bootstrap core CSS -->
   <link rel="stylesheet" href="{{ static_url('weui/lib/weui.min.css') }}">
@@ -74,7 +74,7 @@
         <div class="">
           <div style="height:auto;" class="page-title">
             <div class="title_left">
-              <h3>加盟商</h3>
+              <h3>加盟商管理</h3>
             </div>
 
             <div class="clearfix"></div>
@@ -84,7 +84,7 @@
               <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2>加盟商列表</h2>
+                    <h2>供应商</h2>
                     <ul class="nav navbar-right panel_toolbox">
                     </ul>
                     <div class="clearfix"></div>
@@ -95,7 +95,7 @@
                       <table class="table table-striped jambo_table bulk_action">
                         <thead>
                           <tr class="headings">
-                            <th class="column-title">加盟商名称 </th>
+                            <th class="column-title">供应商名称 </th>
                             <th class="column-title">联系人 </th>
                             <th class="column-title">联系电话 </th>
                             <th class="column-title">电子邮件 </th>
@@ -163,7 +163,7 @@
           var currentPage = 0;//当前页
           var total_page = 0;//总页数
           function query(pageNum) {
-            $.get("/api/leagues/{{ league_id }}/clubs?filter=league&page=1&limit="+limit+"",function(data,status){
+            $.get("/api/leagues/{{ admin['league_id'] }}/clubs?filter=league&page=1&limit="+limit+"",function(data,status){
                   data = JSON.parse(data);
                   // console.log(data);
                   currentPage = 1;
@@ -204,7 +204,7 @@
           };
 
           function gotoPage(pageNum) {
-            $.get("/api/leagues/{{ league_id }}/clubs?filter=league&page="+ pageNum +"&limit="+limit+"",function(data,status){
+            $.get("/api/leagues/{{ admin['league_id'] }}/clubs?filter=league&page="+ pageNum +"&limit="+limit+"",function(data,status){
                   // console.log(data);
                   data = JSON.parse(data);
                   currentPage = pageNum;

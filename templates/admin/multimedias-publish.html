@@ -10,7 +10,7 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Cache-Control" content="no-cache">
 
-  <title>传奇联盟</title>
+  <title>{{ admin['league_name'] }}</title>
 
   <!-- Bootstrap core CSS -->
   <link rel="stylesheet" href="{{ static_url('weui/lib/weui.min.css') }}">
@@ -84,7 +84,7 @@
               <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2>已发布</h2>
+                    <h2>公开</h2>
                     <ul class="nav navbar-right panel_toolbox">
                     </ul>
                     <div class="clearfix"></div>
@@ -172,7 +172,7 @@
           var currentPage = 0;//当前页
           var total_page = 0;//总页数
           function query(pageNum) {
-            $.get("/api/multimedias-pagination?filter=league&league_id={{ league_id }}&status=publish&page=1&limit="+limit+"",function(data,status){
+            $.get("/api/multimedias-pagination?filter=league&league_id={{ admin['league_id'] }}&status=publish&page=1&limit="+limit+"",function(data,status){
                   // console.log(data);
                   data = JSON.parse(data);
                   currentPage = 1;
@@ -215,7 +215,7 @@
           };
 
           function gotoPage(pageNum) {
-            $.get("/api/multimedias-pagination?filter=league&league_id={{ league_id }}&status=publish&page="+pageNum+"&limit="+limit+"",function(data,status){
+            $.get("/api/multimedias-pagination?filter=league&league_id={{ admin['league_id'] }}&status=publish&page="+pageNum+"&limit="+limit+"",function(data,status){
                   // console.log(data);
                   data = JSON.parse(data);
                   currentPage = pageNum;

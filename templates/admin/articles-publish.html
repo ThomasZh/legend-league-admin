@@ -10,7 +10,7 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Cache-Control" content="no-cache">
 
-  <title>传奇联盟</title>
+  <title>{{ admin['league_name'] }}</title>
 
   <!-- Bootstrap core CSS -->
   <link rel="stylesheet" href="{{ static_url('weui/lib/weui.min.css') }}">
@@ -74,7 +74,7 @@
         <div class="">
           <div style="height:auto;" class="page-title">
             <div class="title_left">
-              <h3>文章</h3>
+              <h3>文章管理</h3>
             </div>
 
             <div class="clearfix"></div>
@@ -171,7 +171,7 @@
           var currentPage = 0;//当前页
           var total_page = 0;//总页数
           function query(pageNum) {
-            $.get("/api/articles-pagination?filter=league&league_id={{ league_id }}&status=publish&category={{ category['_id'] }}&page=1&limit="+limit+"",function(data,status){
+            $.get("/api/articles-pagination?filter=league&league_id={{ admin['league_id'] }}&status=publish&category={{ category['_id'] }}&page=1&limit="+limit+"",function(data,status){
                   // console.log(data);
                   data = JSON.parse(data);
                   // data = eval("(" + data + ")");
@@ -225,7 +225,7 @@
           };
 
           function gotoPage(pageNum) {
-            $.get("/api/articles-pagination?filter=league&league_id={{ league_id }}&status=publish&category={{ category['_id'] }}&page="+pageNum+"&limit="+limit+"",function(data,status){
+            $.get("/api/articles-pagination?filter=league&league_id={{ admin['league_id'] }}&status=publish&category={{ category['_id'] }}&page="+pageNum+"&limit="+limit+"",function(data,status){
                   // console.log(data);
                   data = JSON.parse(data);
                   currentPage = pageNum;

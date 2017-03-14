@@ -212,16 +212,31 @@ class BaseHandler(tornado.web.RequestHandler):
         code = session_code['code']
         return code
 
-    def get_myinfo_basic(self):
+    def get_admin_info(self):
         access_token = self.get_secure_cookie("access_token")
 
-        url = "http://api.7x24hs.com/api/myinfo?filter=basic"
-        http_client = HTTPClient()
-        headers={"Authorization":"Bearer "+access_token}
-        response = http_client.fetch(url, method="GET", headers=headers)
-        myinfo = json_decode(response.body)
-        logging.info("got myinfo %r", myinfo)
-        return myinfo
+        try:
+            url = "http://api.7x24hs.com/api/myinfo-as-admin"
+            http_client = HTTPClient()
+            headers={"Authorization":"Bearer "+access_token}
+            response = http_client.fetch(url, method="GET", headers=headers)
+            logging.info("got response %r", response.body)
+            # account_id,nickname,avatar,league_id,league_name,_rank
+            admin = json_decode(response.body)
+            return admin
+        except:
+            err_title = str( sys.exc_info()[0] );
+            err_detail = str( sys.exc_info()[1] );
+            logging.error("error: %r info: %r", err_title, err_detail)
+            if err_detail == 'HTTP 404: Not Found':
+                err_msg = "您不是联盟的管理员!"
+                self.redirect("/admin/auth/phone/login")
+                return
+            else:
+                err_msg = "系统故障, 请稍后尝试!"
+                self.redirect("/admin/auth/phone/login")
+                return
+
 
     def write_error(self, status_code, **kwargs):
         host = self.request.headers['Host']
@@ -252,7 +267,7 @@ class BaseHandler(tornado.web.RequestHandler):
 class AuthorizationHandler(BaseHandler):
     def get_current_user(self):
         self.set_secure_cookie("login_next", self.request.uri)
-        
+
         access_token = self.get_secure_cookie("access_token")
         logging.info("got access_token %r from cookie", access_token)
         if not access_token:
