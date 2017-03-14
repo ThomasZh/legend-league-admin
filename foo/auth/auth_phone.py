@@ -160,7 +160,7 @@ class AuthPhoneRegisterHandler(BaseHandler):
 
 class AuthPhoneLostPwdHandler(BaseHandler):
     def get(self):
-        err_msg = "When you fill in your registered email address, you will be sent instructions on how to reset your password."
+        err_msg = "通过向您的手机发送短信获取验证码."
         self.render('auth/phone-lost-pwd.html', err_msg=err_msg)
 
     def post(self):

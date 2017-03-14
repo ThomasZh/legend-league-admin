@@ -13,7 +13,7 @@
   <link href="{{ static_url('css/font-awesome.min.css') }}" rel="stylesheet" type="text/css">
   <link href="{{ static_url('css/login.css') }}" rel="stylesheet" type="text/css">
 
-  <title>register</title>
+  <title>注册</title>
 </head>
 
 <body>
@@ -21,7 +21,7 @@
   <!-- Where all the magic happens -->
   <!-- REGISTRATION FORM -->
   <div class="text-center" style="padding:50px 0">
-    <div class="logo">register</div>
+    <div class="logo">注册</div>
     <!-- Main Form -->
     <div class="login-form-1">
       <form id="register-form" class="text-left" method="POST" action="/admin/auth/phone/register">
@@ -36,22 +36,22 @@
           <div class="login-group">
             <div class="form-group">
               <label for="reg_phone" class="sr-only">Email</label>
-              <input type="text" class="form-control" id="reg_phone" name="reg_phone" placeholder="phone number">
+              <input type="text" class="form-control" id="reg_phone" name="reg_phone" placeholder="手机号码">
             </div>
             <div class="form-group">
               <label for="reg_pwd" class="sr-only">Password</label>
-              <input type="password" class="form-control" id="reg_pwd" name="reg_pwd" placeholder="password">
+              <input type="password" class="form-control" id="reg_pwd" name="reg_pwd" placeholder="密码">
             </div>
 
             <div class="form-group login-group-checkbox">
               <input type="checkbox" class="" id="reg_agree" name="reg_agree">
-              <label for="reg_agree">i agree with <a href="#">terms</a></label>
+              <label for="reg_agree">同意 <a href="#">协议</a></label>
             </div>
           </div>
           <button type="submit" class="login-button"><i class="fa fa-chevron-right"></i></button>
         </div>
         <div class="etc-login-form">
-          <p>already have an account? <a href="/admin/auth/phone/login">login here</a></p>
+          <p>已经拥有帐号? <a href="/admin/auth/phone/login">登录</a></p>
         </div>
       </form>
     </div>

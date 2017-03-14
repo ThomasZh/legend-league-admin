@@ -13,7 +13,7 @@
   <link href="{{ static_url('css/font-awesome.min.css') }}" rel="stylesheet" type="text/css">
   <link href="{{ static_url('css/login.css') }}" rel="stylesheet" type="text/css">
 
-  <title>login</title>
+  <title>登录</title>
 </head>
 
 <body>
@@ -21,7 +21,7 @@
   <!-- Where all the magic happens -->
   <!-- LOGIN FORM -->
   <div class="text-center" style="padding:50px 0">
-    <div class="logo">login</div>
+    <div class="logo">登录</div>
     <!-- Main Form -->
     <div class="login-form-1">
       <form id="login-form" class="text-left" method="POST" action="/admin/auth/phone/login">
@@ -37,15 +37,15 @@
             <div class="login-group">
               <div class="form-group">
                 <label for="lg_phone" class="sr-only">Phone</label>
-                <input type="text" class="form-control" id="lg_phone" name="lg_phone" placeholder="phone number">
+                <input type="text" class="form-control" id="lg_phone" name="lg_phone" placeholder="手机号码">
               </div>
               <div class="form-group">
                 <label for="lg_pwd" class="sr-only">Password</label>
-                <input type="password" class="form-control" id="lg_pwd" name="lg_pwd" placeholder="password">
+                <input type="password" class="form-control" id="lg_pwd" name="lg_pwd" placeholder="密码">
               </div>
               <div class="form-group login-group-checkbox">
                 <input type="checkbox" id="lg_remember" name="lg_remember">
-                <label for="lg_remember">remember</label>
+                <label for="lg_remember">记住手机号码</label>
               </div>
             </div>
             {% if err_msg %}
@@ -57,8 +57,8 @@
             </button> {% end %}
           </div>
           <div class="etc-login-form">
-            <p>forgot your password? <a href="/admin/auth/phone/lost-pwd">click here</a></p>
-            <p>new user? <a href="/admin/auth/phone/register">create new account</a></p>
+            <p>忘记密码? <a href="/admin/auth/phone/lost-pwd">点击这里</a></p>
+            <p>新用户? <a href="/admin/auth/phone/register">创建帐号</a></p>
           </div>
         </fieldset>
       </form>
