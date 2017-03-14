@@ -47,11 +47,6 @@
     <div class="main_container">
       <div class="col-md-3 left_col">
         <div class="left_col scroll-view">
-          <div class="navbar nav_title" style="border: 0;">
-            <a href="/" class="site_title"><i class="fa fa-support"></i> <span>传奇联盟</span></a>
-          </div>
-
-          <div class="clearfix"></div>
 
           <!-- menu profile quick info -->
           {% module Template("admin/block-menu-prile-quick-info.html", admin=admin) %}
@@ -89,7 +84,7 @@
               <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2>新闻</h2>
+                    <h2>{{ category['title'] }}</h2>
                     <ul class="nav navbar-right panel_toolbox">
                     </ul>
                     <div class="clearfix"></div>
@@ -176,9 +171,10 @@
           var currentPage = 0;//当前页
           var total_page = 0;//总页数
           function query(pageNum) {
-            $.get("/api/articles-pagination?filter=league&league_id={{ league_id }}&status=publish&category={{ category_id }}&page=1&limit="+limit+"",function(data,status){
+            $.get("/api/articles-pagination?filter=league&league_id={{ league_id }}&status=publish&category={{ category['_id'] }}&page=1&limit="+limit+"",function(data,status){
                   // console.log(data);
                   data = JSON.parse(data);
+                  // data = eval("(" + data + ")");
                   currentPage = 1;
               var pageData = data.data;
                   total_page = data.total_pgae;//总页
@@ -203,9 +199,9 @@
                 inner_html += '<div class="divider"></div>'
                 inner_html += '<p>';
                     if(pageData[i]._status == 0){
-                      inner_html += '<a href="#" class="btn ap_del btn-danger btn-xs">草稿箱 </a>';
+                      inner_html += '<a class="btn ap_del btn-danger btn-xs">草稿箱 </a>';
                     }else if(pageData[i]._status == 100){
-                      inner_html += '<a href="#" class="btn btn-success btn-xs">查看 </a>';
+                      inner_html += '<a class="btn btn-success btn-xs">查看 </a>';
                     }
                 inner_html += '</p></div></div></div>';
 
@@ -229,7 +225,7 @@
           };
 
           function gotoPage(pageNum) {
-            $.get("/api/articles-pagination?filter=league&league_id={{ league_id }}&status=publish&category={{ category_id }}&page="+pageNum+"&limit="+limit+"",function(data,status){
+            $.get("/api/articles-pagination?filter=league&league_id={{ league_id }}&status=publish&category={{ category['_id'] }}&page="+pageNum+"&limit="+limit+"",function(data,status){
                   // console.log(data);
                   data = JSON.parse(data);
                   currentPage = pageNum;

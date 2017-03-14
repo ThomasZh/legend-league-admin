@@ -18,7 +18,7 @@ def map():
 
     config = [
 
-        (r'/', getattr(work_sheet, 'ClubsHandler')),
+        (r'/', getattr(work_sheet, 'FranchisesHandler')),
 
         (r'/admin/auth/email/login', getattr(auth_email, 'AuthEmailLoginHandler')),
         (r'/admin/auth/email/register', getattr(auth_email, 'AuthEmailRegisterHandler')),
@@ -34,7 +34,8 @@ def map():
         (r'/admin', getattr(work_sheet, 'AdminIndexHandler')),
         (r'/admin/profile/edit', getattr(work_sheet, 'ProfileEditHandler')),
         (r'/admin/administrators', getattr(work_sheet, 'AdministratorsHandler')),
-        (r'/admin/clubs', getattr(work_sheet, 'ClubsHandler')),
+        (r'/admin/franchises', getattr(work_sheet, 'FranchisesHandler')),
+        (r'/admin/suppliers', getattr(work_sheet, 'SuppliersHandler')),
         (r'/admin/todo-list', getattr(work_sheet, 'TodoListHandler')),
         (r'/admin/todo-detail', getattr(work_sheet, 'TodoDetailHandler')),
         (r'/admin/multimedias/draft', getattr(work_sheet, 'MultimediasDraftHandler')),
@@ -44,13 +45,7 @@ def map():
         (r'/admin/categories/index', getattr(category, 'CategoriesIndexHandler')),
         (r'/admin/categories/edit', getattr(category, 'CategoriesEditHandler')),
 
-        (r'/admin/articles/activity', getattr(work_sheet, 'ArticlesActivityHandler')),
-        (r'/admin/articles/trip-router', getattr(work_sheet, 'ArticlesTripRouterHandler')),
-        (r'/admin/articles/scenery', getattr(work_sheet, 'ArticlesSceneryHandler')),
-        (r'/admin/articles/news', getattr(work_sheet, 'ArticlesNewsHandler')),
-        (r'/admin/articles/journey', getattr(work_sheet, 'ArticlesJourneyHandler')),
-        (r'/admin/articles/popular', getattr(work_sheet, 'ArticlesPopularHandler')),
-        (r'/admin/articles/hot', getattr(work_sheet, 'ArticlesHotHandler')),
+        (r'/admin/articles', getattr(work_sheet, 'ArticlesIndexHandler')),
 
         # comm
         ('.*', getattr(comm, 'PageNotFoundHandler'))

@@ -88,7 +88,7 @@ class AdministratorsHandler(AuthorizationHandler):
                 league_id=LEAGUE_ID)
 
 
-class ClubsHandler(AuthorizationHandler):
+class FranchisesHandler(AuthorizationHandler):
     @tornado.web.authenticated  # if no session, redirect to login page
     def get(self):
         logging.info(self.request)
@@ -96,7 +96,20 @@ class ClubsHandler(AuthorizationHandler):
 
         admin = self.get_myinfo_basic()
 
-        self.render('admin/clubs.html',
+        self.render('admin/franchises.html',
+                admin=admin,
+                league_id=LEAGUE_ID)
+
+
+class SuppliersHandler(AuthorizationHandler):
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def get(self):
+        logging.info(self.request)
+        access_token = self.get_secure_cookie("access_token")
+
+        admin = self.get_myinfo_basic()
+
+        self.render('admin/suppliers.html',
                 admin=admin,
                 league_id=LEAGUE_ID)
 
@@ -137,6 +150,39 @@ class TodoDetailHandler(AuthorizationHandler):
                 admin=admin,
                 league_id=LEAGUE_ID,
                 franchise=franchise)
+
+
+class ArticlesIndexHandler(AuthorizationHandler):
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def get(self):
+        logging.info(self.request)
+        category_id = self.get_argument("category_id", "")
+        logging.info("got category_id %r from argument", category_id)
+        access_token = self.get_secure_cookie("access_token")
+
+        # query category_name by category_id
+        url = "http://api.7x24hs.com/api/categories/" + category_id
+        http_client = HTTPClient()
+        response = http_client.fetch(url, method="GET")
+        logging.info("got response %r", response.body)
+        category = json_decode(response.body)
+
+        params = {"filter":"league", "league_id":LEAGUE_ID, "status":"publish", "category":category_id, "idx":0, "limit":20}
+        url = url_concat("http://api.7x24hs.com/api/articles", params)
+        http_client = HTTPClient()
+        response = http_client.fetch(url, method="GET")
+        logging.info("got response %r", response.body)
+        articles = json_decode(response.body)
+        for article in articles:
+            article['publish_time'] = timestamp_friendly_date(article['publish_time'])
+
+        admin = self.get_myinfo_basic()
+
+        self.render('admin/articles-publish.html',
+                admin=admin,
+                league_id=LEAGUE_ID,
+                articles=articles,
+                category=category)
 
 
 class ArticlesActivityHandler(AuthorizationHandler):
