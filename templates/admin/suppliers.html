@@ -163,7 +163,7 @@
           var currentPage = 0;//当前页
           var total_page = 0;//总页数
           function query(pageNum) {
-            $.get("/api/leagues/{{ admin['league_id'] }}/clubs?filter=league&page=1&limit="+limit+"",function(data,status){
+            $.get("/api/leagues/{{ admin['league_id'] }}/clubs?filter=league&franchise_type=供应商&page=1&limit="+limit+"",function(data,status){
                   data = JSON.parse(data);
                   // console.log(data);
                   currentPage = 1;
@@ -179,9 +179,9 @@
                 inner_html += '</td>';
                 inner_html += '<td>'+pageData[i].phone+'</td>';
                 inner_html += '<td>'+pageData[i].email+'</td>';
-                inner_html += '<td>'+pageData[i].address+'</td>';
+                inner_html += '<td>'+pageData[i].province+'&nbsp'+pageData[i].city+'</td>';
                 inner_html += '<td>'+getLocalTime(pageData[i].create_time)+'</td>';
-                inner_html += '<td><a type="button" onclick="review(\''+ pageData[i]._id + '\')" class="btn btn-round btn-sm btn-info">查看详情</a></td>';
+                inner_html += '<td><a type="button" onclick="review(\''+ pageData[i].club_id + '\')" class="btn btn-round btn-sm btn-info">查看详情</a></td>';
                 inner_html += '</tr>';
 
                 $('#x_Box').append(inner_html);
@@ -204,7 +204,7 @@
           };
 
           function gotoPage(pageNum) {
-            $.get("/api/leagues/{{ admin['league_id'] }}/clubs?filter=league&page="+ pageNum +"&limit="+limit+"",function(data,status){
+            $.get("/api/leagues/{{ admin['league_id'] }}/clubs?filter=league&franchise_type=供应商&page="+ pageNum +"&limit="+limit+"",function(data,status){
                   // console.log(data);
                   data = JSON.parse(data);
                   currentPage = pageNum;
@@ -221,9 +221,9 @@
                 inner_html += '</td>';
                 inner_html += '<td>'+pageData[i].club.phone+'</td>';
                 inner_html += '<td>'+pageData[i].club.email+'</td>';
-                inner_html += '<td>'+pageData[i].club.address+'</td>';
+                inner_html += '<td>'+pageData[i].province+'&nbsp'+pageData[i].city+'</td>';
                 inner_html += '<td>'+getLocalTime(pageData[i].club.create_time)+'</td>';
-                inner_html += '<td><a type="button" onclick="review(\''+ pageData[i]._id + '\')" class="btn btn-round btn-sm btn-info">查看详情</a></td>';
+                inner_html += '<td><a type="button" onclick="review(\''+ pageData[i].club_id + '\')" class="btn btn-round btn-sm btn-info">查看详情</a></td>';
                 inner_html += '</tr>';
 
                 $('#x_Box').append(inner_html);

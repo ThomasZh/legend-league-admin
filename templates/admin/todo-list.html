@@ -101,7 +101,8 @@
                             <th class="column-title">头像 </th>
                             <th class="column-title">昵称 </th>
                             <th class="column-title">联系方式 </th>
-                            <th class="column-title">俱乐部名称 </th>
+                            <th class="column-title">加盟商名称 </th>
+                            <th class="column-title">加盟商类型 </th>
                             <th class="column-title">状态 </th>
                             <th class="column-title">申请日期 </th>
                             <th class="column-title no-link last"><span class="nobr">操作</span>
@@ -174,7 +175,7 @@
           function query(pageNum) {
             $.get("/api/leagues/{{ admin['league_id'] }}/franchises?filter=league&page=1&limit="+limit+"",function(data,status){
                   data = JSON.parse(data);
-                  // console.log(data);
+                  console.log(data);
                   currentPage = 1;
               var pageData = data.data;
                   total_page = data.total_pgae;//总页
@@ -189,6 +190,7 @@
                 inner_html += '<td class=" ">'+pageData[i].nickname+'</td>';
                 inner_html += '<td class=" ">'+pageData[i].club.phone+'</td>';
                 inner_html += '<td class=" "><span>'+pageData[i].club.name+'</span><br /></td>';
+                inner_html += '<td class=" ">'+pageData[i].club.franchise_type+'</td>';
                 inner_html += '<td class=" " id="status'+pageData[i]._id+'">';
                   if(pageData[i]._status == 0){
                     inner_html += '<span>待审批</span>';
@@ -250,6 +252,7 @@
                 inner_html += '<td class=" ">'+pageData[i].nickname+'</td>';
                 inner_html += '<td class=" ">'+pageData[i].club.phone+'</td>';
                 inner_html += '<td class=" "><span>'+pageData[i].club.name+'</span><br /></td>';
+                inner_html += '<td class=" ">'+pageData[i].club.franchise_type+'</td>';
                 inner_html += '<td class="status" id="status'+pageData[i]._id+'">';
                   if(pageData[i]._status == 0){
                     inner_html += '<span>待审批</span>';

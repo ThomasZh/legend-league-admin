@@ -86,43 +86,47 @@
                       <thead>
                         <tr>
                           <th>#</th>
-                          <th>Value</th>
+                          <th>内容</th>
                         </tr>
                       </thead>
                       <tbody>
                         <tr>
-                          <td>Status</td>
+                          <td>审核状态</td>
                           {% if franchise['_status'] == 0 %}
                           <td>待审核</td> {% elif franchise['_status'] == 20 %}
                           <td>已批准</td> {% elif franchise['_status'] == 10 %}
                           <td>已拒绝</td> {% end %}
                         </tr>
                         <tr>
-                          <td>Create Time</td>
+                          <td>申请时间</td>
                           <td>{{ franchise['create_time'] }}</td>
                         </tr>
                         <tr>
-                          <td>Name</td>
+                          <td>加盟商名称</td>
                           <td>{{ franchise['club']['name'] }}</td>
                         </tr>
                         <tr>
-                          <td>Phone</td>
+                          <td>加盟商类型</td>
+                          <td>{{ franchise['club']['franchise_type'] }}</td>
+                        </tr>
+                        <tr>
+                          <td>加盟商电话</td>
                           <td>{{ franchise['club']['phone'] }}</td>
                         </tr>
                         <tr>
-                          <td>email</td>
+                          <td>电子邮箱</td>
                           <td>{{ franchise['club']['email'] }}</td>
                         </tr>
                         <tr>
-                          <td>Address</td>
-                          <td>{{ franchise['club']['address'] }}</td>
+                          <td>地址</td>
+                          <td>{{ franchise['club']['province'] }}&nbsp{{ franchise['club']['province'] }}</td>
                         </tr>
                         <tr>
-                          <td>Image</td>
+                          <td>背景图</td>
                           <td><img src="{{ franchise['club']['img'] }}" alt="背景图"></td>
                         </tr>
                         <tr>
-                          <td>Introduction</td>
+                          <td>加盟商简介</td>
                           <td>{{ franchise['club']['introduction'] }}</td>
                         </tr>
                       </tbody>
