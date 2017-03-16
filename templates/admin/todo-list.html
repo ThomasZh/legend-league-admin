@@ -206,7 +206,7 @@
                 inner_html += '<td class="last" id="'+pageData[i]._id+'">';
                     if(pageData[i]._status == 0){
                       inner_html += '<a type="button" onclick="review(\''+ pageData[i]._id + '\')" class="btn btn-round btn-sm btn-info">查看详情</a>'
-                      inner_html += '<a type="button" onclick="accept()" class="btn btn-round btn-sm btn-success">接受</a>';
+                      inner_html += '<a type="button" onclick="accept(\''+ pageData[i]._id + '\')" class="btn btn-round btn-sm btn-success">接受</a>';
                       inner_html += '<a type="button" onclick="reject(\''+ pageData[i]._id + '\')" class="btn btn-round btn-sm btn-danger">拒绝</a>';
                     }else {
                       inner_html += '<a type="button" onclick="review(\''+ pageData[i]._id + '\')" class="btn btn-round btn-sm btn-info">查看详情</a>'
@@ -399,7 +399,8 @@
   $(document).on("click","#newSetBtn",function(){
     var id = $(this).parent().attr("id");
     review(id)
-  })
+  });
+
 </script>
 
 </body>
