@@ -82,11 +82,13 @@ class AuthPhoneLoginHandler(BaseHandler):
                 logging.info("got response %r", response.body)
 
                 # 校验是否为联盟管理员
-                url = "http://api.7x24hs.com/api/leagues/"+LEAGUE_ID+"/myinfo-as-admin"
+                params = {"filter":"admin"}
+                url = url_concat("http://api.7x24hs.com/api/myinfo", params)
                 http_client = HTTPClient()
                 headers={"Authorization":"Bearer "+session_ticket['access_token']}
                 response = http_client.fetch(url, method="GET", headers=headers)
                 logging.info("got response %r", response.body)
+                admin = json_decode(response.body)
             except:
                 err_title = str( sys.exc_info()[0] );
                 err_detail = str( sys.exc_info()[1] );
