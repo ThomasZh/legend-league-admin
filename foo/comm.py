@@ -216,7 +216,8 @@ class BaseHandler(tornado.web.RequestHandler):
         access_token = self.get_secure_cookie("access_token")
 
         try:
-            url = "http://api.7x24hs.com/api/myinfo-as-admin"
+            params = {"filter":"admin"}
+            url = url_concat("http://api.7x24hs.com/api/myinfo", params)
             http_client = HTTPClient()
             headers={"Authorization":"Bearer "+access_token}
             response = http_client.fetch(url, method="GET", headers=headers)
