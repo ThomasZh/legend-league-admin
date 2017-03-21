@@ -112,7 +112,8 @@
                         </thead>
 
                         <tbody>
-                          <tr class="even pointer" is="oneAdmin" v-for="(admin,idx) in admins" v-bind:admin="admin" v-bind:idx="idx"></tr>
+                          <tr class="even pointer" v-if="admin_rank>0" is="oneAdmin" v-for="(admin,idx) in admins" v-bind:admin="admin" v-bind:idx="idx"></tr>
+                          <tr class="even pointer" v-if="admin_rank==0 && admin._rank==0" is="oneAdmin" v-for="(admin,idx) in admins" v-bind:admin="admin" v-bind:idx="idx"></tr>
                         </tbody>
                       </table>
                     </div>
@@ -211,9 +212,7 @@
           <td class="a-center "><input type="checkbox" class="flat" name="table_records"></td>\
           <td class=" "><img :src="admin.avatar" class="avatar" alt="avatar"></td>\
           <td class=" ">{{! admin.nickname }}</td>\
-          <td class=" ">\
-            <span v-for="login in admin.logins">{{! login }}</span><br />\
-          </td>\
+          <td class=" ">{{! admin.login }}</td>\
           <td class=" ">{{! admin._rank }}</td>\
           <td class=" ">{{! admin._status }}</td>\
           <td class="last"><a v-if="admin._rank < 99" v-on:click="demoteToUser" type="button" class="btn btn-round btn-sm btn-danger">删除</a></td>\
@@ -294,6 +293,7 @@
         admins: [],
         admins_num: 0,
         users: [],
+        admin_rank: {{ admin['_rank'] }},
         phone: '',
       },
       created: function() {

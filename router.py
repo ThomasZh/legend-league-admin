@@ -41,6 +41,12 @@ def map():
         (r'/admin/multimedias/draft', getattr(work_sheet, 'MultimediasDraftHandler')),
         (r'/admin/multimedias/publish', getattr(work_sheet, 'MultimediasPublishHandler')),
 
+        (r'/admin/guest-book', getattr(work_sheet, 'GuestBookHandler')),
+        (r'/admin/guest-detail', getattr(work_sheet, 'GuestBookDetailHandler')),
+        (r'/admin/notice-board', getattr(work_sheet, 'NoticeBoardHandler')),
+        (r'/admin/notice-create', getattr(work_sheet, 'NoticeCreateHandler')),
+        (r'/admin/notice-edit', getattr(work_sheet, 'NoticeEditHandler')),
+
         (r'/admin/categories/create', getattr(category, 'CategoriesCreateHandler')),
         (r'/admin/categories/index', getattr(category, 'CategoriesIndexHandler')),
         (r'/admin/categories/edit', getattr(category, 'CategoriesEditHandler')),

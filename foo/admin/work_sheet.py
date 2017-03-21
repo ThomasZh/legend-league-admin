@@ -45,7 +45,7 @@ class AdminIndexHandler(AuthorizationHandler):
     @tornado.web.authenticated  # if no session, redirect to login page
     def get(self):
         logging.info(self.request)
-        
+
         admin = self.get_admin_info()
 
         self.render('admin/index.html',
@@ -182,6 +182,83 @@ class ArticlesIndexHandler(AuthorizationHandler):
         self.render('admin/articles-publish.html',
                 admin=admin,
                 articles=articles,
+                category=category)
+
+
+class GuestBookHandler(AuthorizationHandler):
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def get(self):
+        logging.info(self.request)
+
+        admin = self.get_admin_info()
+
+        self.render('admin/guest-book.html',
+                admin=admin,
+                league_id = LEAGUE_ID)
+
+
+class GuestBookDetailHandler(AuthorizationHandler):
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def get(self):
+        logging.info(self.request)
+        access_token = self.get_secure_cookie("access_token")
+        id = self.get_argument("id","")
+
+        admin = self.get_admin_info()
+
+        url = "http://api.7x24hs.com/api/guest-book/"+id
+        http_client = HTTPClient()
+        headers={"Authorization":"Bearer "+access_token}
+        response = http_client.fetch(url, method="GET", headers=headers)
+        logging.info("got response %r", response.body)
+        guest= json_decode(response.body)
+        guest['create_time'] = timestamp_datetime(guest['create_time'])
+
+        self.render('admin/guest-detail.html',
+                admin=admin,
+                guest=guest)
+
+
+class NoticeBoardHandler(AuthorizationHandler):
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def get(self):
+        logging.info(self.request)
+
+        admin = self.get_admin_info()
+
+        self.render('admin/notice-board.html',
+                admin=admin,
+                league_id=LEAGUE_ID)
+
+
+class NoticeCreateHandler(AuthorizationHandler):
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def get(self):
+        logging.info(self.request)
+
+        admin = self.get_admin_info()
+
+        self.render('admin/notice-create.html',
+                league_id=LEAGUE_ID,
+                admin=admin)
+
+
+class NoticeEditHandler(AuthorizationHandler):
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def get(self):
+        logging.info(self.request)
+        category_id = self.get_argument("id", "")
+
+        admin = self.get_admin_info()
+
+        url = "http://api.7x24hs.com/api/categories/"+category_id
+        http_client = HTTPClient()
+        response = http_client.fetch(url, method="GET")
+        logging.info("got response.body %r", response.body)
+        category = json_decode(response.body)
+
+        self.render('admin/notice-edit.html',
+                admin=admin,
                 category=category)
 
 
