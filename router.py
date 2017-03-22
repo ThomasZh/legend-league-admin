@@ -52,6 +52,7 @@ def map():
         (r'/admin/categories/edit', getattr(category, 'CategoriesEditHandler')),
 
         (r'/admin/articles', getattr(work_sheet, 'ArticlesIndexHandler')),
+        (r'/admin/articles/detail', getattr(work_sheet, 'ArticlesDetailHandler')),
 
         # comm
         ('.*', getattr(comm, 'PageNotFoundHandler'))

@@ -185,6 +185,29 @@ class ArticlesIndexHandler(AuthorizationHandler):
                 category=category)
 
 
+class ArticlesDetailHandler(AuthorizationHandler):
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def get(self):
+        logging.info(self.request)
+        category_id = self.get_argument("category_id", "")
+        logging.info("got category_id %r from argument", category_id)
+        article_id = self.get_argument("id", "")
+        logging.info("get article_id=[%r] from argument", article_id)
+        access_token = self.get_secure_cookie("access_token")
+
+        admin = self.get_admin_info()
+
+        url = "http://api.7x24hs.com/api/articles/"+article_id
+        http_client = HTTPClient()
+        response = http_client.fetch(url, method="GET")
+        logging.info("got response %r", response.body)
+        article = json_decode(response.body)
+
+        self.render('admin/articles-detail.html',
+                admin=admin,
+                article=article)
+
+
 class GuestBookHandler(AuthorizationHandler):
     @tornado.web.authenticated  # if no session, redirect to login page
     def get(self):

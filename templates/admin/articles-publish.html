@@ -186,7 +186,7 @@
                 inner_html += '<div class="x_content">';
                 inner_html += '<div class="thumbnail">';
                 inner_html += '<div class="image view view-first">';
-                inner_html += '<a href="/ops/articles/edit?id='+pageData[i]._id+'">';
+                inner_html += '<a href="/admin/articles/detail?id='+pageData[i]._id+'">';
                 inner_html += '<img style="width: 100%; display: block;" src="'+pageData[i].img+'" alt="image" />';
                 inner_html += '</a></div></div>';
                 inner_html += '<p>'+pageData[i].title+'</p>';
@@ -201,7 +201,7 @@
                     if(pageData[i]._status == 0){
                       inner_html += '<a class="btn ap_del btn-danger btn-xs">草稿箱 </a>';
                     }else if(pageData[i]._status == 100){
-                      inner_html += '<a class="btn btn-success btn-xs">查看 </a>';
+                      inner_html += '<a href="/admin/articles/detail?id='+pageData[i]._id+'" class="btn btn-success btn-xs">查看 </a>';
                     }
                 inner_html += '</p></div></div></div>';
 
@@ -240,7 +240,7 @@
                 inner_html += '<div class="x_content">';
                 inner_html += '<div class="thumbnail">';
                 inner_html += '<div class="image view view-first">';
-                inner_html += '<a href="/ops/articles/edit?id='+pageData[i]._id+'">';
+                inner_html += '<a href="/admin/articles/detail?id='+pageData[i]._id+'">';
                 inner_html += '<img style="width: 100%; display: block;" src="'+pageData[i].img+'" alt="image" />';
                 inner_html += '</a></div></div>';
                 inner_html += '<p>'+pageData[i].title+'</p>';
