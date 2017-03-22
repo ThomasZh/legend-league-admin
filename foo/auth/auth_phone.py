@@ -73,14 +73,6 @@ class AuthPhoneLoginHandler(BaseHandler):
 
             # is admin
             try:
-                # 添加此帐号到联盟的普通用户帐号表中
-                url = "http://api.7x24hs.com/api/leagues/"+LEAGUE_ID+"/signup"
-                http_client = HTTPClient()
-                _json = json_encode({"role":"user"})
-                headers={"Authorization":"Bearer "+session_ticket['access_token']}
-                response = http_client.fetch(url, method="POST", headers=headers, body=_json)
-                logging.info("got response %r", response.body)
-
                 # 校验是否为联盟管理员
                 params = {"filter":"admin"}
                 url = url_concat("http://api.7x24hs.com/api/myinfo", params)

@@ -14,7 +14,6 @@
 
   <!-- Bootstrap core CSS -->
   <link rel="stylesheet" href="{{ static_url('weui/lib/weui.min.css') }}">
-  <link rel="stylesheet" href="{{ static_url('weui/css/jquery-weui.css') }}">
   <link href="{{ static_url('gentelella/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
   <link href="{{ static_url('gentelella/fontawesome/css/font-awesome.min.css') }}" rel="stylesheet">
   <link href="{{ static_url('gentelella/animate.css/animate.min.css') }}" rel="stylesheet">
@@ -28,16 +27,6 @@
   <link href="{{ static_url('gentelella/css/maps/jquery-jvectormap-2.0.3.css') }}" rel="stylesheet" type="text/css" />
   <link href="{{ static_url('gentelella/css/floatexamples.css') }}" rel="stylesheet" type="text/css" />
   <script src="{{ static_url('gentelella/nprogress/nprogress.js') }}"></script>
-
-  <!--[if lt IE 9]>
-        <script src="../assets/js/ie8-responsive-file-warning.js"></script>
-        <![endif]-->
-
-  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-  <!--[if lt IE 9]>
-          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-        <![endif]-->
   <link rel="stylesheet" href="{{ static_url('upyun/css/fileinput.min.css') }}" />
 
 </head>
@@ -114,7 +103,7 @@
                   <!-- <div class="ln_solid"></div> -->
                   <div class="form-group">
                     <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                      <button type="submit" class="btn btn-success">保存</button>
+                      <button type="submit" id="category_btn" class="btn btn-success">保存</button>
                     </div>
                   </div>
 
@@ -156,6 +145,7 @@
   <script type="text/javascript" src="{{ static_url('js/jquery.validate.min.js') }}"></script>
   <!-- alert Scripts -->
   <script src="{{ static_url('weui/lib/fastclick.js') }}"></script>
+  <script src="{{ static_url('weui/js/weui.js') }}"></script>
   <!-- fileinput -->
   <script src="{{ static_url('upyun/js/fileinput.min.js') }}"></script>
   <script src="{{ static_url('upyun/js/spark-md5.min.js') }}"></script>
@@ -280,7 +270,11 @@
             required: true,
           },
         },
-        errorClass: "form-invalid",
+        messages:{
+          title:"请填写分类名称",
+          img:"请上传一张图片"
+        },
+        errorClass: "error",
         submitHandler: function(form) {
           console.log('create article');
 
@@ -300,7 +294,9 @@
             dataType: "json",
             contentType: 'application/json',
             success: function(data, status, xhr) {
-              location.href = "/admin/categories/index";
+              weui.alert("保存成功！","提示信息",function(){
+                location.href = "/admin/categories/index";
+              });
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
               console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);

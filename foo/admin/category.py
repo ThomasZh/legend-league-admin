@@ -67,7 +67,6 @@ class CategoriesCreateHandler(AuthorizationHandler):
         admin = self.get_admin_info()
 
         self.render('category/create.html',
-                league_id=LEAGUE_ID,
                 admin=admin)
 
 

@@ -13,8 +13,7 @@
   <title>{{ admin['league_name'] }}</title>
 
   <!-- Bootstrap core CSS -->
-  <link rel="stylesheet" href="{{ static_url('weui/lib/weui.min.css') }}">
-  <link rel="stylesheet" href="{{ static_url('weui/css/jquery-weui.css') }}">
+  <link rel="stylesheet" href="{{ static_url('weui/lib/weui.css') }}">
   <link href="{{ static_url('gentelella/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
   <link href="{{ static_url('gentelella/fontawesome/css/font-awesome.min.css') }}" rel="stylesheet">
   <link href="{{ static_url('gentelella/animate.css/animate.min.css') }}" rel="stylesheet">
@@ -28,16 +27,6 @@
   <link href="{{ static_url('gentelella/css/maps/jquery-jvectormap-2.0.3.css') }}" rel="stylesheet" type="text/css" />
   <link href="{{ static_url('gentelella/css/floatexamples.css') }}" rel="stylesheet" type="text/css" />
   <script src="{{ static_url('gentelella/nprogress/nprogress.js') }}"></script>
-
-  <!--[if lt IE 9]>
-        <script src="../assets/js/ie8-responsive-file-warning.js"></script>
-        <![endif]-->
-
-  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-  <!--[if lt IE 9]>
-          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-        <![endif]-->
   <link rel="stylesheet" href="{{ static_url('upyun/css/fileinput.min.css') }}" />
 
 </head>
@@ -132,36 +121,11 @@
   <script src="{{ static_url('gentelella/bootstrap-daterangepicker/daterangepicker.js') }}" type="text/javascript"></script>
   <!-- alert Scripts -->
   <script src="{{ static_url('weui/lib/fastclick.js') }}"></script>
+  <script src="{{ static_url('weui/js/weui.js') }}"></script>
   <script src="{{ static_url('js/custom.js') }}" type="text/javascript"></script>
   <script type="text/javascript" src="{{ static_url('js/json2.js') }}"></script>
   <script type="text/javascript" src="{{ static_url('js/jquery.validate.min.js') }}"></script>
 
-  <script>
-  function unpublish(id){
-    console.log(id);
-
-    $.ajax({
-      type: "POST",
-      url: "/api/multimedias/"+id+"/unpublish",
-      dataType: "json",
-      contentType: 'application/json',
-      success: function(data, status, xhr) {
-        location.href = "/admin/multimedias/draft";
-      },
-      error: function(XMLHttpRequest, textStatus, errorThrown) {
-        console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
-        if (XMLHttpRequest.status == 200) {
-          location.href = "/admin/multimedias/draft";
-        } else {
-          $('.lostpwd-form-main-message').addClass('show error').html(XMLHttpRequest.status + ": 服务器异常,请稍后重试!");
-        }
-      },
-      complete: function(XMLHttpRequest, textStatus) {
-        this; // 调用本次AJAX请求时传递的options参数
-      }
-    });
-  }
-  </script>
   <script>
           function getLocalTime(nS) { //时间戳转换
              return new Date(parseInt(nS) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
@@ -192,7 +156,7 @@
                 inner_html += '<p>'+getLocalTime(pageData[i].publish_time)+'</p>';
                 inner_html += '<div class="divider"></div>'
                 inner_html += '<p>';
-                inner_html += '<a onclick="unpublish(\''+pageData[i]._id+'\')" href="#" class="btn ap_del btn-danger btn-xs">草稿箱 </a>';
+                inner_html += '<a data-id="'+pageData[i]._id+'" id="draft_btn" class="btn ap_del btn-danger btn-xs">草稿箱 </a>';
                 inner_html += '</p></div></div></div>';
 
                 $('#x_Box').append(inner_html);
@@ -236,7 +200,7 @@
                 inner_html += '<p>'+getLocalTime(pageData[i].publish_time)+'</p>';
                 inner_html += '<div class="divider"></div>'
                 inner_html += '<p>';
-                inner_html += '<a onclick="unpublish(\''+pageData[i]._id+'\')" class="btn ap_del btn-danger btn-xs">草稿箱 </a>';
+                inner_html += '<a data-id="'+pageData[i]._id+'" id="draft_btn" class="btn ap_del btn-danger btn-xs">草稿箱 </a>';
                 inner_html += '</p></div></div></div>';
 
                 $('#x_Box').append(inner_html);
@@ -290,6 +254,40 @@
                 }
             })
           });
+  </script>
+
+  <script>
+    $(document).on("click","#draft_btn",function(){
+      var id = $(this).attr("data-id");
+      weui.confirm("确定移到草稿箱吗？","提示消息",function(r){
+        if(r == true){
+          unpublish(id);
+        }
+      });
+    });
+
+    function unpublish(id){
+      $.ajax({
+        type: "POST",
+        url: "/api/multimedias/"+id+"/unpublish",
+        dataType: "json",
+        contentType: 'application/json',
+        success: function(data, status, xhr) {
+          location.href = "/admin/multimedias/draft";
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+          console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
+          if (XMLHttpRequest.status == 200) {
+            location.href = "/admin/multimedias/draft";
+          } else {
+            $('.lostpwd-form-main-message').addClass('show error').html(XMLHttpRequest.status + ": 服务器异常,请稍后重试!");
+          }
+        },
+        complete: function(XMLHttpRequest, textStatus) {
+          this; // 调用本次AJAX请求时传递的options参数
+        }
+      });
+    }
   </script>
 
 </body>

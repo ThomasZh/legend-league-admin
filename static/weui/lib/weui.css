@@ -684,11 +684,11 @@ input.weui_btn_plain_default {
   border-radius: 3px;
 }
 .weui_dialog_confirm .weui_dialog .weui_dialog_hd {
-  text-align: left;
+  text-align: center;;
   padding: 1.2em 20px .5em;
 }
 .weui_dialog_confirm .weui_dialog .weui_dialog_bd {
-  text-align: left;
+  text-align: center;;
 }
 .weui_dialog_hd {
   padding: 1.2em 0 .5em;

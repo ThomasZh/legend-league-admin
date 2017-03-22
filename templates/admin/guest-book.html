@@ -165,7 +165,7 @@
           var currentPage = 0;//当前页
           var total_page = 0;//总页数
           function query(pageNum) {
-            $.get("/api/guest-book?filter=league&league_id={{ league_id }}&page=1&limit="+limit+"",function(data,status){
+            $.get("/api/guest-book?filter=league&league_id={{ admin['league_id'] }}&page=1&limit="+limit+"",function(data,status){
                   data = JSON.parse(data);
                   console.log(data);
                   currentPage = 1;
@@ -208,7 +208,7 @@
           };
 
           function gotoPage(pageNum) {
-            $.get("/api/guest-book?filter=league&league_id={{ league_id }}&page="+ pageNum +"&limit="+limit+"",function(data,status){
+            $.get("/api/guest-book?filter=league&league_id={{ admin['league_id'] }}&page="+ pageNum +"&limit="+limit+"",function(data,status){
                    console.log(data);
                   data = JSON.parse(data);
                   currentPage = pageNum;

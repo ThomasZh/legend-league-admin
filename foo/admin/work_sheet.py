@@ -79,7 +79,7 @@ class ProfileEditHandler(AuthorizationHandler):
         response = http_client.fetch(url, method="PUT", headers=headers, body=_json)
         logging.info("got response.body %r", response.body)
 
-        self.redirect("/")
+        self.redirect("/admin/profile/edit")
 
 
 class AdministratorsHandler(AuthorizationHandler):
@@ -193,8 +193,7 @@ class GuestBookHandler(AuthorizationHandler):
         admin = self.get_admin_info()
 
         self.render('admin/guest-book.html',
-                admin=admin,
-                league_id = LEAGUE_ID)
+                admin=admin)
 
 
 class GuestBookDetailHandler(AuthorizationHandler):
@@ -227,8 +226,7 @@ class NoticeBoardHandler(AuthorizationHandler):
         admin = self.get_admin_info()
 
         self.render('admin/notice-board.html',
-                admin=admin,
-                league_id=LEAGUE_ID)
+                admin=admin)
 
 
 class NoticeCreateHandler(AuthorizationHandler):
@@ -239,7 +237,6 @@ class NoticeCreateHandler(AuthorizationHandler):
         admin = self.get_admin_info()
 
         self.render('admin/notice-create.html',
-                league_id=LEAGUE_ID,
                 admin=admin)
 
 

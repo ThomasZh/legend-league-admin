@@ -13,8 +13,7 @@
   <title>{{ admin['league_name'] }}</title>
 
   <!-- Bootstrap core CSS -->
-  <link rel="stylesheet" href="{{ static_url('weui/lib/weui.min.css') }}">
-  <link rel="stylesheet" href="{{ static_url('weui/css/jquery-weui.css') }}">
+  <link rel="stylesheet" href="{{ static_url('weui/lib/weui.css') }}">
   <link href="{{ static_url('gentelella/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
   <link href="{{ static_url('gentelella/fontawesome/css/font-awesome.min.css') }}" rel="stylesheet">
   <link href="{{ static_url('gentelella/animate.css/animate.min.css') }}" rel="stylesheet">
@@ -147,6 +146,7 @@
   <script type="text/javascript" src="{{ static_url('js/jquery.validate.min.js') }}"></script>
   <!-- alert Scripts -->
   <script src="{{ static_url('weui/lib/fastclick.js') }}"></script>
+  <script src="{{ static_url('weui/js/weui.js') }}" type="text/javascript"></script>
 
   <script>
     $(function() {
@@ -169,7 +169,7 @@
           var message = $("#message").val();
           var data = {
             message: message,
-            league_id: "{{ league_id }}",
+            league_id: "{{ admin['league_id'] }}",
             club_id: "00000000000000000000000000000000"
           };
           var json = JSON.stringify(data);
@@ -182,15 +182,13 @@
             dataType: "json",
             contentType: 'application/json',
             success: function(data, status, xhr) {
-              location.href = "/admin/notice-board";
+              weui.alert("添加公告成功！","提示信息",function(){
+                location.href = "/admin/notice-board";
+              })
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
               console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
-              if (XMLHttpRequest.status == 200) {
-                location.href = "/admin/notice-board";
-              } else {
                 $('.lostpwd-form-main-message').addClass('show error').html(XMLHttpRequest.status + ": 服务器异常,请稍后重试!");
-              }
             },
             complete: function(XMLHttpRequest, textStatus) {
               this; // 调用本次AJAX请求时传递的options参数

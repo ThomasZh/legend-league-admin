@@ -13,7 +13,7 @@
   <title>{{ admin['league_name'] }}</title>
 
   <!-- Bootstrap core CSS -->
-  <link rel="stylesheet" href="{{ static_url('weui/lib/weui.min.css') }}">
+  <link rel="stylesheet" href="{{ static_url('weui/lib/weui.css') }}">
   <link href="{{ static_url('gentelella/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
   <link href="{{ static_url('gentelella/fontawesome/css/font-awesome.min.css') }}" rel="stylesheet">
   <link href="{{ static_url('gentelella/animate.css/animate.min.css') }}" rel="stylesheet">
@@ -155,7 +155,7 @@
           var currentPage = 0;//当前页
           var total_page = 0;//总页数
           function query(pageNum) {
-            $.get("/api/notice-board?filter=league&league_id={{ league_id }}&page=1&limit="+limit+"",function(data,status){
+            $.get("/api/notice-board?filter=league&league_id={{ admin['league_id'] }}&page=1&limit="+limit+"",function(data,status){
                   data = JSON.parse(data);
                   console.log(data);
                   currentPage = 1;
@@ -190,7 +190,7 @@
           };
 
           function gotoPage(pageNum) {
-            $.get("/api/notice-board?filter=league&league_id={{ league_id }}&page="+ pageNum +"&limit="+limit+"",function(data,status){
+            $.get("/api/notice-board?filter=league&league_id={{ admin['league_id'] }}&page="+ pageNum +"&limit="+limit+"",function(data,status){
                    console.log(data);
                   data = JSON.parse(data);
                   currentPage = pageNum;
@@ -264,18 +264,20 @@
     $(document).on("click","#notice_btn",function(){
         var id = $(this).parent().attr("id");
         // console.log(id);
-      weui.alert("确定删除吗？","提示信息",function(){
-        $.ajax({
-          type: "DELETE",
-          url: "/api/notice-board/"+ id,
-          dataType: "json",
-          contentType: 'application/json',
-          success: function(data, status, xhr) {
-            location.href="/admin/notice-board";
-          },
-          error: function(XMLHttpRequest, textStatus, errorThrown) {
-          }
-        });
+      weui.confirm("确定删除吗？","提示信息",function(r){
+        if(r == true){
+          $.ajax({
+            type: "DELETE",
+            url: "/api/notice-board/"+ id,
+            dataType: "json",
+            contentType: 'application/json',
+            success: function(data, status, xhr) {
+              location.href="/admin/notice-board";
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+            }
+          });
+        }
       });
     });
 

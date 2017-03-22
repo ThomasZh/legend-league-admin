@@ -21,8 +21,6 @@ API_HOST = "127.0.0.1"
 API_PORT = "8009"
 
 TOKEN_EXPIRES_IN = 7200 # 2hours
-LEAGUE_ID = "f24794c7e1d511e68c0aa45e60efbf2d"
-LEAGUE_NAME = "中国水利风景区联盟"
 
 DEFAULT_USER_AVATAR = "http://tripc2c-person-face.b0.upaiyun.com/default/user.png"
 DEFAULT_USER_NICKNAME = "匿名"
