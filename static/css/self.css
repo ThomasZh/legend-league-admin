@@ -1,0 +1,41 @@
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color: #D1D1D1;
+}
+
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color: #D1D1D1;
+}
+
+input:-ms-input-placeholder,
+textarea:-ms-input-placeholder {
+    color: #D1D1D1;
+}
+
+input::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder {
+    color: #D1D1D1;
+}
+.error{
+  margin-bottom: 15px;
+  color: red;
+}
+.send-ok-message{
+  color: #72e8b1;
+  position: relative;
+  top:-20px;
+}
+#code-button{
+  height: 50px;
+  width: 100px;
+  padding: 0;
+  position:absolute;
+  top:0;
+  right: 0;
+}
+.show{
+  color:#39e6ac;
+}
+.wysiwyg-img{
+  max-width: 80%;
+  height: auto;
+}

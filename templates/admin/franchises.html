@@ -149,7 +149,7 @@
           };
 
           var preAllow = true;   // when ajax not completed, cannot do the next request
-          var limit = 8;//每页显示数
+          var limit = 10;//每页显示数
           var currentPage = 0;//当前页
           var total_page = 0;//总页数
           function query(pageNum) {
@@ -205,14 +205,14 @@
               for (var i in pageData) {
 
                 var inner_html = '<tr class="even pointer">';
-                inner_html += '<td>'+pageData[i].club.name+'</td>';
-                inner_html += '<td class=" "><img src="'+pageData[i].club.avatar+'" class="avatar" alt="avatar">';
-                inner_html += '<span>'+pageData[i].club.nickname+'</span>';
+                inner_html += '<td>'+pageData[i].name+'</td>';
+                inner_html += '<td class=" "><img src="'+pageData[i].avatar+'" class="avatar" alt="avatar">';
+                inner_html += '<span>'+pageData[i].nickname+'</span>';
                 inner_html += '</td>';
-                inner_html += '<td>'+pageData[i].club.phone+'</td>';
-                inner_html += '<td>'+pageData[i].club.email+'</td>';
-                inner_html += '<td>'+pageData[i].club.address+'</td>';
-                inner_html += '<td>'+getLocalTime(pageData[i].club.create_time)+'</td>';
+                inner_html += '<td>'+pageData[i].phone+'</td>';
+                inner_html += '<td>'+pageData[i].email+'</td>';
+                inner_html += '<td>'+pageData[i].province+ '&nbsp'+ pageData[i].city+'</td>';
+                inner_html += '<td>'+getLocalTime(pageData[i].create_time)+'</td>';
                 inner_html += '<td><a type="button" onclick="review(\''+ pageData[i].club_id + '\')" class="btn btn-round btn-sm btn-info">查看详情</a></td>';
                 inner_html += '</tr>';
 
