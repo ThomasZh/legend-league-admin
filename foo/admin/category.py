@@ -56,18 +56,25 @@ class CategoriesIndexHandler(AuthorizationHandler):
 
         self.render('category/index.html',
                 admin=admin,
-                categories=categories)
+                categories=categories,
+                api_domain=API_DOMAIN)
 
 
 class CategoriesCreateHandler(AuthorizationHandler):
     @tornado.web.authenticated  # if no session, redirect to login page
     def get(self):
         logging.info(self.request)
-
+        access_token = self.get_secure_cookie("access_token")
         admin = self.get_admin_info()
 
         self.render('category/create.html',
-                admin=admin)
+                admin=admin,
+                access_token=access_token,
+                api_domain=API_DOMAIN,
+                upyun_domain=UPYUN_DOMAIN,
+                upyun_notify_url=UPYUN_NOTIFY_URL,
+                upyun_form_api_secret=UPYUN_FORM_API_SECRET,
+                upyun_bucket=UPYUN_BUCKET)
 
 
 class CategoriesEditHandler(AuthorizationHandler):
@@ -75,7 +82,7 @@ class CategoriesEditHandler(AuthorizationHandler):
     def get(self):
         logging.info(self.request)
         category_id = self.get_argument("id", "")
-
+        access_token = self.get_secure_cookie("access_token")
         admin = self.get_admin_info()
 
         url = "http://api.7x24hs.com/api/categories/"+category_id
@@ -86,4 +93,10 @@ class CategoriesEditHandler(AuthorizationHandler):
 
         self.render('category/edit.html',
                 admin=admin,
-                category=category)
+                category=category,
+                access_token=access_token,
+                api_domain=API_DOMAIN,
+                upyun_domain=UPYUN_DOMAIN,
+                upyun_notify_url=UPYUN_NOTIFY_URL,
+                upyun_form_api_secret=UPYUN_FORM_API_SECRET,
+                upyun_bucket=UPYUN_BUCKET)

@@ -155,7 +155,7 @@
           var currentPage = 0;//当前页
           var total_page = 0;//总页数
           function query(pageNum) {
-            $.get("/api/notice-board?filter=league&league_id={{ admin['league_id'] }}&page=1&limit="+limit+"",function(data,status){
+            $.get("{{api_domain}}/api/notice-board?filter=league&league_id={{ admin['league_id'] }}&page=1&limit="+limit+"",function(data,status){
                   data = JSON.parse(data);
                   console.log(data);
                   currentPage = 1;
@@ -190,7 +190,7 @@
           };
 
           function gotoPage(pageNum) {
-            $.get("/api/notice-board?filter=league&league_id={{ admin['league_id'] }}&page="+ pageNum +"&limit="+limit+"",function(data,status){
+            $.get("{{api_domain}}/api/notice-board?filter=league&league_id={{ admin['league_id'] }}&page="+ pageNum +"&limit="+limit+"",function(data,status){
                    console.log(data);
                   data = JSON.parse(data);
                   currentPage = pageNum;
@@ -268,9 +268,10 @@
         if(r == true){
           $.ajax({
             type: "DELETE",
-            url: "/api/notice-board/"+ id,
+            url: "{{api_domain}}/api/notice-board/"+ id,
             dataType: "json",
             contentType: 'application/json',
+            headers: {"Authorization":"Bearer {{access_token}}"},
             success: function(data, status, xhr) {
               location.href="/admin/notice-board";
             },

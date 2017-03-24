@@ -28,16 +28,6 @@
   <link href="{{ static_url('gentelella/css/maps/jquery-jvectormap-2.0.3.css') }}" rel="stylesheet" type="text/css" />
   <link href="{{ static_url('gentelella/css/floatexamples.css') }}" rel="stylesheet" type="text/css" />
   <script src="{{ static_url('gentelella/nprogress/nprogress.js') }}"></script>
-
-  <!--[if lt IE 9]>
-        <script src="../assets/js/ie8-responsive-file-warning.js"></script>
-        <![endif]-->
-
-  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-  <!--[if lt IE 9]>
-          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-        <![endif]-->
   <script src="{{ static_url('js/json2.js') }}" type="text/javascript"></script>
 
 </head>
@@ -169,74 +159,88 @@
           };
 
           var preAllow = true;   // when ajax not completed, cannot do the next request
-          var limit = 8;//每页显示数
+          var limit = 10;//每页显示数
           var currentPage = 0;//当前页
           var total_page = 0;//总页数
           function query(pageNum) {
-            $.get("/api/leagues/{{ admin['league_id'] }}/franchises?filter=league&page=1&limit="+limit+"",function(data,status){
-                  data = JSON.parse(data);
-                  console.log(data);
-                  currentPage = 1;
-              var pageData = data.data;
-                  total_page = data.total_pgae;//总页
-              // num = ajaxobj.length;
-              for (var i in pageData) {
+            $.ajax({
+              type: "GET",
+              url: "{{api_domain}}/api/leagues/{{ admin['league_id'] }}/franchises?filter=league&page=1&limit="+limit+"",
+              contentType: 'application/json',
+              headers: {"Authorization":"Bearer {{access_token}}"},
+              success: function(data, status, xhr) {
 
-                var inner_html = '<tr class="even pointer" is="oneFranchise">';
-                if(pageData[i]._status != 0){
-                    inner_html += '<td class="a-center "><input type="checkbox" checked class="flat" name="table_records"></td>';
-                }
-                inner_html += '<td class=" ">';
-                inner_html += '<img src="'+pageData[i].avatar+'" class="avatar" alt="avatar">';
-                inner_html += '</td>';
-                inner_html += '<td class=" ">'+pageData[i].nickname+'</td>';
-                inner_html += '<td class=" ">'+pageData[i].club.phone+'</td>';
-                inner_html += '<td class=" "><span>'+pageData[i].club.name+'</span><br /></td>';
-                inner_html += '<td class=" ">'+pageData[i].club.franchise_type+'</td>';
-                inner_html += '<td class=" " id="status'+pageData[i]._id+'">';
-                  if(pageData[i]._status == 0){
-                    inner_html += '<span>待审批</span>';
-                  }else if(pageData[i]._status == 20){
-                    inner_html += '<span>通过</span>';
-                  }
-                  else if(pageData[i]._status == 10){
-                    inner_html += '<span>拒绝</span>';
-                  }
+                    data = JSON.parse(data);
+                    console.log(data);
+                    currentPage = 1;
+                var pageData = data.data;
+                    total_page = data.total_pgae;//总页
+                // num = ajaxobj.length;
+                for (var i in pageData) {
 
-                inner_html += '</td>';
-                inner_html += '<td class=" ">'+getLocalTime(pageData[i].create_time)+'</td>';
-                inner_html += '<td class="last" id="'+pageData[i]._id+'">';
+                  var inner_html = '<tr class="even pointer" is="oneFranchise">';
+                  if(pageData[i]._status != 0){
+                      inner_html += '<td class="a-center"><input type="checkbox" checked class="flat" name="table_records"></td>';
+                  }else{
+                    inner_html += '<td class="a-center" id="checkbox'+pageData[i]._id+'"><input type="checkbox" class="flat" name="table_records"></td>';
+                  }
+                  inner_html += '<td class=" ">';
+                  inner_html += '<img src="'+pageData[i].avatar+'" class="avatar" alt="avatar">';
+                  inner_html += '</td>';
+                  inner_html += '<td class=" ">'+pageData[i].nickname+'</td>';
+                  inner_html += '<td class=" ">'+pageData[i].club.phone+'</td>';
+                  inner_html += '<td class=" "><span>'+pageData[i].club.name+'</span><br /></td>';
+                  inner_html += '<td class=" ">'+pageData[i].club.franchise_type+'</td>';
+                  inner_html += '<td class=" " id="status'+pageData[i]._id+'">';
                     if(pageData[i]._status == 0){
-                      inner_html += '<a type="button" onclick="review(\''+ pageData[i]._id + '\')" class="btn btn-round btn-sm btn-info">查看详情</a>'
-                      inner_html += '<a type="button" onclick="accept(\''+ pageData[i]._id + '\')" class="btn btn-round btn-sm btn-success">接受</a>';
-                      inner_html += '<a type="button" onclick="reject(\''+ pageData[i]._id + '\')" class="btn btn-round btn-sm btn-danger">拒绝</a>';
-                    }else {
-                      inner_html += '<a type="button" onclick="review(\''+ pageData[i]._id + '\')" class="btn btn-round btn-sm btn-info">查看详情</a>'
+                      inner_html += '<span>待审批</span>';
+                    }else if(pageData[i]._status == 20){
+                      inner_html += '<span>通过</span>';
                     }
-                inner_html += '</td>';
-                inner_html += '</tr>';
+                    else if(pageData[i]._status == 10){
+                      inner_html += '<span>拒绝</span>';
+                    }
 
-                $('#x_Box').append(inner_html);
-                // member_num += 1;
-              };
-            if(total_page>5){
-                for (var k=1;k<=5;k++){
-                  var inner_html = '<button class="btn btn-info" type="button" id="num'+k+'">'+k+'</button>';
-                  $(".pageBox").append(inner_html);
+                  inner_html += '</td>';
+                  inner_html += '<td class=" ">'+getLocalTime(pageData[i].create_time)+'</td>';
+                  inner_html += '<td class="last" id="'+pageData[i]._id+'">';
+                      if(pageData[i]._status == 0){
+                        inner_html += '<a type="button" onclick="review(\''+ pageData[i]._id + '\')" class="btn btn-round btn-sm btn-info">查看详情</a>'
+                        inner_html += '<a type="button" onclick="accept(\''+ pageData[i]._id + '\')" class="btn btn-round btn-sm btn-success">接受</a>';
+                        inner_html += '<a type="button" onclick="reject(\''+ pageData[i]._id + '\')" class="btn btn-round btn-sm btn-danger">拒绝</a>';
+                      }else {
+                        inner_html += '<a type="button" onclick="review(\''+ pageData[i]._id + '\')" class="btn btn-round btn-sm btn-info">查看详情</a>'
+                      }
+                  inner_html += '</td>';
+                  inner_html += '</tr>';
+
+                  $('#x_Box').append(inner_html);
+                  // member_num += 1;
                 };
-              }else if(total_page<=5){
-                for (var k=1;k<=total_page;k++){
-                  var inner_html = '<button class="btn btn-info" type="button" id="num'+k+'">'+k+'</button>';
-                  $(".pageBox").append(inner_html);
-                };
+                  if(total_page>5){
+                      for (var k=1;k<=5;k++){
+                        var inner_html = '<button class="btn btn-info" type="button" id="num'+k+'">'+k+'</button>';
+                        $(".pageBox").append(inner_html);
+                      };
+                    }else if(total_page<=5){
+                      for (var k=1;k<=total_page;k++){
+                        var inner_html = '<button class="btn btn-info" type="button" id="num'+k+'">'+k+'</button>';
+                        $(".pageBox").append(inner_html);
+                      };
+                    }
+                    $("#num1").addClass("on");
               }
-              $("#num1").addClass("on");
 
             });
           };
 
           function gotoPage(pageNum) {
-            $.get("/api/leagues/{{ admin['league_id'] }}/franchises?filter=league&page="+ pageNum +"&limit="+limit+"",function(data,status){
+            $.ajax({
+              type: "GET",
+              url: "{{api_domain}}/api/leagues/{{ admin['league_id'] }}/franchises?filter=league&page="+ pageNum +"&limit="+limit+"",
+              contentType: 'application/json',
+              headers: {"Authorization":"Bearer {{access_token}}"},
+              success: function(data, status, xhr) {
                   // console.log(data);
                   data = JSON.parse(data);
                   currentPage = pageNum;
@@ -248,7 +252,9 @@
 
                 var inner_html = '<tr class="even pointer" is="oneFranchise">';
                 if(pageData[i]._status != 0){
-                    inner_html += '<td class="a-center "><input type="checkbox" checked class="flat" name="table_records"></td>';
+                    inner_html += '<td class="a-center"><input type="checkbox" checked class="flat" name="table_records"></td>';
+                }else{
+                  inner_html += '<td class="a-center" id="checkbox'+pageData[i]._id+'"><input type="checkbox" class="flat" name="table_records"></td>';
                 }
                 inner_html += '<td class=" ">';
                 inner_html += '<img src="'+pageData[i].avatar+'" class="avatar" alt="avatar">';
@@ -271,6 +277,7 @@
                 inner_html += '<td class=" ">'+getLocalTime(pageData[i].create_time)+'</td>';
                 inner_html += '<td class="last" id="'+pageData[i]._id+'">';
                     if(pageData[i]._status == 0){
+                      inner_html += '<a type="button" onclick="review(\''+ pageData[i]._id + '\')" class="btn btn-round btn-sm btn-info">查看详情</a>'
                       inner_html += '<a type="button" onclick="accept(\''+ pageData[i]._id + '\')" class="btn btn-round btn-sm btn-success">接受</a>';
                       inner_html += '<a type="button" onclick="reject(\''+ pageData[i]._id + '\')" class="btn btn-round btn-sm btn-danger">拒绝</a>';
                     }else {
@@ -298,7 +305,7 @@
                   $(".pageBox").append(inner_html);
                 };
                  $("#num"+currentPage).addClass("on").siblings().removeClass("on");
-
+              }
 
             });
 
@@ -344,15 +351,17 @@
 
     $.ajax({
       type: "PUT",
-      url: "/api/leagues/{{ admin['league_id'] }}/franchises/"+id,
+      url: "{{api_domain}}/api/leagues/{{ admin['league_id'] }}/franchises/"+id,
       dataType: "json",
       data: json,
       contentType: 'application/json',
+      headers: {"Authorization":"Bearer {{access_token}}"},
       success: function(data, status, xhr) {
         console.log("XMLHttpRequest.xhr:" + xhr);
         if (status == "success") {
           $("#"+id).html('<a type="button" id="newSetBtn" class="btn btn-round btn-sm btn-info">查看详情</a>');
           $("#status"+id).html('<span>通过</span>');
+          $("#checkbox"+id).html('<input type="checkbox" checked class="flat" name="table_records">');
         }
       },
       error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -377,15 +386,17 @@
 
     $.ajax({
       type: "PUT",
-      url: "/api/leagues/{{ admin['league_id'] }}/franchises/"+ id,
+      url: "{{api_domain}}/api/leagues/{{ admin['league_id'] }}/franchises/"+ id,
       dataType: "json",
       data: json,
       contentType: 'application/json',
+      headers: {"Authorization":"Bearer {{access_token}}"},
       success: function(data, status, xhr) {
         console.log("XMLHttpRequest.xhr:" + xhr);
         if (status == "success") {
           $("#"+id).html('<a type="button" id="newSetBtn" class="btn btn-round btn-sm btn-info">查看详情</a>');
           $("#status"+id).html('<span>拒绝</span>');
+          $("#checkbox"+id).html('<input type="checkbox" checked class="flat" name="table_records">');
         }
       },
       error: function(XMLHttpRequest, textStatus, errorThrown) {

@@ -153,7 +153,7 @@
           var currentPage = 0;//当前页
           var total_page = 0;//总页数
           function query(pageNum) {
-            $.get("/api/leagues/{{ admin['league_id'] }}/clubs?filter=league&franchise_type=景区&page=1&limit="+limit+"",function(data,status){
+            $.get("{{api_domain}}/api/leagues/{{ admin['league_id'] }}/clubs?filter=league&franchise_type=景区&page=1&limit="+limit+"",function(data,status){
                   data = JSON.parse(data);
                   // console.log(data);
                   currentPage = 1;
@@ -194,7 +194,7 @@
           };
 
           function gotoPage(pageNum) {
-            $.get("/api/leagues/{{ admin['league_id'] }}/clubs?filter=league&franchise_type=景区&page="+ pageNum +"&limit="+limit+"",function(data,status){
+            $.get("{{api_domain}}/api/leagues/{{ admin['league_id'] }}/clubs?filter=league&franchise_type=景区&page="+ pageNum +"&limit="+limit+"",function(data,status){
                   // console.log(data);
                   data = JSON.parse(data);
                   currentPage = pageNum;

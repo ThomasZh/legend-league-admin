@@ -24,3 +24,10 @@ TOKEN_EXPIRES_IN = 7200 # 2hours
 
 DEFAULT_USER_AVATAR = "http://tripc2c-person-face.b0.upaiyun.com/default/user.png"
 DEFAULT_USER_NICKNAME = "匿名"
+
+UPYUN_DOMAIN = "https://tripc2c-club-title.b0.upaiyun.com"
+UPYUN_NOTIFY_URL = "http://upyun.com"
+UPYUN_FORM_API_SECRET = "CRKAOsKHGbbCnU+yztBxUT0bYR0="
+UPYUN_BUCKET = "tripc2c-club-title"
+
+API_DOMAIN = "http://7x24hs.com"

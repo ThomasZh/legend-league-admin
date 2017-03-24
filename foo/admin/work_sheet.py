@@ -49,7 +49,8 @@ class AdminIndexHandler(AuthorizationHandler):
         admin = self.get_admin_info()
 
         self.render('admin/index.html',
-                admin=admin)
+                admin=admin,
+                api_domain=API_DOMAIN)
 
 
 class ProfileEditHandler(AuthorizationHandler):
@@ -60,7 +61,12 @@ class ProfileEditHandler(AuthorizationHandler):
         admin = self.get_admin_info()
 
         self.render('admin/profile-edit.html',
-                admin=admin)
+                admin=admin,
+                api_domain=API_DOMAIN,
+                upyun_domain=UPYUN_DOMAIN,
+                upyun_notify_url=UPYUN_NOTIFY_URL,
+                upyun_form_api_secret=UPYUN_FORM_API_SECRET,
+                upyun_bucket=UPYUN_BUCKET)
 
     @tornado.web.authenticated  # if no session, redirect to login page
     def post(self):
@@ -91,7 +97,9 @@ class AdministratorsHandler(AuthorizationHandler):
         admin = self.get_admin_info()
 
         self.render('admin/administrators.html',
-                admin=admin)
+                admin=admin,
+                access_token=access_token,
+                api_domain=API_DOMAIN)
 
 
 class FranchisesHandler(AuthorizationHandler):
@@ -103,7 +111,8 @@ class FranchisesHandler(AuthorizationHandler):
         admin = self.get_admin_info()
 
         self.render('admin/franchises.html',
-                admin=admin)
+                admin=admin,
+                api_domain=API_DOMAIN)
 
 
 class SuppliersHandler(AuthorizationHandler):
@@ -115,18 +124,21 @@ class SuppliersHandler(AuthorizationHandler):
         admin = self.get_admin_info()
 
         self.render('admin/suppliers.html',
-                admin=admin)
+                admin=admin,
+                api_domain=API_DOMAIN)
 
 
 class TodoListHandler(AuthorizationHandler):
     @tornado.web.authenticated  # if no session, redirect to login page
     def get(self):
         logging.info(self.request)
-
+        access_token = self.get_secure_cookie("access_token")
         admin = self.get_admin_info()
 
         self.render('admin/todo-list.html',
-                admin=admin)
+                admin=admin,
+                access_token=access_token,
+                api_domain=API_DOMAIN)
 
 
 class TodoDetailHandler(AuthorizationHandler):
@@ -150,7 +162,9 @@ class TodoDetailHandler(AuthorizationHandler):
 
         self.render('admin/todo-detail.html',
                 admin=admin,
-                franchise=franchise)
+                access_token=access_token,
+                franchise=franchise,
+                api_domain=API_DOMAIN)
 
 
 class ArticlesIndexHandler(AuthorizationHandler):
@@ -182,7 +196,8 @@ class ArticlesIndexHandler(AuthorizationHandler):
         self.render('admin/articles-publish.html',
                 admin=admin,
                 articles=articles,
-                category=category)
+                category=category,
+                api_domain=API_DOMAIN)
 
 
 class ArticlesDetailHandler(AuthorizationHandler):
@@ -205,7 +220,9 @@ class ArticlesDetailHandler(AuthorizationHandler):
 
         self.render('admin/articles-detail.html',
                 admin=admin,
-                article=article)
+                access_token=access_token,
+                article=article,
+                api_domain=API_DOMAIN)
 
 
 class GuestBookHandler(AuthorizationHandler):
@@ -216,7 +233,8 @@ class GuestBookHandler(AuthorizationHandler):
         admin = self.get_admin_info()
 
         self.render('admin/guest-book.html',
-                admin=admin)
+                admin=admin,
+                api_domain=API_DOMAIN)
 
 
 class GuestBookDetailHandler(AuthorizationHandler):
@@ -238,6 +256,7 @@ class GuestBookDetailHandler(AuthorizationHandler):
 
         self.render('admin/guest-detail.html',
                 admin=admin,
+                access_token=access_token,
                 guest=guest)
 
 
@@ -245,22 +264,26 @@ class NoticeBoardHandler(AuthorizationHandler):
     @tornado.web.authenticated  # if no session, redirect to login page
     def get(self):
         logging.info(self.request)
-
+        access_token = self.get_secure_cookie("access_token")
         admin = self.get_admin_info()
 
         self.render('admin/notice-board.html',
-                admin=admin)
+                admin=admin,
+                access_token=access_token,
+                api_domain=API_DOMAIN)
 
 
 class NoticeCreateHandler(AuthorizationHandler):
     @tornado.web.authenticated  # if no session, redirect to login page
     def get(self):
         logging.info(self.request)
-
+        access_token = self.get_secure_cookie("access_token")
         admin = self.get_admin_info()
 
         self.render('admin/notice-create.html',
-                admin=admin)
+                admin=admin,
+                access_token=access_token,
+                api_domain=API_DOMAIN)
 
 
 class NoticeEditHandler(AuthorizationHandler):
@@ -268,7 +291,7 @@ class NoticeEditHandler(AuthorizationHandler):
     def get(self):
         logging.info(self.request)
         category_id = self.get_argument("id", "")
-
+        access_token = self.get_secure_cookie("access_token")
         admin = self.get_admin_info()
 
         url = "http://api.7x24hs.com/api/categories/"+category_id
@@ -279,7 +302,9 @@ class NoticeEditHandler(AuthorizationHandler):
 
         self.render('admin/notice-edit.html',
                 admin=admin,
-                category=category)
+                access_token=access_token,
+                category=category,
+                api_domain=API_DOMAIN)
 
 
 class MultimediasDraftHandler(AuthorizationHandler):
@@ -299,7 +324,9 @@ class MultimediasDraftHandler(AuthorizationHandler):
 
         self.render('admin/multimedias-draft.html',
                 admin=admin,
-                multimedias=multimedias)
+                access_token=access_token,
+                multimedias=multimedias,
+                api_domain=API_DOMAIN)
 
 
 class MultimediasPublishHandler(AuthorizationHandler):
@@ -319,4 +346,6 @@ class MultimediasPublishHandler(AuthorizationHandler):
 
         self.render('admin/multimedias-publish.html',
                 admin=admin,
-                multimedias=multimedias)
+                access_token=access_token,
+                multimedias=multimedias,
+                api_domain=API_DOMAIN)

@@ -221,10 +221,11 @@
             var randomWord = Math.random().toString(36).substr(2);
             $.ajax({
               type: "POST",
-              url: "/api/articles/{{ article['_id'] }}/categories?random="+ randomWord +"",
+              url: "{{api_domain}}/api/articles/{{ article['_id'] }}/categories?random="+ randomWord +"",
               data: json,
               dataType: "json",
               contentType: 'application/json',
+              headers: {"Authorization":"Bearer {{access_token}}"},
               success: function(data, status, xhr) {
                 console.log("saveCategories:"+data);
                 _self.queryCategories();
@@ -244,9 +245,10 @@
             var randomWord = Math.random().toString(36).substr(2);
             $.ajax({
               type: "GET",
-              url: "/api/articles/{{ article['_id'] }}/categories?random="+ randomWord +"",
+              url: "{{api_domain}}/api/articles/{{ article['_id'] }}/categories?random="+ randomWord +"",
               dataType: "json",
               contentType: 'application/json',
+              headers: {"Authorization":"Bearer {{access_token}}"},
               success: function(data, status, xhr) {
                 console.log("queryCategories:"+data);
                 _self.categories = data;

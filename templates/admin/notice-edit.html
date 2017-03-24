@@ -167,10 +167,11 @@
 
           $.ajax({
             type: "PUT",
-            url: "/api/categories/{{ category['_id'] }}",
+            url: "{{api_domain}}/api/categories/{{ category['_id'] }}",
             data: json,
             dataType: "json",
             contentType: 'application/json',
+            headers: {"Authorization":"Bearer {{access_token}}"},
             success: function(data, status, xhr) {
               location.href = "/admin/categories/index";
             },
