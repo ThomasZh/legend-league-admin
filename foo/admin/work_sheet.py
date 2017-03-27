@@ -78,7 +78,7 @@ class ProfileEditHandler(AuthorizationHandler):
 
         admin = self.get_admin_info()
 
-        url = "http://api.7x24hs.com/api/myinfo"
+        url = API_DOMAIN+"/api/myinfo"
         http_client = HTTPClient()
         headers = {"Authorization":"Bearer "+access_token}
         _json = json_encode({"nickname":nickname, "avatar":avatar})
@@ -150,7 +150,7 @@ class TodoDetailHandler(AuthorizationHandler):
 
         admin = self.get_admin_info()
 
-        url = "http://api.7x24hs.com/api/leagues/"+admin['league_id']+"/franchises/"+id
+        url = API_DOMAIN+"/api/leagues/"+admin['league_id']+"/franchises/"+id
         http_client = HTTPClient()
         headers={"Authorization":"Bearer "+access_token}
         response = http_client.fetch(url, method="GET", headers=headers)
@@ -178,14 +178,14 @@ class ArticlesIndexHandler(AuthorizationHandler):
         admin = self.get_admin_info()
 
         # query category_name by category_id
-        url = "http://api.7x24hs.com/api/categories/" + category_id
+        url = API_DOMAIN+"/api/categories/" + category_id
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
         logging.info("got response %r", response.body)
         category = json_decode(response.body)
 
         params = {"filter":"league", "league_id":admin['league_id'], "status":"publish", "category":category_id, "idx":0, "limit":20}
-        url = url_concat("http://api.7x24hs.com/api/articles", params)
+        url = url_concat(API_DOMAIN+"/api/articles", params)
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
         logging.info("got response %r", response.body)
@@ -212,7 +212,7 @@ class ArticlesDetailHandler(AuthorizationHandler):
 
         admin = self.get_admin_info()
 
-        url = "http://api.7x24hs.com/api/articles/"+article_id
+        url = API_DOMAIN+"/api/articles/"+article_id
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
         logging.info("got response %r", response.body)
@@ -246,7 +246,7 @@ class GuestBookDetailHandler(AuthorizationHandler):
 
         admin = self.get_admin_info()
 
-        url = "http://api.7x24hs.com/api/guest-book/"+id
+        url = API_DOMAIN+"/api/guest-book/"+id
         http_client = HTTPClient()
         headers={"Authorization":"Bearer "+access_token}
         response = http_client.fetch(url, method="GET", headers=headers)
@@ -294,7 +294,7 @@ class NoticeEditHandler(AuthorizationHandler):
         access_token = self.get_secure_cookie("access_token")
         admin = self.get_admin_info()
 
-        url = "http://api.7x24hs.com/api/categories/"+category_id
+        url = API_DOMAIN+"/api/categories/"+category_id
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
         logging.info("got response.body %r", response.body)
@@ -316,7 +316,7 @@ class MultimediasDraftHandler(AuthorizationHandler):
         admin = self.get_admin_info()
 
         params = {"filter":"league", "league_id":admin['league_id'], "status":"draft"}
-        url = url_concat("http://api.7x24hs.com/api/multimedias", params)
+        url = url_concat(API_DOMAIN+"/api/multimedias", params)
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
         logging.info("got response %r", response.body)
@@ -338,7 +338,7 @@ class MultimediasPublishHandler(AuthorizationHandler):
         admin = self.get_admin_info()
 
         params = {"filter":"league", "league_id":admin['league_id'], "status":"publish"}
-        url = url_concat("http://api.7x24hs.com/api/multimedias", params)
+        url = url_concat(API_DOMAIN+"/api/multimedias", params)
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
         logging.info("got response %r", response.body)

@@ -48,7 +48,7 @@ class CategoriesIndexHandler(AuthorizationHandler):
 
         admin = self.get_admin_info()
 
-        url = "http://api.7x24hs.com/api/leagues/"+admin['league_id']+"/categories"
+        url = API_DOMAIN+"/api/leagues/"+admin['league_id']+"/categories"
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
         logging.info("got response.body %r", response.body)
@@ -85,7 +85,7 @@ class CategoriesEditHandler(AuthorizationHandler):
         access_token = self.get_secure_cookie("access_token")
         admin = self.get_admin_info()
 
-        url = "http://api.7x24hs.com/api/categories/"+category_id
+        url = API_DOMAIN+"/api/categories/"+category_id
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
         logging.info("got response.body %r", response.body)

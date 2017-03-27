@@ -33,6 +33,8 @@ from tornado.escape import json_encode, json_decode
 from tornado.httpclient import *
 from tornado.httputil import url_concat
 
+from global_const import *
+
 
 class singleton(object):
     _singleton = None;

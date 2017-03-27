@@ -17,9 +17,6 @@
 # under the License.
 
 
-API_HOST = "127.0.0.1"
-API_PORT = "8009"
-
 TOKEN_EXPIRES_IN = 7200 # 2hours
 
 DEFAULT_USER_AVATAR = "http://tripc2c-person-face.b0.upaiyun.com/default/user.png"
