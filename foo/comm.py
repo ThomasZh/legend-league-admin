@@ -203,13 +203,14 @@ class PageNotFoundHandler(tornado.web.RequestHandler):
 
 class BaseHandler(tornado.web.RequestHandler):
     def get_code(self):
-        url = "http://api.7x24hs.com/api/auth/codes"
+        url = API_DOMAIN + "/api/auth/codes"
         http_client = HTTPClient()
         data = {"appid":"7x24hs:blog",
                 "app_secret":"2518e11b3bc89ebec594350d5739f29e"}
         _json = json_encode(data)
         response = http_client.fetch(url, method="POST", body=_json)
-        session_code = json_decode(response.body)
+        data = json_decode(response.body)
+        session_code = data['rs']
         logging.info("got session_code %r", session_code)
         code = session_code['code']
         return code
@@ -219,13 +220,14 @@ class BaseHandler(tornado.web.RequestHandler):
 
         try:
             params = {"filter":"admin"}
-            url = url_concat("http://api.7x24hs.com/api/myinfo", params)
+            url = url_concat(API_DOMAIN + "/api/myinfo", params)
             http_client = HTTPClient()
             headers={"Authorization":"Bearer "+access_token}
             response = http_client.fetch(url, method="GET", headers=headers)
             logging.info("got response %r", response.body)
             # account_id,nickname,avatar,league_id,league_name,_rank
-            admin = json_decode(response.body)
+            data = json_decode(response.body)
+            admin = data['rs']
             return admin
         except:
             err_title = str( sys.exc_info()[0] );
@@ -291,7 +293,7 @@ class AuthorizationHandler(BaseHandler):
                         return None
                     else:
                         try:
-                            url = "http://api.7x24hs.com/api/auth/tokens"
+                            url = API_DOMAIN + "/api/auth/tokens"
                             http_client = HTTPClient()
                             headers={"Authorization":"Bearer "+refresh_token}
                             data = {"action":"refresh"}
@@ -299,7 +301,8 @@ class AuthorizationHandler(BaseHandler):
                             logging.info("request %r body %r", url, _json)
                             response = http_client.fetch(url, method="POST", headers=headers, body=_json)
                             logging.info("got response %r", response.body)
-                            session_ticket = json_decode(response.body)
+                            data = json_decode(response.body)
+                            session_ticket = data['rs']
 
                             self.set_secure_cookie("access_token", session_ticket['access_token'])
                             self.set_secure_cookie("expires_at", str(session_ticket['expires_at']))

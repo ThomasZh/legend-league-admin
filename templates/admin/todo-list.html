@@ -169,9 +169,8 @@
               contentType: 'application/json',
               headers: {"Authorization":"Bearer {{access_token}}"},
               success: function(data, status, xhr) {
-
-                    data = JSON.parse(data);
-                    console.log(data);
+                    data_obj = JSON.parse(data);
+                    data = data_obj.rs;
                     currentPage = 1;
                 var pageData = data.data;
                     total_page = data.total_pgae;//总页
@@ -242,7 +241,8 @@
               headers: {"Authorization":"Bearer {{access_token}}"},
               success: function(data, status, xhr) {
                   // console.log(data);
-                  data = JSON.parse(data);
+                  data_obj = JSON.parse(data);
+                  data = data_obj.rs;
                   currentPage = pageNum;
               var pageData = data.data;
                   total_page = data.total_pgae;//总页

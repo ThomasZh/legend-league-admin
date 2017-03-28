@@ -156,8 +156,8 @@
           var total_page = 0;//总页数
           function query(pageNum) {
             $.get("{{api_domain}}/api/guest-book?filter=league&league_id={{ admin['league_id'] }}&page=1&limit="+limit+"",function(data,status){
-                  data = JSON.parse(data);
-                  console.log(data);
+                  data_obj = JSON.parse(data);
+                  data = data_obj.rs;
                   currentPage = 1;
               var pageData = data.data;
                   total_page = data.total_pgae;//总页
@@ -199,8 +199,9 @@
 
           function gotoPage(pageNum) {
             $.get("{{api_domain}}/api/guest-book?filter=league&league_id={{ admin['league_id'] }}&page="+ pageNum +"&limit="+limit+"",function(data,status){
-                   console.log(data);
-                  data = JSON.parse(data);
+                  //  console.log(data);
+                  data_obj = JSON.parse(data);
+                  data = data_obj.rs;
                   currentPage = pageNum;
               var pageData = data.data;
                   total_page = data.total_pgae;//总页
@@ -279,10 +280,17 @@
 
   $(document).on("click","#guest_btn",function(){
     var id = $(this).parent().attr("id");
-    // console.log(id);
-    $.post("{{api_domain}}/api/guest-book/"+ id +"/review",function(data){
-        if(JSON.parse(data).err_code == 200){
-        location.href="/admin/guest-detail?id="+id ;
+     console.log(id);
+    $.ajax({
+      type: "POST",
+      url: "{{api_domain}}/api/guest-book/"+ id +"/review",
+      dataType: "json",
+      contentType: 'application/json',
+      headers: {"Authorization":"Bearer {{access_token}}"},
+      success: function(data, status, xhr) {
+          if(data.err_code == 200){
+          location.href="/admin/guest-detail?id="+id ;
+          }
         }
     });
   });

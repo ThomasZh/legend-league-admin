@@ -155,7 +155,8 @@ class TodoDetailHandler(AuthorizationHandler):
         headers={"Authorization":"Bearer "+access_token}
         response = http_client.fetch(url, method="GET", headers=headers)
         logging.info("got response %r", response.body)
-        franchise= json_decode(response.body)
+        data = json_decode(response.body)
+        franchise = data['rs']
         franchise['create_time'] = timestamp_datetime(franchise['create_time'])
         if not franchise['club'].has_key('img'):
             franchise['club']['img'] = ''
@@ -182,14 +183,16 @@ class ArticlesIndexHandler(AuthorizationHandler):
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
         logging.info("got response %r", response.body)
-        category = json_decode(response.body)
+        data = json_decode(response.body)
+        category = data['rs']
 
         params = {"filter":"league", "league_id":admin['league_id'], "status":"publish", "category":category_id, "idx":0, "limit":20}
         url = url_concat(API_DOMAIN+"/api/articles", params)
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
         logging.info("got response %r", response.body)
-        articles = json_decode(response.body)
+        data = json_decode(response.body)
+        articles = data['rs']
         for article in articles:
             article['publish_time'] = timestamp_friendly_date(article['publish_time'])
 
@@ -216,7 +219,8 @@ class ArticlesDetailHandler(AuthorizationHandler):
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
         logging.info("got response %r", response.body)
-        article = json_decode(response.body)
+        data = json_decode(response.body)
+        article = data['rs']
 
         self.render('admin/articles-detail.html',
                 admin=admin,
@@ -229,11 +233,12 @@ class GuestBookHandler(AuthorizationHandler):
     @tornado.web.authenticated  # if no session, redirect to login page
     def get(self):
         logging.info(self.request)
-
+        access_token = self.get_secure_cookie("access_token")
         admin = self.get_admin_info()
 
         self.render('admin/guest-book.html',
                 admin=admin,
+                access_token=access_token,
                 api_domain=API_DOMAIN)
 
 
@@ -251,7 +256,8 @@ class GuestBookDetailHandler(AuthorizationHandler):
         headers={"Authorization":"Bearer "+access_token}
         response = http_client.fetch(url, method="GET", headers=headers)
         logging.info("got response %r", response.body)
-        guest= json_decode(response.body)
+        data = json_decode(response.body)
+        guest = data['rs']
         guest['create_time'] = timestamp_datetime(guest['create_time'])
 
         self.render('admin/guest-detail.html',
@@ -298,7 +304,8 @@ class NoticeEditHandler(AuthorizationHandler):
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
         logging.info("got response.body %r", response.body)
-        category = json_decode(response.body)
+        data = json_decode(response.body)
+        category = data['rs']
 
         self.render('admin/notice-edit.html',
                 admin=admin,
@@ -320,7 +327,8 @@ class MultimediasDraftHandler(AuthorizationHandler):
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
         logging.info("got response %r", response.body)
-        multimedias = json_decode(response.body)
+        data = json_decode(response.body)
+        multimedias = data['rs']
 
         self.render('admin/multimedias-draft.html',
                 admin=admin,
@@ -342,7 +350,8 @@ class MultimediasPublishHandler(AuthorizationHandler):
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
         logging.info("got response %r", response.body)
-        multimedias = json_decode(response.body)
+        data = json_decode(response.body)
+        multimedias = data['rs']
 
         self.render('admin/multimedias-publish.html',
                 admin=admin,

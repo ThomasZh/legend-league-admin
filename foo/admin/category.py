@@ -52,7 +52,8 @@ class CategoriesIndexHandler(AuthorizationHandler):
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
         logging.info("got response.body %r", response.body)
-        categories = json_decode(response.body)
+        data = json_decode(response.body)
+        categories = data['rs']
 
         self.render('category/index.html',
                 admin=admin,
@@ -89,7 +90,8 @@ class CategoriesEditHandler(AuthorizationHandler):
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
         logging.info("got response.body %r", response.body)
-        category = json_decode(response.body)
+        data = json_decode(response.body)
+        category = data['rs']
 
         self.render('category/edit.html',
                 admin=admin,

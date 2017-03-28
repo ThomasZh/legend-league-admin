@@ -69,7 +69,8 @@ class AuthPhoneLoginHandler(BaseHandler):
             logging.info("request %r body %r", url, _json)
             response = http_client.fetch(url, method="POST", headers=headers, body=_json)
             logging.info("got response %r", response.body)
-            session_ticket = json_decode(response.body)
+            data = json_decode(response.body)
+            session_ticket = data['rs']
 
             # is admin
             try:
@@ -80,7 +81,8 @@ class AuthPhoneLoginHandler(BaseHandler):
                 headers={"Authorization":"Bearer "+session_ticket['access_token']}
                 response = http_client.fetch(url, method="GET", headers=headers)
                 logging.info("got response %r", response.body)
-                admin = json_decode(response.body)
+                data = json_decode(response.body)
+                admin = data['rs']
             except:
                 err_title = str( sys.exc_info()[0] );
                 err_detail = str( sys.exc_info()[1] );
@@ -138,7 +140,8 @@ class AuthPhoneRegisterHandler(BaseHandler):
             logging.info("request %r body %r", url, _json)
             response = http_client.fetch(url, method="POST", headers=headers, body=_json)
             logging.info("got response %r", response.body)
-            session_ticket = json_decode(response.body)
+            data = json_decode(response.body)
+            session_ticket = data['rs']
         except:
             err_title = str( sys.exc_info()[0] );
             err_detail = str( sys.exc_info()[1] );

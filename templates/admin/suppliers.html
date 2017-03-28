@@ -154,7 +154,8 @@
           var total_page = 0;//总页数
           function query(pageNum) {
             $.get("{{api_domain}}/api/leagues/{{ admin['league_id'] }}/clubs?filter=league&franchise_type=供应商&page=1&limit="+limit+"",function(data,status){
-                  data = JSON.parse(data);
+                  data_obj = JSON.parse(data);
+                  data = data_obj.rs;
                   // console.log(data);
                   currentPage = 1;
               var pageData = data.data;
@@ -196,7 +197,8 @@
           function gotoPage(pageNum) {
             $.get("{{api_domain}}/api/leagues/{{ admin['league_id'] }}/clubs?filter=league&franchise_type=供应商&page="+ pageNum +"&limit="+limit+"",function(data,status){
                   // console.log(data);
-                  data = JSON.parse(data);
+                  data_obj = JSON.parse(data);
+                  data = data_obj.rs;
                   currentPage = pageNum;
               var pageData = data.data;
                   total_page = data.total_pgae;//总页
