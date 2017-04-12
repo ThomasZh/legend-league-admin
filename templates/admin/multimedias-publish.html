@@ -73,7 +73,7 @@
               <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2>公开</h2>
+                    <h2>审核通过</h2>
                     <ul class="nav navbar-right panel_toolbox">
                     </ul>
                     <div class="clearfix"></div>
@@ -157,7 +157,7 @@
                 inner_html += '<p>'+getLocalTime(pageData[i].publish_time)+'</p>';
                 inner_html += '<div class="divider"></div>'
                 inner_html += '<p>';
-                inner_html += '<a data-id="'+pageData[i]._id+'" id="draft_btn" class="btn ap_del btn-danger btn-xs">草稿箱 </a>';
+                inner_html += '<a data-id="'+pageData[i]._id+'" id="draft_btn" class="btn ap_del btn-danger btn-xs">取消公开 </a>';
                 inner_html += '</p></div></div></div>';
 
                 $('#x_Box').append(inner_html);
@@ -202,7 +202,7 @@
                 inner_html += '<p>'+getLocalTime(pageData[i].publish_time)+'</p>';
                 inner_html += '<div class="divider"></div>'
                 inner_html += '<p>';
-                inner_html += '<a data-id="'+pageData[i]._id+'" id="draft_btn" class="btn ap_del btn-danger btn-xs">草稿箱 </a>';
+                inner_html += '<a data-id="'+pageData[i]._id+'" id="draft_btn" class="btn ap_del btn-danger btn-xs">取消公开 </a>';
                 inner_html += '</p></div></div></div>';
 
                 $('#x_Box').append(inner_html);
