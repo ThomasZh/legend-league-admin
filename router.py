@@ -33,6 +33,7 @@ def map():
 
         (r'/admin', getattr(work_sheet, 'AdminIndexHandler')),
         (r'/admin/profile/edit', getattr(work_sheet, 'ProfileEditHandler')),
+        (r'/admin/setup/binding-wx', getattr(work_sheet, 'VendorBindingWxHandler')),
         (r'/admin/administrators', getattr(work_sheet, 'AdministratorsHandler')),
         (r'/admin/franchises', getattr(work_sheet, 'FranchisesHandler')),
         (r'/admin/suppliers', getattr(work_sheet, 'SuppliersHandler')),

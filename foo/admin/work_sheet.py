@@ -358,3 +358,27 @@ class MultimediasPublishHandler(AuthorizationHandler):
                 access_token=access_token,
                 multimedias=multimedias,
                 api_domain=API_DOMAIN)
+
+
+class VendorBindingWxHandler(AuthorizationHandler):
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def get(self):
+        logging.info(self.request)
+        admin = self.get_admin_info()
+        logging.info("got adming %r",admin)
+
+        # create wechat qrcode
+        binding_wx_url = WX_NOTIFY_DOMAIN + "/bf/wx/leagues/" + admin['league_id'] + "/administrators/" + admin['account_id'] +"/binding"
+        logging.info("got binding_wx_url %r", binding_wx_url)
+        data = {"url": binding_wx_url}
+        _json = json_encode(data)
+        http_client = HTTPClient()
+        response = http_client.fetch(QRCODE_CREATE_URL, method="POST", body=_json)
+        logging.info("got response %r", response.body)
+        qrcode_url = response.body
+        logging.info("got qrcode_url %r", qrcode_url)
+
+        self.render('admin/binding-wx.html',
+                admin=admin,
+                qrcode_url=qrcode_url,
+                api_domain=API_DOMAIN)
