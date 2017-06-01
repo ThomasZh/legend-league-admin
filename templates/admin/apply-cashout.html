@@ -90,7 +90,7 @@
                       <tr>
                         <th style="width: 11%">申请人</th>
                         <th style="width: 11%">分销商名称</th>
-                        <th style="width: 11%">积分</th>
+                        <th style="width: 11%">申请积分</th>
                         <th style="width: 11%">申请时间</th>
                         <th style="width: 11%">供应商名称</th>
                         <th style="width: 11%">审批状态</th>
@@ -267,6 +267,8 @@
 
           $(document).on("click","#reject_btn",function(){
               apply_id = $(this).parent().attr("id");
+              var _this = $(this);
+              var _status = _this.parent().prev().prev().prev();
               $.prompt("请填写拒绝理由","",function(text) {
                   data = {'_status': '20', '_reason':text};
                   json_data = JSON.stringify(data);
@@ -277,7 +279,11 @@
                     data:json_data,
                     contentType: 'application/json',
                     success: function(data, status, xhr){
-                      $.alert("ok");
+                      var data = JSON.parse(data);
+                      if(data.err_code == '200'){
+                        _this.parent().html("");
+                        _status.html("<a class='btn btn-success btn-xs'>已拒绝 </a>");
+                      };
                     }
                   });
               }, function() {
