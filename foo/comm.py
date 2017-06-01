@@ -203,6 +203,16 @@ class PageNotFoundHandler(tornado.web.RequestHandler):
 
 class BaseHandler(tornado.web.RequestHandler):
 
+    def get_distributor(self, club_id, distributor_id):
+        url = API_DOMAIN + "/api/points/clubs/"+club_id+"/distributors/"+distributor_id+"/balance"
+        http_client = HTTPClient()
+        response = http_client.fetch(url, method="GET")
+        logging.info("got distributor %r", response.body)
+        data = json_decode(response.body)
+        distributor = data['data']
+        return distributor
+
+
     def get_apply_cashout(self, league_id, apply_id):
         url = API_DOMAIN + "/api/points/leagues/"+league_id+"/apply-cash-out/" + apply_id
         http_client = HTTPClient()
@@ -277,6 +287,7 @@ class BaseHandler(tornado.web.RequestHandler):
         logging.info("got session_code %r", session_code)
         code = session_code['code']
         return code
+
 
     def get_admin_info(self):
         access_token = self.get_secure_cookie("access_token")

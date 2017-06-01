@@ -60,31 +60,43 @@ class ApiApplyCashoutAcceptXHR(AuthorizationHandler):
             self.finish()
             return
 
-        headers={"Authorization":"Bearer "+access_token}
-        url = API_DOMAIN + "/api/points/leagues/"+league_id+"/apply-cash-out/"+ apply_id +"/check"
-        http_client = HTTPClient()
-        _json = json_encode(check_status)
-        response = http_client.fetch(url, method="POST", headers=headers, body=_json)
-        logging.info("got apply-cash-out check_status %r", response.body)
-
         # 取得提现申请信息
         apply_cashout = self.get_apply_cashout(league_id, apply_id)
 
-        # 扣除积分，并添加一条日志记录
-        bonus_points = {
-            'org_id':apply_cashout['org_id'],
-            'org_type':apply_cashout['org_type'],
-            'account_id':apply_cashout['apply_org_id'],
-            'account_type':apply_cashout['apply_org_type'],
-            'action': 'cashout',
-            'item_type': 'bonus',
-            'item_id': DEFAULT_USER_ID,
-            'item_name': apply_cashout['apply_org_name'],
-            'bonus_type':'bonus',
-            'points': -apply_cashout['bonus_point'],
-            'order_id': DEFAULT_USER_ID
-        }
-        self.create_points(bonus_points)
+        # 取得此俱乐部（分销商）在供应商的积分余额
+        distributor = self.get_distributor(apply_cashout['org_id'], apply_cashout['apply_org_id'])
+        # TODO 余额不足
+        if distributor['remaining_points'] < apply_cashout['bonus_point']:
+            headers={"Authorization":"Bearer "+access_token}
+            url = API_DOMAIN + "/api/points/leagues/"+league_id+"/apply-cash-out/"+ apply_id +"/check"
+            http_client = HTTPClient()
+            check_status = {'_status':20, '_reason':u"余额不足"}
+            _json = json_encode(check_status)
+            response = http_client.fetch(url, method="POST", headers=headers, body=_json)
+            logging.info("got apply-cash-out check_status %r", response.body)
+        else:
+            headers={"Authorization":"Bearer "+access_token}
+            url = API_DOMAIN + "/api/points/leagues/"+league_id+"/apply-cash-out/"+ apply_id +"/check"
+            http_client = HTTPClient()
+            _json = json_encode(check_status)
+            response = http_client.fetch(url, method="POST", headers=headers, body=_json)
+            logging.info("got apply-cash-out check_status %r", response.body)
+
+            # 扣除积分，并添加一条日志记录
+            bonus_points = {
+                'org_id':apply_cashout['org_id'],
+                'org_type':apply_cashout['org_type'],
+                'account_id':apply_cashout['apply_org_id'],
+                'account_type':apply_cashout['apply_org_type'],
+                'action': 'cashout',
+                'item_type': 'bonus',
+                'item_id': DEFAULT_USER_ID,
+                'item_name': apply_cashout['apply_org_name'],
+                'bonus_type':'bonus',
+                'points': -apply_cashout['bonus_point'],
+                'order_id': DEFAULT_USER_ID
+            }
+            self.create_points(bonus_points)
 
         # budge_num decrease
         self.counter_decrease(league_id, "apply_cashout")
