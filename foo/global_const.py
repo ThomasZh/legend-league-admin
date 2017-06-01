@@ -19,6 +19,7 @@
 
 TOKEN_EXPIRES_IN = 7200 # 2hours
 
+DEFAULT_USER_ID = "00000000000000000000000000000000"
 DEFAULT_USER_AVATAR = "http://tripc2c-person-face.b0.upaiyun.com/default/user.png"
 DEFAULT_USER_NICKNAME = "匿名"
 

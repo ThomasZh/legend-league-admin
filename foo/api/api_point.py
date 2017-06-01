@@ -71,6 +71,25 @@ class ApiApplyCashoutAcceptXHR(AuthorizationHandler):
         self.counter_decrease(league_id, "apply_cashout")
         # TODO notify this message to vendor's administrator by SMS
 
+        # 取得提现申请信息
+        apply_cashout = self.get_apply_cashout(league_id, apply_id)
+
+        # 扣除积分，并添加一条日志记录
+        bonus_points = {
+            'org_id':apply_cashout['org_id'],
+            'org_type':apply_cashout['org_type'],
+            'account_id':apply_cashout['apply_org_id'],
+            'account_type':apply_cashout['apply_org_type'],
+            'action': 'cashout',
+            'item_type': 'bonus',
+            'item_id': DEFAULT_USER_ID,
+            'item_name': apply_cashout['apply_org_name'],
+            'bonus_type':'bonus',
+            'points': -apply_cashout['bonus_point'],
+            'order_id': DEFAULT_USER_ID
+        }
+        self.create_points(bonus_points)
+
         rs = {'err_code':200, 'err_msg':'Success'}
         self.write(JSON.dumps(rs, default=json_util.default))
         self.finish()

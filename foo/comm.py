@@ -203,6 +203,28 @@ class PageNotFoundHandler(tornado.web.RequestHandler):
 
 class BaseHandler(tornado.web.RequestHandler):
 
+    def get_apply_cashout(self, league_id, apply_id):
+        url = API_DOMAIN + "/api/points/leagues/"+league_id+"/apply-cash-out/" + apply_id
+        http_client = HTTPClient()
+        response = http_client.fetch(url, method="GET")
+        logging.info("got get_apply_cashout %r", response.body)
+        data = json_decode(response.body)
+        if data['err_code'] == 404:
+            return {}
+        apply_cashout = data['data']
+        return apply_cashout
+
+
+    def create_points(self, bonus_points):
+        headers = {"Authorization":"Bearer "+DEFAULT_USER_ID}
+
+        _json = json_encode(bonus_points)
+        url = API_DOMAIN + "/api/points"
+        http_client = HTTPClient()
+        response = http_client.fetch(url, method="POST", headers=headers, body=_json)
+        logging.info("got create_points response.body=[%r]", response.body)
+
+
     def get_counter(self, item_id):
         url = API_DOMAIN + "/api/counters/" + item_id
         http_client = HTTPClient()
