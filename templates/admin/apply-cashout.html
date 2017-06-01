@@ -41,7 +41,7 @@
           <br />
 
           <!-- sidebar menu -->
-          {% module Template("admin/block-sidebar-menu.html") %}
+          {% module Template("admin/block-sidebar-menu.html", counter=counter) %}
           <!-- /sidebar menu -->
           <br />
 
@@ -247,9 +247,7 @@
               apply_id = $(this).parent().attr("id");
               var _this = $(this);
               var _status = _this.parent().prev().prev().prev();
-              data = {'_status': '10',
-                      '_reason':''
-                    };
+              data = {'_status': '10', '_reason':''};
               json_data = JSON.stringify(data);
               $.ajax({
                 type: "POST",
@@ -258,11 +256,11 @@
                 data:json_data,
                 contentType: 'application/json',
                 success: function(data, status, xhr){
-                      var data = JSON.parse(data);
-                      if(data.err_code == '200'){
-                        _this.parent().html("");
-                        _status.html("<a class='btn btn-success btn-xs'>已通过 </a>");
-                      };
+                  var data = JSON.parse(data);
+                  if(data.err_code == '200'){
+                    _this.parent().html("");
+                    _status.html("<a class='btn btn-success btn-xs'>已通过 </a>");
+                  };
                 }
               })
           });
@@ -270,9 +268,7 @@
           $(document).on("click","#reject_btn",function(){
               apply_id = $(this).parent().attr("id");
               $.prompt("请填写拒绝理由","",function(text) {
-                  data = {'_status': '20',
-                          '_reason':text,
-                        };
+                  data = {'_status': '20', '_reason':text};
                   json_data = JSON.stringify(data);
                   $.ajax({
                     type: "POST",
@@ -281,7 +277,7 @@
                     data:json_data,
                     contentType: 'application/json',
                     success: function(data, status, xhr){
-                          $.alert("ok");
+                      $.alert("ok");
                     }
                   });
               }, function() {

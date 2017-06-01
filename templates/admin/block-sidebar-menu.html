@@ -34,11 +34,19 @@
           <li><a href="/admin/multimedias/publish">已发布</a></li>
         </ul>
       </li>
-      <li><a><i class="fa fa-book"></i> 消息 <span class="fa fa-chevron-down"></span></a>
+      {% if counter and counter.has_key('apply_cashout') and counter['apply_cashout'] != "0" %}
+        <li><a><i class="fa fa-book"></i> 消息 <span class="badge bg-green">{{ counter['apply_cashout'] }}</span> <span class="fa fa-chevron-down"></span></a>
+      {% else %}
+        <li><a><i class="fa fa-book"></i> 消息 <span class="fa fa-chevron-down"></span></a>
+      {% end %}
         <ul class="nav child_menu" style="display: none">
           <li><a href="/admin/guest-book">留言管理</a></li>
           <li><a href="/admin/notice-board">公告</a></li>
-          <li><a href="/admin/apply-cashout">提现申请</a></li>
+          {% if counter and counter.has_key('apply_cashout') and counter['apply_cashout'] != "0" %}
+            <li><a href="/admin/apply-cashout">提现申请 <span class="badge bg-green">{{ counter['apply_cashout'] }}</span></a></li>
+          {% else %}
+            <li><a href="/admin/apply-cashout">提现申请</a></li>
+          {% end %}
         </ul>
       </li>
       <li><a><i class="fa fa-gear"></i> 联盟配置 <span class="fa fa-chevron-down"></span></a>

@@ -47,9 +47,12 @@ class AdminIndexHandler(AuthorizationHandler):
         logging.info(self.request)
 
         admin = self.get_admin_info()
+        league_id = admin['league_id']
+        counter = self.get_counter(league_id)
 
         self.render('admin/index.html',
                 admin=admin,
+                counter=counter,
                 api_domain=API_DOMAIN)
 
 
@@ -59,9 +62,12 @@ class ProfileEditHandler(AuthorizationHandler):
         logging.info(self.request)
 
         admin = self.get_admin_info()
+        league_id = admin['league_id']
+        counter = self.get_counter(league_id)
 
         self.render('admin/profile-edit.html',
                 admin=admin,
+                counter=counter,
                 api_domain=API_DOMAIN,
                 upyun_domain=UPYUN_DOMAIN,
                 upyun_notify_url=UPYUN_NOTIFY_URL,
@@ -95,9 +101,12 @@ class AdministratorsHandler(AuthorizationHandler):
         access_token = self.get_secure_cookie("access_token")
 
         admin = self.get_admin_info()
+        league_id = admin['league_id']
+        counter = self.get_counter(league_id)
 
         self.render('admin/administrators.html',
                 admin=admin,
+                counter=counter,
                 access_token=access_token,
                 api_domain=API_DOMAIN)
 
@@ -109,9 +118,12 @@ class FranchisesHandler(AuthorizationHandler):
         access_token = self.get_secure_cookie("access_token")
 
         admin = self.get_admin_info()
+        league_id = admin['league_id']
+        counter = self.get_counter(league_id)
 
         self.render('admin/franchises.html',
                 admin=admin,
+                counter=counter,
                 api_domain=API_DOMAIN)
 
 
@@ -122,9 +134,12 @@ class SuppliersHandler(AuthorizationHandler):
         access_token = self.get_secure_cookie("access_token")
 
         admin = self.get_admin_info()
+        league_id = admin['league_id']
+        counter = self.get_counter(league_id)
 
         self.render('admin/suppliers.html',
                 admin=admin,
+                counter=counter,
                 api_domain=API_DOMAIN)
 
 
@@ -133,10 +148,14 @@ class TodoListHandler(AuthorizationHandler):
     def get(self):
         logging.info(self.request)
         access_token = self.get_secure_cookie("access_token")
+
         admin = self.get_admin_info()
+        league_id = admin['league_id']
+        counter = self.get_counter(league_id)
 
         self.render('admin/todo-list.html',
                 admin=admin,
+                counter=counter,
                 access_token=access_token,
                 api_domain=API_DOMAIN)
 
@@ -149,6 +168,8 @@ class TodoDetailHandler(AuthorizationHandler):
         id = self.get_argument("id","")
 
         admin = self.get_admin_info()
+        league_id = admin['league_id']
+        counter = self.get_counter(league_id)
 
         url = API_DOMAIN+"/api/leagues/"+admin['league_id']+"/franchises/"+id
         http_client = HTTPClient()
@@ -163,6 +184,7 @@ class TodoDetailHandler(AuthorizationHandler):
 
         self.render('admin/todo-detail.html',
                 admin=admin,
+                counter=counter,
                 access_token=access_token,
                 franchise=franchise,
                 api_domain=API_DOMAIN)
@@ -177,6 +199,8 @@ class ArticlesIndexHandler(AuthorizationHandler):
         access_token = self.get_secure_cookie("access_token")
 
         admin = self.get_admin_info()
+        league_id = admin['league_id']
+        counter = self.get_counter(league_id)
 
         # query category_name by category_id
         url = API_DOMAIN+"/api/categories/" + category_id
@@ -198,6 +222,7 @@ class ArticlesIndexHandler(AuthorizationHandler):
 
         self.render('admin/articles-publish.html',
                 admin=admin,
+                counter=counter,
                 articles=articles,
                 category=category,
                 api_domain=API_DOMAIN)
@@ -214,6 +239,8 @@ class ArticlesDetailHandler(AuthorizationHandler):
         access_token = self.get_secure_cookie("access_token")
 
         admin = self.get_admin_info()
+        league_id = admin['league_id']
+        counter = self.get_counter(league_id)
 
         url = API_DOMAIN+"/api/articles/"+article_id
         http_client = HTTPClient()
@@ -224,6 +251,7 @@ class ArticlesDetailHandler(AuthorizationHandler):
 
         self.render('admin/articles-detail.html',
                 admin=admin,
+                counter=counter,
                 access_token=access_token,
                 article=article,
                 api_domain=API_DOMAIN)
@@ -234,10 +262,14 @@ class GuestBookHandler(AuthorizationHandler):
     def get(self):
         logging.info(self.request)
         access_token = self.get_secure_cookie("access_token")
+
         admin = self.get_admin_info()
+        league_id = admin['league_id']
+        counter = self.get_counter(league_id)
 
         self.render('admin/guest-book.html',
                 admin=admin,
+                counter=counter,
                 access_token=access_token,
                 api_domain=API_DOMAIN)
 
@@ -250,6 +282,8 @@ class GuestBookDetailHandler(AuthorizationHandler):
         id = self.get_argument("id","")
 
         admin = self.get_admin_info()
+        league_id = admin['league_id']
+        counter = self.get_counter(league_id)
 
         url = API_DOMAIN+"/api/guest-book/"+id
         http_client = HTTPClient()
@@ -262,6 +296,7 @@ class GuestBookDetailHandler(AuthorizationHandler):
 
         self.render('admin/guest-detail.html',
                 admin=admin,
+                counter=counter,
                 access_token=access_token,
                 guest=guest)
 
@@ -271,10 +306,14 @@ class NoticeBoardHandler(AuthorizationHandler):
     def get(self):
         logging.info(self.request)
         access_token = self.get_secure_cookie("access_token")
+
         admin = self.get_admin_info()
+        league_id = admin['league_id']
+        counter = self.get_counter(league_id)
 
         self.render('admin/notice-board.html',
                 admin=admin,
+                counter=counter,
                 access_token=access_token,
                 api_domain=API_DOMAIN)
 
@@ -284,10 +323,14 @@ class NoticeCreateHandler(AuthorizationHandler):
     def get(self):
         logging.info(self.request)
         access_token = self.get_secure_cookie("access_token")
+
         admin = self.get_admin_info()
+        league_id = admin['league_id']
+        counter = self.get_counter(league_id)
 
         self.render('admin/notice-create.html',
                 admin=admin,
+                counter=counter,
                 access_token=access_token,
                 api_domain=API_DOMAIN)
 
@@ -298,7 +341,10 @@ class NoticeEditHandler(AuthorizationHandler):
         logging.info(self.request)
         category_id = self.get_argument("id", "")
         access_token = self.get_secure_cookie("access_token")
+
         admin = self.get_admin_info()
+        league_id = admin['league_id']
+        counter = self.get_counter(league_id)
 
         url = API_DOMAIN+"/api/categories/"+category_id
         http_client = HTTPClient()
@@ -309,6 +355,7 @@ class NoticeEditHandler(AuthorizationHandler):
 
         self.render('admin/notice-edit.html',
                 admin=admin,
+                counter=counter,
                 access_token=access_token,
                 category=category,
                 api_domain=API_DOMAIN)
@@ -321,6 +368,8 @@ class MultimediasDraftHandler(AuthorizationHandler):
         access_token = self.get_secure_cookie("access_token")
 
         admin = self.get_admin_info()
+        league_id = admin['league_id']
+        counter = self.get_counter(league_id)
 
         params = {"filter":"league", "league_id":admin['league_id'], "status":"draft"}
         url = url_concat(API_DOMAIN+"/api/multimedias", params)
@@ -332,6 +381,7 @@ class MultimediasDraftHandler(AuthorizationHandler):
 
         self.render('admin/multimedias-draft.html',
                 admin=admin,
+                counter=counter,
                 access_token=access_token,
                 multimedias=multimedias,
                 api_domain=API_DOMAIN)
@@ -344,6 +394,8 @@ class MultimediasPublishHandler(AuthorizationHandler):
         access_token = self.get_secure_cookie("access_token")
 
         admin = self.get_admin_info()
+        league_id = admin['league_id']
+        counter = self.get_counter(league_id)
 
         params = {"filter":"league", "league_id":admin['league_id'], "status":"publish"}
         url = url_concat(API_DOMAIN+"/api/multimedias", params)
@@ -355,6 +407,7 @@ class MultimediasPublishHandler(AuthorizationHandler):
 
         self.render('admin/multimedias-publish.html',
                 admin=admin,
+                counter=counter,
                 access_token=access_token,
                 multimedias=multimedias,
                 api_domain=API_DOMAIN)
@@ -364,8 +417,10 @@ class VendorBindingWxHandler(AuthorizationHandler):
     @tornado.web.authenticated  # if no session, redirect to login page
     def get(self):
         logging.info(self.request)
+
         admin = self.get_admin_info()
-        logging.info("got adming %r",admin)
+        league_id = admin['league_id']
+        counter = self.get_counter(league_id)
 
         # create wechat qrcode
         binding_wx_url = WX_NOTIFY_DOMAIN + "/bf/wx/leagues/" + admin['league_id'] + "/administrators/" + admin['account_id'] +"/binding"
@@ -380,6 +435,7 @@ class VendorBindingWxHandler(AuthorizationHandler):
 
         self.render('admin/binding-wx.html',
                 admin=admin,
+                counter=counter,
                 qrcode_url=qrcode_url,
                 api_domain=API_DOMAIN)
 
@@ -388,13 +444,15 @@ class VendorBindingWxHandler(AuthorizationHandler):
 class ApplyCashoutHandler(AuthorizationHandler):
     @tornado.web.authenticated  # if no session, redirect to login page
     def get(self):
+        access_token = self.get_secure_cookie("access_token")
+
         admin = self.get_admin_info()
         league_id = admin['league_id']
-
-        access_token = self.get_secure_cookie("access_token")
+        counter = self.get_counter(league_id)
 
         self.render('admin/apply-cashout.html',
                 access_token=access_token,
                 admin=admin,
+                counter=counter,
                 league_id=league_id,
                 api_domain = API_DOMAIN)

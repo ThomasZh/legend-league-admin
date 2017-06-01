@@ -47,6 +47,8 @@ class CategoriesIndexHandler(AuthorizationHandler):
         logging.info(self.request)
 
         admin = self.get_admin_info()
+        league_id = admin['league_id']
+        counter = self.get_counter(league_id)
 
         url = API_DOMAIN+"/api/leagues/"+admin['league_id']+"/categories"
         http_client = HTTPClient()
@@ -57,6 +59,7 @@ class CategoriesIndexHandler(AuthorizationHandler):
 
         self.render('category/index.html',
                 admin=admin,
+                counter=counter,
                 categories=categories,
                 api_domain=API_DOMAIN)
 
@@ -66,10 +69,14 @@ class CategoriesCreateHandler(AuthorizationHandler):
     def get(self):
         logging.info(self.request)
         access_token = self.get_secure_cookie("access_token")
+
         admin = self.get_admin_info()
+        league_id = admin['league_id']
+        counter = self.get_counter(league_id)
 
         self.render('category/create.html',
                 admin=admin,
+                counter=counter,
                 access_token=access_token,
                 api_domain=API_DOMAIN,
                 upyun_domain=UPYUN_DOMAIN,
@@ -84,7 +91,10 @@ class CategoriesEditHandler(AuthorizationHandler):
         logging.info(self.request)
         category_id = self.get_argument("id", "")
         access_token = self.get_secure_cookie("access_token")
+
         admin = self.get_admin_info()
+        league_id = admin['league_id']
+        counter = self.get_counter(league_id)
 
         url = API_DOMAIN+"/api/categories/"+category_id
         http_client = HTTPClient()
@@ -95,6 +105,7 @@ class CategoriesEditHandler(AuthorizationHandler):
 
         self.render('category/edit.html',
                 admin=admin,
+                counter=counter,
                 category=category,
                 access_token=access_token,
                 api_domain=API_DOMAIN,
