@@ -382,3 +382,19 @@ class VendorBindingWxHandler(AuthorizationHandler):
                 admin=admin,
                 qrcode_url=qrcode_url,
                 api_domain=API_DOMAIN)
+
+
+# 积分提现记录
+class ApplyCashoutHandler(AuthorizationHandler):
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def get(self):
+        admin = self.get_admin_info()
+        league_id = admin['league_id']
+
+        access_token = self.get_secure_cookie("access_token")
+
+        self.render('admin/apply-cashout.html',
+                access_token=access_token,
+                admin=admin,
+                league_id=league_id,
+                api_domain = API_DOMAIN)

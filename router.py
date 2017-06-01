@@ -40,12 +40,13 @@ def map():
         (r'/admin/todo-list', getattr(work_sheet, 'TodoListHandler')),
         (r'/admin/todo-detail', getattr(work_sheet, 'TodoDetailHandler')),
         (r'/admin/multimedias/draft', getattr(work_sheet, 'MultimediasDraftHandler')),
-        (r'/admin/multimedias/publish', getattr(work_sheet, 'MultimediasPublishHandler')),
+        (r'/admin/apply-cashout', getattr(work_sheet, 'ApplyCashoutHandler')),
 
         (r'/admin/guest-book', getattr(work_sheet, 'GuestBookHandler')),
         (r'/admin/guest-detail', getattr(work_sheet, 'GuestBookDetailHandler')),
         (r'/admin/notice-board', getattr(work_sheet, 'NoticeBoardHandler')),
         (r'/admin/notice-create', getattr(work_sheet, 'NoticeCreateHandler')),
+        (r'/admin/notice-edit', getattr(work_sheet, 'NoticeEditHandler')),
         (r'/admin/notice-edit', getattr(work_sheet, 'NoticeEditHandler')),
 
         (r'/admin/categories/create', getattr(category, 'CategoriesCreateHandler')),
