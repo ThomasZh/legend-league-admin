@@ -251,7 +251,7 @@
               json_data = JSON.stringify(data);
               $.ajax({
                 type: "POST",
-                url: "{{ api_domain }}/api/points/leagues/{{ league_id }}/apply-cash-out/"+ apply_id +"/check",
+                url: "/admin/api/apply-cash-out/"+apply_id+"/accept",
                 headers: {"Authorization": "Bearer {{ access_token }}"},
                 data:json_data,
                 contentType: 'application/json',
@@ -272,7 +272,7 @@
                   json_data = JSON.stringify(data);
                   $.ajax({
                     type: "POST",
-                    url: "{{ api_domain }}/api/points/leagues/{{ league_id }}/apply-cash-out/"+ apply_id +"/check",
+                    url: "/admin/api/apply-cash-out/"+apply_id+"/reject",
                     headers: {"Authorization": "Bearer {{ access_token }}"},
                     data:json_data,
                     contentType: 'application/json',

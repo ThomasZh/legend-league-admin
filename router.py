@@ -12,6 +12,7 @@ from foo.auth import auth_email
 from foo.auth import auth_phone
 from foo.admin import work_sheet
 from foo.admin import category
+from foo.api import api_point
 
 
 def map():
@@ -55,6 +56,9 @@ def map():
 
         (r'/admin/articles', getattr(work_sheet, 'ArticlesIndexHandler')),
         (r'/admin/articles/detail', getattr(work_sheet, 'ArticlesDetailHandler')),
+
+        (r'/admin/api/apply-cash-out/([a-z0-9]*)/accept', getattr(api_point, 'ApiApplyCashoutAcceptXHR')),
+        (r'/admin/api/apply-cash-out/([a-z0-9]*)/reject', getattr(api_point, 'ApiApplyCashoutRejectXHR')),
 
         # comm
         ('.*', getattr(comm, 'PageNotFoundHandler'))
