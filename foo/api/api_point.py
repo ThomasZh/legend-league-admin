@@ -90,7 +90,7 @@ class ApiApplyCashoutAcceptXHR(AuthorizationHandler):
         self.counter_decrease(league_id, "apply_cashout")
 
         # budge_num increase
-        self.counter_increase(apply_cashout['apply_org_id'], "apply_cashout")
+        self.counter_increase(apply_cashout['apply_org_id'], "review_cashout")
         # TODO notify this message to vendor's administrator by SMS
 
         rs = {'err_code':200, 'err_msg':'Success'}
@@ -136,7 +136,7 @@ class ApiApplyCashoutRejectXHR(AuthorizationHandler):
         self.counter_decrease(league_id, "apply_cashout")
 
         # budge_num increase
-        self.counter_increase(apply_cashout['apply_org_id'], "apply_cashout")
+        self.counter_increase(apply_cashout['apply_org_id'], "review_cashout")
         # TODO notify this message to vendor's administrator by SMS
 
         rs = {'err_code':200, 'err_msg':'Success'}
