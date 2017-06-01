@@ -67,10 +67,6 @@ class ApiApplyCashoutAcceptXHR(AuthorizationHandler):
         response = http_client.fetch(url, method="POST", headers=headers, body=_json)
         logging.info("got apply-cash-out check_status %r", response.body)
 
-        # budge_num decrease
-        self.counter_decrease(league_id, "apply_cashout")
-        # TODO notify this message to vendor's administrator by SMS
-
         # 取得提现申请信息
         apply_cashout = self.get_apply_cashout(league_id, apply_id)
 
@@ -89,6 +85,13 @@ class ApiApplyCashoutAcceptXHR(AuthorizationHandler):
             'order_id': DEFAULT_USER_ID
         }
         self.create_points(bonus_points)
+
+        # budge_num decrease
+        self.counter_decrease(league_id, "apply_cashout")
+
+        # budge_num increase
+        self.counter_increase(apply_cashout['apply_org_id'], "apply_cashout")
+        # TODO notify this message to vendor's administrator by SMS
 
         rs = {'err_code':200, 'err_msg':'Success'}
         self.write(JSON.dumps(rs, default=json_util.default))
@@ -126,8 +129,14 @@ class ApiApplyCashoutRejectXHR(AuthorizationHandler):
         response = http_client.fetch(url, method="POST", headers=headers, body=_json)
         logging.info("got apply-cash-out check_status %r", response.body)
 
+        # 取得提现申请信息
+        apply_cashout = self.get_apply_cashout(league_id, apply_id)
+
         # budge_num decrease
         self.counter_decrease(league_id, "apply_cashout")
+
+        # budge_num increase
+        self.counter_increase(apply_cashout['apply_org_id'], "apply_cashout")
         # TODO notify this message to vendor's administrator by SMS
 
         rs = {'err_code':200, 'err_msg':'Success'}
