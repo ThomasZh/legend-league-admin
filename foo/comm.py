@@ -213,6 +213,17 @@ class BaseHandler(tornado.web.RequestHandler):
         return distributor
 
 
+    def get_club_ops_wx(self, club_id):
+        params = {"page":1,"limit":20}
+        url = url_concat(API_DOMAIN + "/api/clubs/" + club_id+"/ops-wx", params)
+        http_client = HTTPClient()
+        response = http_client.fetch(url, method="GET")
+        data = json_decode(response.body)
+        rs = data['rs']
+        ops = rs['data']
+        return ops
+
+
     def get_apply_cashout(self, league_id, apply_id):
         url = API_DOMAIN + "/api/points/leagues/"+league_id+"/apply-cash-out/" + apply_id
         http_client = HTTPClient()

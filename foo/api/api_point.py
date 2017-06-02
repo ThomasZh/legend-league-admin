@@ -34,6 +34,7 @@ from bson import json_util
 
 from global_const import *
 from comm import *
+from foo.admin import wx_wrap
 
 
 # 审核提现申请(接受)
@@ -98,6 +99,16 @@ class ApiApplyCashoutAcceptXHR(AuthorizationHandler):
             }
             self.create_points(bonus_points)
 
+        # notify this message to club's operators by wx_template
+        wx_access_token = wx_wrap.getAccessTokenByClientCredential(WX_APP_ID, WX_APP_SECRET)
+        logging.info("got wx_access_token %r", wx_access_token)
+        # 通过wxpub，给俱乐部操作员发送通知
+        ops = self.get_club_ops_wx(apply_cashout['apply_org_id'])
+        for op in ops:
+            wx_openid = op['binding_id']
+            logging.info("got wx_openid %r", wx_openid)
+            wx_wrap.sendApplyCashoutCheckResultToOpsMessage(wx_access_token, WX_NOTIFY_DOMAIN, wx_openid, apply_cashout)
+
         # budge_num decrease
         self.counter_decrease(league_id, "apply_cashout")
 
@@ -143,6 +154,16 @@ class ApiApplyCashoutRejectXHR(AuthorizationHandler):
 
         # 取得提现申请信息
         apply_cashout = self.get_apply_cashout(league_id, apply_id)
+
+        # notify this message to club's operators by wx_template
+        wx_access_token = wx_wrap.getAccessTokenByClientCredential(WX_APP_ID, WX_APP_SECRET)
+        logging.info("got wx_access_token %r", wx_access_token)
+        # 通过wxpub，给俱乐部操作员发送通知
+        ops = self.get_club_ops_wx(apply_cashout['apply_org_id'])
+        for op in ops:
+            wx_openid = op['binding_id']
+            logging.info("got wx_openid %r", wx_openid)
+            wx_wrap.sendApplyCashoutCheckResultToOpsMessage(wx_access_token, WX_NOTIFY_DOMAIN, wx_openid, apply_cashout)
 
         # budge_num decrease
         self.counter_decrease(league_id, "apply_cashout")
