@@ -320,7 +320,7 @@ def sendApplyCashoutCheckResultToOpsMessage(access_token, wx_notify_domain, open
                "color":"#173177"
            },
            "keyword4": {
-               "value":str(apply_cashout['_status']),
+               "value":apply_cashout['_status'],
                "color":"#173177"
            },
            "keyword5": {
