@@ -288,6 +288,13 @@ def sendApplyCashoutToOpsMessage(access_token, wx_notify_domain, openid, apply_c
 
 
 def sendApplyCashoutCheckResultToOpsMessage(access_token, wx_notify_domain, openid, apply_cashout):
+    if apply_cashout['_status'] == 0:
+        apply_cashout['_status'] = u"待审核"
+    elif apply_cashout['_status'] == 10:
+        apply_cashout['_status'] = u"接受"
+    elif apply_cashout['_status'] == 20:
+        apply_cashout['_status'] = u"拒绝"
+
     # touser = 联盟管理员openid
     # template_id = 提现申请通知
     # url = 模版链接跳转地址
