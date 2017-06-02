@@ -246,7 +246,7 @@ def sendApplyCashoutToAdminMessage(access_token, wx_notify_domain, openid, apply
 
 
 def sendApplyCashoutToOpsMessage(access_token, wx_notify_domain, openid, apply_cashout):
-    # touser = 联盟管理员openid
+    # touser = 店小二openid
     # template_id = 提现申请通知
     # url = 模版链接跳转地址
     data = {
@@ -287,48 +287,41 @@ def sendApplyCashoutToOpsMessage(access_token, wx_notify_domain, openid, apply_c
     logging.info("got response %r", response.body)
 
 
-def sendApplyCashoutCheckResultToOpsMessage(access_token, wx_notify_domain, openid, apply_cashout):
-    if apply_cashout['_status'] == 0:
-        apply_cashout['_status'] = u"待审核"
-    elif apply_cashout['_status'] == 10:
-        apply_cashout['_status'] = u"接受"
-    elif apply_cashout['_status'] == 20:
-        apply_cashout['_status'] = u"拒绝"
-
-    # touser = 联盟管理员openid
-    # template_id = 提现申请通知
+def sendChangeBonusPointToOpsMessage(access_token, wx_notify_domain, openid, points_changed_log):
+    # touser = 店小二openid
+    # template_id = 积分变动通知
     # url = 模版链接跳转地址
     data = {
         "touser": openid,
-        "template_id": "2M0GoEnDeHNNoTjDOLbVCPEz0c81J2JOq_6EgaLcV4Q",
-        "url": wx_notify_domain + "/bf/wx/vendors/"+apply_cashout['apply_org_id']+"/apply-cashout/"+apply_cashout['_id'],
+        "template_id": "hoQJbcLyzWVJj8mvp62lTeMJVisy2_2PjLRchXSQpSU",
+        "url": wx_notify_domain + "/bf/wx/vendors/"+points_changed_log['account_id']+"/bonus-points/"+points_changed_log['_id'],
         "data": {
            "first": {
-               "value":apply_cashout['apply_nickname']+u", 您好, 您的提现申请已处理。",
+               "value":u"您好, 你刚刚申请进行了"+points_changed_log['action']+u"操作，积分产生变化",
                "color":"#173177"
            },
            "keyword1": {
-               "value":str(float(apply_cashout['bonus_point'])/100)+u"元",
+               "value":points_changed_log['item_name'],
                "color":"#173177"
            },
            "keyword2": {
-               "value":u"微信",
+               "value":timestamp_datetime(points_changed_log['create_time']),
                "color":"#173177"
            },
            "keyword3": {
-               "value":timestamp_datetime(apply_cashout['create_time']),
+               "value":str(float(points_changed_log['points'])/100)+u"元",
                "color":"#173177"
            },
            "keyword4": {
-               "value":apply_cashout['_status'],
+               "value":str(float(points_changed_log['balance_after'])/100)+u"元",
                "color":"#173177"
            },
            "keyword5": {
-               "value":timestamp_datetime(apply_cashout['last_update_time']),
+               "value":points_changed_log['action'],
                "color":"#173177"
            },
            "remark": {
-               "value":u"有任何疑问，请致电客服。",
+               "value":u"感谢你的使用。有任何疑问，请致电客服。",
                "color":"#173177"
            },
         }

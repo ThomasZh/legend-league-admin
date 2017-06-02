@@ -244,6 +244,9 @@ class BaseHandler(tornado.web.RequestHandler):
         http_client = HTTPClient()
         response = http_client.fetch(url, method="POST", headers=headers, body=_json)
         logging.info("got create_points response.body=[%r]", response.body)
+        data = json_decode(response.body)
+        points_changed_log = data['data']
+        return points_changed_log
 
 
     def get_counter(self, item_id):

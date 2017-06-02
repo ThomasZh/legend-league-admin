@@ -64,6 +64,16 @@ class ApiApplyCashoutAcceptXHR(AuthorizationHandler):
         # 取得提现申请信息
         apply_cashout = self.get_apply_cashout(league_id, apply_id)
 
+        # notify this message to club's operators by wx_template
+        wx_access_token = wx_wrap.getAccessTokenByClientCredential(WX_APP_ID, WX_APP_SECRET)
+        logging.info("got wx_access_token %r", wx_access_token)
+        # 通过wxpub，给俱乐部操作员发送通知
+        ops = self.get_club_ops_wx(apply_cashout['apply_org_id'])
+        for op in ops:
+            wx_openid = op['binding_id']
+            logging.info("got wx_openid %r", wx_openid)
+            wx_wrap.sendApplyCashoutToOpsMessage(wx_access_token, WX_NOTIFY_DOMAIN, wx_openid, apply_cashout)
+
         # 取得此俱乐部（分销商）在供应商的积分余额
         distributor = self.get_distributor(apply_cashout['org_id'], apply_cashout['apply_org_id'])
         # TODO 余额不足
@@ -95,19 +105,15 @@ class ApiApplyCashoutAcceptXHR(AuthorizationHandler):
                 'item_name': apply_cashout['apply_org_name'],
                 'bonus_type':'bonus',
                 'points': -apply_cashout['bonus_point'],
-                'order_id': DEFAULT_USER_ID
+                'order_id': apply_cashout['_id']
             }
-            self.create_points(bonus_points)
+            points_changed_log = self.create_points(bonus_points)
 
-        # notify this message to club's operators by wx_template
-        wx_access_token = wx_wrap.getAccessTokenByClientCredential(WX_APP_ID, WX_APP_SECRET)
-        logging.info("got wx_access_token %r", wx_access_token)
-        # 通过wxpub，给俱乐部操作员发送通知
-        ops = self.get_club_ops_wx(apply_cashout['apply_org_id'])
-        for op in ops:
-            wx_openid = op['binding_id']
-            logging.info("got wx_openid %r", wx_openid)
-            wx_wrap.sendApplyCashoutCheckResultToOpsMessage(wx_access_token, WX_NOTIFY_DOMAIN, wx_openid, apply_cashout)
+            # 积分变更提醒
+            for op in ops:
+                wx_openid = op['binding_id']
+                logging.info("got wx_openid %r", wx_openid)
+                wx_wrap.sendChangeBonusPointToOpsMessage(wx_access_token, WX_NOTIFY_DOMAIN, wx_openid, points_changed_log)
 
         # budge_num decrease
         self.counter_decrease(league_id, "apply_cashout")
