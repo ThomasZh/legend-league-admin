@@ -93,18 +93,19 @@ class ApiApplyCashoutAcceptXHR(AuthorizationHandler):
             response = http_client.fetch(url, method="POST", headers=headers, body=_json)
             logging.info("got apply-cash-out check_status %r", response.body)
 
+            apply_cashout['bonus_point'] = -apply_cashout['bonus_point']
             # 扣除积分，并添加一条日志记录
             bonus_points = {
-                'org_id':apply_cashout['org_id'],
-                'org_type':apply_cashout['org_type'],
-                'account_id':apply_cashout['apply_org_id'],
-                'account_type':apply_cashout['apply_org_type'],
+                'org_id': apply_cashout['org_id'],
+                'org_type': apply_cashout['org_type'],
+                'account_id': apply_cashout['apply_org_id'],
+                'account_type': apply_cashout['apply_org_type'],
                 'action': 'cashout',
                 'item_type': 'bonus',
                 'item_id': DEFAULT_USER_ID,
                 'item_name': apply_cashout['apply_org_name'],
-                'bonus_type':'bonus',
-                'points': -apply_cashout['bonus_point'],
+                'bonus_type': 'bonus',
+                'points': apply_cashout['bonus_point'],
                 'order_id': apply_cashout['_id']
             }
             points_changed_log = self.create_points(bonus_points)

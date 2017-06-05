@@ -297,7 +297,7 @@ def sendChangeBonusPointToOpsMessage(access_token, wx_notify_domain, openid, poi
         "url": wx_notify_domain + "/bf/wx/vendors/"+points_changed_log['account_id']+"/bonus-points/"+points_changed_log['_id'],
         "data": {
            "first": {
-               "value":u"您好, 你刚刚申请进行了"+points_changed_log['action']+u"操作，积分产生变化",
+               "value":u"您好, 你刚刚进行了"+points_changed_log['action']+u"操作，积分产生变化",
                "color":"#173177"
            },
            "keyword1": {
