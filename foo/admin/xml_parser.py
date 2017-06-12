@@ -182,3 +182,43 @@ def parseWxPayReturn(xml):
         pay_return['out_trade_no'] = node.text
 
     return pay_return
+
+
+#<xml>
+# <return_code><![CDATA[SUCCESS]]></return_code>\n
+# <return_msg><![CDATA[OK]]></return_msg>\n
+# <result_code><![CDATA[SUCCESS]]></result_code>\n
+# <err_code><![CDATA[wx2016051011051929643983670302291635]]></err_code>\n
+# <err_code_des><![CDATA[JSAPI]]></err_code_des>\n
+#</xml>
+def parseWxTransfersReturn(xml):
+    root = ElementTree.fromstring(xml)
+
+    transfers_return = {}
+
+    lst_node = root.getiterator("return_code")
+    for node in lst_node:
+        #print_node(node)
+        transfers_return['return_code'] = node.text
+
+    lst_node = root.getiterator("return_msg")
+    for node in lst_node:
+        #print_node(node)
+        transfers_return['return_msg'] = node.text
+
+    lst_node = root.getiterator("result_code")
+    for node in lst_node:
+        #print_node(node)
+        transfers_return['result_code'] = node.text
+
+    lst_node = root.getiterator("err_code")
+    for node in lst_node:
+        #print_node(node)
+        transfers_return['err_code'] = node.text
+
+    lst_node = root.getiterator("err_code_des")
+    for node in lst_node:
+        #print_node(node)
+        transfers_return['err_code_des'] = node.text
+
+    return transfers_return

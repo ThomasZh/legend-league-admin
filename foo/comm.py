@@ -312,21 +312,22 @@ class BaseHandler(tornado.web.RequestHandler):
             http_client = HTTPClient()
             headers={"Authorization":"Bearer "+access_token}
             response = http_client.fetch(url, method="GET", headers=headers)
-            logging.info("got response %r", response.body)
+            logging.info("got admin_info %r", response.body)
             # account_id,nickname,avatar,league_id,league_name,_rank
             data = json_decode(response.body)
             admin = data['rs']
+
             return admin
         except:
             err_title = str( sys.exc_info()[0] );
             err_detail = str( sys.exc_info()[1] );
             logging.error("error: %r info: %r", err_title, err_detail)
             if err_detail == 'HTTP 404: Not Found':
-                err_msg = "您不是联盟的管理员!"
+                err_msg = u"您不是联盟的管理员!"
                 self.redirect("/admin/auth/phone/login")
                 return
             else:
-                err_msg = "系统故障, 请稍后尝试!"
+                err_msg = u"系统故障, 请稍后尝试!"
                 self.redirect("/admin/auth/phone/login")
                 return
 

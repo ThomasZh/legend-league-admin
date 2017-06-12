@@ -31,6 +31,9 @@ UPYUN_BUCKET = "tripc2c-club-title"
 QRCODE_CREATE_URL = "http://qrcode.7x24hs.com/api/qrcode"
 
 API_DOMAIN = "http://7x24hs.com"
+# wx_pub: 俱乐部服务中心
 WX_APP_ID = "wxedab0b4bf94e1c9d"  # 微信公众号APP_ID
 WX_APP_SECRET = "03325dea1b00c151cf6b7c1fe52ea2fa"  #微信公众号APP_SECRET
+WX_MCH_ID = "1419954602"
+WX_MCH_KEY = "91575df83aac11e79defa45e60efbf2d"
 WX_NOTIFY_DOMAIN = "http://7x24hs.com"   # 微信支付notify_domain

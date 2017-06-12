@@ -74,6 +74,7 @@ class ApiApplyCashoutAcceptXHR(AuthorizationHandler):
             logging.info("got wx_openid %r", wx_openid)
             wx_wrap.sendApplyCashoutToOpsMessage(wx_access_token, WX_NOTIFY_DOMAIN, wx_openid, apply_cashout)
 
+        rs_transfers = None
         # 取得此俱乐部（分销商）在供应商的积分余额
         distributor = self.get_distributor(apply_cashout['org_id'], apply_cashout['apply_org_id'])
         # TODO 余额不足
@@ -102,13 +103,18 @@ class ApiApplyCashoutAcceptXHR(AuthorizationHandler):
                 'account_type': apply_cashout['apply_org_type'],
                 'action': 'cashout',
                 'item_type': 'bonus',
-                'item_id': DEFAULT_USER_ID,
+                'item_id': apply_cashout['apply_org_id'],
                 'item_name': apply_cashout['apply_org_name'],
                 'bonus_type': 'bonus',
                 'points': apply_cashout['bonus_point'],
                 'order_id': apply_cashout['_id']
             }
             points_changed_log = self.create_points(bonus_points)
+
+            # 微信企业付款
+            # remote_ip = self.request.headers['X-Real-Ip']
+            # logging.info("got remote_ip %r", remote_ip)
+            # rs_transfers = wx_wrap.transfers(WX_APP_ID, WX_MCH_ID, WX_MCH_KEY, apply_cashout['_id'], wx_openid, apply_cashout['bonus_point'], apply_cashout['apply_org_id'], remote_ip)
 
             # 积分变更提醒
             for op in ops:
@@ -123,7 +129,7 @@ class ApiApplyCashoutAcceptXHR(AuthorizationHandler):
         self.counter_increase(apply_cashout['apply_org_id'], "review_cashout")
         # TODO notify this message to vendor's administrator by SMS
 
-        rs = {'err_code':200, 'err_msg':'Success'}
+        rs = {'err_code':200, 'err_msg':'Success', 'data':rs_transfers}
         self.write(JSON.dumps(rs, default=json_util.default))
         self.finish()
 

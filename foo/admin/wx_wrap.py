@@ -25,7 +25,7 @@ import time
 from tornado.escape import json_decode
 from tornado.httpclient import HTTPClient
 
-from xml_parser import parseWxOrderReturn, parseWxPayReturn
+from xml_parser import parseWxOrderReturn, parseWxPayReturn, parseWxTransfersReturn
 from comm import *
 
 
@@ -149,6 +149,51 @@ class Sign:
         stringA = '&'.join(['%s=%s' % (key.lower(), self.ret[key]) for key in sorted(self.ret)])
         self.ret['signature'] = hashlib.sha1(stringA).hexdigest()
         return self.ret
+
+
+def getTransfersSign(wx_app_id, wx_mch_id, wx_mch_key, nonceA, order_id, openid, actual_payment, item_name, remote_ip):
+    stringA = "amount=" + str(actual_payment) + \
+        "&check_name=NO_CHECK" +\
+        "&desc=" + item_name + \
+        "&mch_appid=" + wx_app_id + \
+        "&mch_id=" + wx_mch_id + \
+        "&nonce_str=" + nonceA + \
+        "&openid=" + openid + \
+        "&partner_trade_no=" + order_id + \
+        "&spbill_create_ip=" + remote_ip
+    stringSignTemp = stringA + "&key=" + wx_mch_key;
+    signA = hashlib.md5(stringSignTemp.encode("utf-8")).hexdigest().upper();
+    return signA
+
+
+def transfers(wx_app_id, wx_mch_id, wx_mch_key, order_id, openid, actual_payment, item_name, remote_ip):
+    logging.info("got ==================== wx_app_id %r", wx_app_id)
+    logging.info("got ==================== wx_mch_id %r", wx_mch_id)
+    logging.info("got ==================== wx_mch_key %r", wx_mch_key)
+    nonceA = getNonceStr();
+    logging.info("got ==================== nonceA %r", nonceA)
+    signA = getTransfersSign(wx_app_id, wx_mch_id, wx_mch_key, nonceA, order_id, openid, actual_payment, item_name, remote_ip)
+    logging.info("got ==================== signA %r", signA)
+
+    _xml = '<xml>' \
+        + '<amount>' + str(actual_payment) + '</amount>' \
+        + '<check_name>NO_CHECK</check_name>' \
+        + '<desc>' + item_name + '</desc>' \
+        + '<mch_appid>' + wx_app_id + '</mch_appid>' \
+        + '<mch_id>' + wx_mch_id + '</mch_id>' \
+        + '<nonce_str>' + nonceA + '</nonce_str>' \
+        + '<openid>' + openid + '</openid>' \
+        + '<partner_trade_no>' + order_id + '</partner_trade_no>' \
+        + '<spbill_create_ip>' + remote_ip + '</spbill_create_ip>' \
+        + '<sign>' + signA + '</sign>' \
+        + '</xml>'
+    logging.info("got _xml %r", _xml)
+    url = "https://api.mch.weixin.qq.com/mmpaymkttransfers/promotion/transfers"
+    http_client = HTTPClient()
+    response = http_client.fetch(url, method="POST", body=_xml)
+    logging.info("got transfers response %r", response.body)
+    transfers_return = parseWxTransfersReturn(response.body)
+    return transfers_return
 
 
 def getAccessToken(appId, appSecret, code):

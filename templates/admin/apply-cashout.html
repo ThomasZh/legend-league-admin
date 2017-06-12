@@ -256,7 +256,10 @@
                 data:json_data,
                 contentType: 'application/json',
                 success: function(data, status, xhr){
+                  console.log(data);
                   var data = JSON.parse(data);
+                  alert(data.data.return_msg);
+                  alert(data.data.err_code_des);
                   if(data.err_code == '200'){
                     _this.parent().html("");
                     _status.html("<a class='btn btn-success btn-xs'>已通过 </a>");
