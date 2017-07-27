@@ -124,6 +124,7 @@ class FranchisesHandler(AuthorizationHandler):
         self.render('admin/franchises.html',
                 admin=admin,
                 counter=counter,
+                access_token=access_token,
                 api_domain=API_DOMAIN)
 
 
@@ -140,6 +141,7 @@ class SuppliersHandler(AuthorizationHandler):
         self.render('admin/suppliers.html',
                 admin=admin,
                 counter=counter,
+                access_token=access_token,
                 api_domain=API_DOMAIN)
 
 
@@ -222,6 +224,7 @@ class ArticlesIndexHandler(AuthorizationHandler):
 
         self.render('admin/articles-publish.html',
                 admin=admin,
+                access_token = access_token,
                 counter=counter,
                 articles=articles,
                 category=category,
@@ -249,11 +252,21 @@ class ArticlesDetailHandler(AuthorizationHandler):
         data = json_decode(response.body)
         article = data['rs']
 
+        # article
+        url = API_DOMAIN+"/api/articles/"+article_id
+        http_client = HTTPClient()
+        response = http_client.fetch(url, method="GET")
+        logging.info("got article response %r", response.body)
+        data = json_decode(response.body)
+        article_info = data['rs']
+        article_info['publish_time'] = timestamp_friendly_date(article_info['publish_time'])
+
         self.render('admin/articles-detail.html',
                 admin=admin,
                 counter=counter,
                 access_token=access_token,
                 article=article,
+                article_info=article_info,
                 api_domain=API_DOMAIN)
 
 

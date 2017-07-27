@@ -25,8 +25,6 @@
   <script src="{{ static_url('gentelella/jquery/dist/jquery.min.js') }}"></script>
 
   <!-- Custom styling plus plugins -->
-  <link href="{{ static_url('gentelella/css/maps/jquery-jvectormap-2.0.3.css') }}" rel="stylesheet" type="text/css" />
-  <link href="{{ static_url('gentelella/css/floatexamples.css') }}" rel="stylesheet" type="text/css" />
   <script src="{{ static_url('gentelella/nprogress/nprogress.js') }}"></script>
   <script src="{{ static_url('js/json2.js') }}" type="text/javascript"></script>
 
@@ -136,20 +134,14 @@
   </div>
 
   <script src="{{ static_url('gentelella/bootstrap/dist/js/bootstrap.min.js') }}" type="text/javascript"></script>
-  <!-- gauge js -->
-  <script src="{{ static_url('gentelella/gauge.js/dist/gauge.min.js') }}" type="text/javascript"></script>
-  <!-- chart js -->
-  <script src="{{ static_url('gentelella/Chart.js/dist/chart.min.js') }}" type="text/javascript"></script>
   <!-- bootstrap progress js -->
   <script src="{{ static_url('gentelella/bootstrap-progressbar/bootstrap-progressbar.min.js') }}" type="text/javascript"></script>
-  <script src="{{ static_url('gentelella/js/nicescroll/jquery.nicescroll.min.js') }}" type="text/javascript"></script>
   <!-- icheck -->
   <script src="{{ static_url('gentelella/iCheck/icheck.min.js') }}" type="text/javascript"></script>
   <!-- daterangepicker -->
   <script src="{{ static_url('gentelella/moment/min/moment.min.js') }}" type="text/javascript"></script>
   <script src="{{ static_url('gentelella/bootstrap-daterangepicker/daterangepicker.js') }}" type="text/javascript"></script>
   <!-- alert Scripts -->
-  <script src="{{ static_url('weui/lib/fastclick.js') }}"></script>
   <script src="{{ static_url('js/custom.js') }}" type="text/javascript"></script>
   <script src="{{ static_url('js/vue-2.1.4.js') }}" type="text/javascript"></script>
 
@@ -158,80 +150,9 @@
              return new Date(parseInt(nS) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
           };
 
-          var preAllow = true;   // when ajax not completed, cannot do the next request
           var limit = 10;//每页显示数
           var currentPage = 0;//当前页
           var total_page = 0;//总页数
-          function query(pageNum) {
-            $.ajax({
-              type: "GET",
-              url: "{{api_domain}}/api/leagues/{{ admin['league_id'] }}/franchises?filter=league&page=1&limit="+limit+"",
-              contentType: 'application/json',
-              headers: {"Authorization":"Bearer {{access_token}}"},
-              success: function(data, status, xhr) {
-                    data_obj = JSON.parse(data);
-                    data = data_obj.rs;
-                    currentPage = 1;
-                var pageData = data.data;
-                    total_page = data.total_page;//总页
-                // num = ajaxobj.length;
-                for (var i in pageData) {
-
-                  var inner_html = '<tr class="even pointer" is="oneFranchise">';
-                  if(pageData[i]._status != 0){
-                      inner_html += '<td class="a-center"><input type="checkbox" checked class="flat" name="table_records"></td>';
-                  }else{
-                    inner_html += '<td class="a-center" id="checkbox'+pageData[i]._id+'"><input type="checkbox" class="flat" name="table_records"></td>';
-                  }
-                  inner_html += '<td class=" ">';
-                  inner_html += '<img src="'+pageData[i].avatar+'" class="avatar" alt="avatar">';
-                  inner_html += '</td>';
-                  inner_html += '<td class=" ">'+pageData[i].nickname+'</td>';
-                  inner_html += '<td class=" ">'+pageData[i].club.phone+'</td>';
-                  inner_html += '<td class=" "><span>'+pageData[i].club.name+'</span><br /></td>';
-                  inner_html += '<td class=" ">'+pageData[i].club.franchise_type+'</td>';
-                  inner_html += '<td class=" " id="status'+pageData[i]._id+'">';
-                    if(pageData[i]._status == 0){
-                      inner_html += '<span>待审批</span>';
-                    }else if(pageData[i]._status == 20){
-                      inner_html += '<span>通过</span>';
-                    }
-                    else if(pageData[i]._status == 10){
-                      inner_html += '<span>拒绝</span>';
-                    }
-
-                  inner_html += '</td>';
-                  inner_html += '<td class=" ">'+getLocalTime(pageData[i].create_time)+'</td>';
-                  inner_html += '<td class="last" id="'+pageData[i]._id+'">';
-                      if(pageData[i]._status == 0){
-                        inner_html += '<a type="button" onclick="review(\''+ pageData[i]._id + '\')" class="btn btn-round btn-sm btn-info">查看详情</a>'
-                        inner_html += '<a type="button" onclick="accept(\''+ pageData[i]._id + '\')" class="btn btn-round btn-sm btn-success">接受</a>';
-                        inner_html += '<a type="button" onclick="reject(\''+ pageData[i]._id + '\')" class="btn btn-round btn-sm btn-danger">拒绝</a>';
-                      }else {
-                        inner_html += '<a type="button" onclick="review(\''+ pageData[i]._id + '\')" class="btn btn-round btn-sm btn-info">查看详情</a>'
-                      }
-                  inner_html += '</td>';
-                  inner_html += '</tr>';
-
-                  $('#x_Box').append(inner_html);
-                  // member_num += 1;
-                };
-                  if(total_page>5){
-                      for (var k=1;k<=5;k++){
-                        var inner_html = '<button class="btn btn-info" type="button" id="num'+k+'">'+k+'</button>';
-                        $(".pageBox").append(inner_html);
-                      };
-                    }else if(total_page<=5){
-                      for (var k=1;k<=total_page;k++){
-                        var inner_html = '<button class="btn btn-info" type="button" id="num'+k+'">'+k+'</button>';
-                        $(".pageBox").append(inner_html);
-                      };
-                    }
-                    $("#num1").addClass("on");
-              }
-
-            });
-          };
 
           function gotoPage(pageNum) {
             $.ajax({
@@ -312,7 +233,7 @@
           };
 
           $(function(){
-            query();
+            gotoPage("1");
             $(document).on('click','.pageBox > button',function(){
               var num = $(this).text();
               gotoPage(num);

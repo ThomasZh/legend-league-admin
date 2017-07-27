@@ -24,8 +24,6 @@
   <script src="{{ static_url('gentelella/jquery/dist/jquery.min.js') }}"></script>
 
   <!-- Custom styling plus plugins -->
-  <link href="{{ static_url('gentelella/css/maps/jquery-jvectormap-2.0.3.css') }}" rel="stylesheet" type="text/css" />
-  <link href="{{ static_url('gentelella/css/floatexamples.css') }}" rel="stylesheet" type="text/css" />
   <script src="{{ static_url('gentelella/nprogress/nprogress.js') }}"></script>
   <link rel="stylesheet" href="{{ static_url('upyun/css/fileinput.min.css') }}" />
 
@@ -107,13 +105,8 @@
   </div>
 
   <script src="{{ static_url('gentelella/bootstrap/dist/js/bootstrap.min.js') }}" type="text/javascript"></script>
-  <!-- gauge js -->
-  <script src="{{ static_url('gentelella/gauge.js/dist/gauge.min.js') }}" type="text/javascript"></script>
-  <!-- chart js -->
-  <script src="{{ static_url('gentelella/Chart.js/dist/chart.min.js') }}" type="text/javascript"></script>
   <!-- bootstrap progress js -->
   <script src="{{ static_url('gentelella/bootstrap-progressbar/bootstrap-progressbar.min.js') }}" type="text/javascript"></script>
-  <script src="{{ static_url('gentelella/js/nicescroll/jquery.nicescroll.min.js') }}" type="text/javascript"></script>
   <!-- icheck -->
   <script src="{{ static_url('gentelella/iCheck/icheck.min.js') }}" type="text/javascript"></script>
   <!-- daterangepicker -->
@@ -131,53 +124,9 @@
              return new Date(parseInt(nS) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
           };
 
-          var preAllow = true;   // when ajax not completed, cannot do the next request
           var limit = 8;//每页显示数
           var currentPage = 0;//当前页
           var total_page = 0;//总页数
-          function query(pageNum) {
-            $.get("{{api_domain}}/api/multimedias-pagination?filter=league&league_id={{ admin['league_id'] }}&status=draft&page=1&limit="+limit+"",function(data,status){
-                  // console.log(data);
-                  data_obj = JSON.parse(data);
-                  data = data_obj.rs;
-                  currentPage = 1;
-              var pageData = data.data;
-                  total_page = data.total_page;//总页
-              // num = ajaxobj.length;
-              for (var i in pageData) {
-
-                var inner_html = '<div class="col-md-3 col-xs-12 widget widget_tally_box">';
-                inner_html += '<div class="x_panel ui-ribbon-container fixed_height_360">';
-                inner_html += '<div class="x_content">';
-                inner_html += '<div class="thumbnail">';
-                inner_html += '<div class="image view view-first">';
-                inner_html += '<a>';
-                inner_html += '<img style="width: 100%; display: block;" src="'+pageData[i].url+'" alt="image" />';
-                inner_html += '</a></div></div>';
-                inner_html += '<p>'+getLocalTime(pageData[i].publish_time)+'</p>';
-                inner_html += '<div class="divider"></div>'
-                inner_html += '<p>';
-                inner_html += '<a data-id="'+pageData[i]._id+'" id="pub_btn" class="btn ap_del btn-success btn-xs">公开 </a>';
-                inner_html += '</p></div></div></div>';
-
-                $('#x_Box').append(inner_html);
-                // member_num += 1;
-              };
-            if(total_page>5){
-                for (var k=1;k<=5;k++){
-                  var inner_html = '<button class="btn btn-info" type="button" id="num'+k+'">'+k+'</button>';
-                  $(".pageBox").append(inner_html);
-                };
-              }else if(total_page<=5){
-                for (var k=1;k<=total_page;k++){
-                  var inner_html = '<button class="btn btn-info" type="button" id="num'+k+'">'+k+'</button>';
-                  $(".pageBox").append(inner_html);
-                };
-              }
-              $("#num1").addClass("on");
-              preAllow = true;
-            });
-          };
 
           function gotoPage(pageNum) {
             $.get("{{api_domain}}/api/multimedias-pagination?filter=league&league_id={{ admin['league_id'] }}&status=draft&page="+pageNum+"&limit="+limit+"",function(data,status){
@@ -191,7 +140,7 @@
 
               for (var i in pageData) {
 
-                var inner_html = '<div class="col-md-3 col-xs-12 widget widget_tally_box">';
+                var inner_html = '<div class="col-md-3 col-xs-12 widget widget_tally_box m-box">';
                 inner_html += '<div class="x_panel ui-ribbon-container fixed_height_360">';
                 inner_html += '<div class="x_content">';
                 inner_html += '<div class="thumbnail">';
@@ -202,7 +151,8 @@
                 inner_html += '<p>'+getLocalTime(pageData[i].publish_time)+'</p>';
                 inner_html += '<div class="divider"></div>'
                 inner_html += '<p>';
-                inner_html += '<a data-id="'+pageData[i]._id+'" id="pub_btn" class="btn ap_del btn-success btn-xs">公开 </a>';
+                inner_html += '<a data-id="'+pageData[i]._id+'" class="btn ap_del btn-danger btn-xs del-btn">删除 </a>';
+                inner_html += '<a data-id="'+pageData[i]._id+'" class="btn ap_del btn-success btn-xs pub-btn">公开 </a>';
                 inner_html += '</p></div></div></div>';
 
                 $('#x_Box').append(inner_html);
@@ -231,7 +181,7 @@
           };
 
           $(function(){
-            query();
+            gotoPage("1");
             $(document).on('click','.pageBox > button',function(){
               var num = $(this).text();
               gotoPage(num);
@@ -259,12 +209,20 @@
   </script>
 
   <script>
-  $(document).on("click","#pub_btn",function(){
+  $(document).on("click",".pub-btn",function(){
     var id = $(this).attr("data-id");
     weui.confirm("确定公开吗？","提示消息",function(r){
       if(r == true){
         publish(id);
-        weui.Loading.success();
+      }
+    });
+  });
+  $(document).on('click',".del-btn",function(){
+    var id = $(this).attr("data-id");
+    var _this = $(this);
+    weui.confirm("确定删除吗？","提示消息",function(r){
+      if(r == true){
+        dele(id,_this);
       }
     });
   });
@@ -277,6 +235,26 @@
         headers: {"Authorization":"Bearer {{access_token}}"},
         success: function(data, status, xhr) {
           location.href = "/admin/multimedias/publish";
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+          console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
+            $('.lostpwd-form-main-message').addClass('show error').html(XMLHttpRequest.status + ": 服务器异常,请稍后重试!");
+        },
+        complete: function(XMLHttpRequest, textStatus) {
+            this; // 调用本次AJAX请求时传递的options参数
+        }
+      });
+    };
+
+    function dele(id,tag){
+      $.ajax({
+        type: "DELETE",
+        url: "{{api_domain}}/api/multimedias/"+id,
+        dataType: "json",
+        contentType: 'application/json',
+        headers: {"Authorization":"Bearer {{access_token}}"},
+        success: function(data, status, xhr) {
+          tag.parents('.m-box').remove();
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
           console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
