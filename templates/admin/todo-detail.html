@@ -66,7 +66,7 @@
         <div class="">
           <div style="height:auto;" class="page-title">
             <div class="title_left">
-              <h3>加盟商管理</h3>
+              <h3>加盟管理</h3>
             </div>
 
             <div class="clearfix"></div>
@@ -76,7 +76,7 @@
               <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2>加盟商申请详情</h2>
+                    <h2>加盟申请详情</h2>
 
                     <div class="clearfix"></div>
                   </div>
@@ -102,15 +102,15 @@
                           <td>{{ franchise['create_time'] }}</td>
                         </tr>
                         <tr>
-                          <td>加盟商名称</td>
+                          <td>加盟名称</td>
                           <td>{{ franchise['club']['name'] }}</td>
                         </tr>
                         <tr>
-                          <td>加盟商类型</td>
+                          <td>加盟类型</td>
                           <td>{{ franchise['club']['franchise_type'] }}</td>
                         </tr>
                         <tr>
-                          <td>加盟商电话</td>
+                          <td>联系电话</td>
                           <td>{{ franchise['club']['phone'] }}</td>
                         </tr>
                         <tr>
@@ -119,14 +119,14 @@
                         </tr>
                         <tr>
                           <td>地址</td>
-                          <td>{{ franchise['club']['province'] }}&nbsp{{ franchise['club']['province'] }}</td>
+                          <td>{{ franchise['club']['province'] }}&nbsp{{ franchise['club']['city'] }}</td>
                         </tr>
                         <tr>
                           <td>背景图</td>
                           <td><div class="col-md-3 col-sm-12 col-xs-12"><img style="width:100%;" src="{{ franchise['club']['img'] }}" alt="背景图"></div></td>
                         </tr>
                         <tr>
-                          <td>加盟商简介</td>
+                          <td>简介</td>
                           <td>{{ franchise['club']['introduction'] }}</td>
                         </tr>
                       </tbody>

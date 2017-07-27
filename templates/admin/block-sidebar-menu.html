@@ -4,10 +4,10 @@
   <div class="menu_section">
     <h3>联盟管理员</h3>
     <ul class="nav side-menu">
-      <li><a><i class="fa fa-group"></i> 加盟商管理 <span class="fa fa-chevron-down"></span></a>
+      <li><a><i class="fa fa-group"></i> 加盟管理 <span class="fa fa-chevron-down"></span></a>
         <ul class="nav child_menu" style="display: none">
-          <li><a href="/admin/todo-list">加盟商申请</a></li>
-          <li><a href="/admin/franchises">分销商</a></li>
+          <li><a href="/admin/todo-list">加盟申请</a></li>
+          <li><a href="/admin/franchises">景区</a></li>
           <li><a href="/admin/suppliers">供应商</a></li>
         </ul>
       </li>
@@ -20,12 +20,12 @@
         <ul class="nav child_menu" style="display: none">
           <li><a href="/admin/categories/index">分类</a></li>
           <li><a href="/admin/articles?category_id=0bbf89e2f73411e69a3c00163e023e51">近期活动</a></li>
-          <li><a href="/admin/articles?category_id=b0569f58144f11e78d3400163e023e51">最佳线路</a></li>
-          <li><a href="/admin/articles?category_id=01d6120cf73411e69a3c00163e023e51">游记</a></li>
-          <li><a href="/admin/articles?category_id=2a28cb78f73411e69a3c00163e023e51">攻略</a></li>
-          <li><a href="/admin/articles?category_id=30a56cb8f73411e69a3c00163e023e51">旅游资讯</a></li>
-          <li><a href="/admin/articles?category_id=8853422e03a911e7998c00163e023e51">经验交流</a></li>
-
+          <li><a href="/admin/articles?category_id=b0569f58144f11e78d3400163e023e51">旅游产品</a></li>
+          <li><a href="/admin/articles?category_id=065f565e6bd711e7b46300163e023e51">旅游资讯</a></li>
+          <li><a href="/admin/articles?category_id=8853422e03a911e7998c00163e023e51">景区需求</a></li>
+          <li><a href="/admin/articles?category_id=01d6120cf73411e69a3c00163e023e51">经验交流</a></li>
+          <li><a href="/admin/articles?category_id=2a28cb78f73411e69a3c00163e023e51">供应商产品</a></li>
+          <li><a href="/admin/articles?category_id=404228663a1711e7b21000163e023e51">供应商需求</a></li>
         </ul>
       </li>
       <li><a><i class="fa fa-file-image-o"></i> 精彩瞬间 <span class="fa fa-chevron-down"></span></a>
@@ -34,22 +34,13 @@
           <li><a href="/admin/multimedias/publish">已发布</a></li>
         </ul>
       </li>
-      {% if counter and counter.has_key('apply_cashout') and counter['apply_cashout'] != "0" %}
-        <li><a><i class="fa fa-book"></i> 消息 <span class="badge bg-green">{{ counter['apply_cashout'] }}</span> <span class="fa fa-chevron-down"></span></a>
-      {% else %}
         <li><a><i class="fa fa-book"></i> 消息 <span class="fa fa-chevron-down"></span></a>
-      {% end %}
         <ul class="nav child_menu" style="display: none">
           <li><a href="/admin/guest-book">留言管理</a></li>
           <li><a href="/admin/notice-board">公告</a></li>
-          {% if counter and counter.has_key('apply_cashout') and counter['apply_cashout'] != "0" %}
-            <li><a href="/admin/apply-cashout">提现申请 <span class="badge bg-green">{{ counter['apply_cashout'] }}</span></a></li>
-          {% else %}
-            <li><a href="/admin/apply-cashout">提现申请</a></li>
-          {% end %}
         </ul>
       </li>
-      <li><a><i class="fa fa-gear"></i> 联盟配置 <span class="fa fa-chevron-down"></span></a>
+      <li><a><i class="fa fa-gear"></i> 平台配置 <span class="fa fa-chevron-down"></span></a>
         <ul class="nav child_menu" style="display: none">
           <li><a href="/admin/administrators">管理员</a></li>
           <li><a href="/admin/setup/binding-wx">绑定微信</a></li>
