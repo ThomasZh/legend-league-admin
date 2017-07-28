@@ -184,7 +184,7 @@
                     if(pageData[i]._status == 0){
                       inner_html += '<a href="#" class="btn ap_del btn-default btn-xs">草稿箱 </a>';
                     }else if(pageData[i]._status == 100){
-                      inner_html += '<a href="#" class="btn btn-success btn-xs">查看 </a>';
+                      inner_html += '<a href="/admin/articles/detail?id='+pageData[i]._id+'" class="btn btn-success btn-xs">查看 </a>';
                     }
                 inner_html += '</p></div></div></div>';
 
@@ -211,9 +211,8 @@
               $(document).on('click','.dele-btn',function(){
                 var _this = $(this);
                 var _id = _this.attr('data_id');
-
-                $.confirm('确实删除该文章吗？',function(){
-
+                $.confirm('确实删除吗？',function(){
+                    $.showLoading("删除中...");
                     $.ajax({
                       type: "DELETE",
                       url: "{{api_domain}}/api/articles/"+_id,
@@ -222,10 +221,14 @@
                       contentType: 'application/json',
                       success: function(data, status, xhr) {
                           console.log(data);
+                          if (data.err_code == 200){
+                            $.hideLoading();
+                            _this.parents('.widget_tally_box').remove();
+                          }
 
                       }
                     });
-                  _this.parents('.widget_tally_box').remove();
+
                 });
               });
             });
