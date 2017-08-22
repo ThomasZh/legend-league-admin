@@ -70,7 +70,13 @@ class AuthPhoneLoginHandler(BaseHandler):
             response = http_client.fetch(url, method="POST", headers=headers, body=_json)
             logging.info("got response %r", response.body)
             data = json_decode(response.body)
-            session_ticket = data['rs']
+            session_ticket = None
+            if data['err_code'] == 404:
+                err_msg = "手机号码或密码不正确!"
+                self.render('auth/phone-login.html', err_msg=err_msg)
+                return
+            else:
+                session_ticket = data['rs']
 
             # is admin
             try:
@@ -82,7 +88,13 @@ class AuthPhoneLoginHandler(BaseHandler):
                 response = http_client.fetch(url, method="GET", headers=headers)
                 logging.info("got response %r", response.body)
                 data = json_decode(response.body)
-                admin = data['rs']
+                admin = None
+                if data['err_code'] == 404:
+                    err_msg = "您不是联盟的管理员!"
+                    self.render('auth/phone-login.html', err_msg=err_msg)
+                    return
+                else:
+                    admin = data['rs']
             except:
                 err_title = str( sys.exc_info()[0] );
                 err_detail = str( sys.exc_info()[1] );
