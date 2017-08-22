@@ -141,9 +141,9 @@
           var limit = 10;//每页显示数
           var currentPage = 0;//当前页
           var total_page = 0;//总页数
-
+          var type = encodeURI(encodeURI("供应商"));
           function gotoPage(pageNum) {
-            $.get("{{api_domain}}/api/leagues/{{ admin['league_id'] }}/clubs?filter=league&franchise_type=供应商&page="+ pageNum +"&limit="+limit+"",function(data,status){
+            $.get("{{api_domain}}/api/leagues/{{ admin['league_id'] }}/clubs?filter=league&franchise_type="+ type +"&page="+ pageNum +"&limit="+limit+"",function(data,status){
                   // console.log(data);
                   data_obj = JSON.parse(data);
                   data = data_obj.rs;

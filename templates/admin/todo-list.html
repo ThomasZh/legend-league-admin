@@ -146,6 +146,7 @@
   <script src="{{ static_url('js/vue-2.1.4.js') }}" type="text/javascript"></script>
 
   <script>
+    $(function(){
           function getLocalTime(nS) { //时间戳转换
              return new Date(parseInt(nS) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
           };
@@ -155,9 +156,100 @@
           var total_page = 0;//总页数
 
           function gotoPage(pageNum) {
+            if(navigator.appName == "Microsoft Internet Explorer" && navigator.appVersion .split(";")[1].replace(/[ ]/g,"")=="MSIE9.0"){
+               save();
+               function getXMLHttpRequest() {
+                  var xhr;
+                  if(window.ActiveXObject) {
+                           xhr= new ActiveXObject("Microsoft.XMLHTTP");
+                  }else if (window.XMLHttpRequest) {
+                           xhr= new XMLHttpRequest();
+                  }else {
+                           xhr= null;
+                  }
+                  return xhr;
+                }
+
+               function save() {
+                  var xhr = getXMLHttpRequest();
+                  // console.log(xhr)
+                  xhr.open("get","{{api_domain}}/api/leagues/{{ admin['league_id'] }}/franchises?filter=league&page="+ pageNum +"&limit="+limit,true);
+                  xhr.send(headers: {"Authorization":"Bearer {{access_token}}"});
+                  xhr.onreadystatechange= function() {
+                       if(xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 304)) {
+                             console.log(xhr.responseText);
+                             data_obj = JSON.parse(xhr.responseText);
+                             data = data_obj.rs;
+                             currentPage = pageNum;
+                         var pageData = data.data;
+                             total_page = data.total_page;//总页
+                         $('#x_Box').html("");
+
+                         for (var i in pageData) {
+
+                           var inner_html = '<tr class="even pointer" is="oneFranchise">';
+                           if(pageData[i]._status != 0){
+                               inner_html += '<td class="a-center"><input type="checkbox" checked class="flat" name="table_records"></td>';
+                           }else{
+                             inner_html += '<td class="a-center" id="checkbox'+pageData[i]._id+'"><input type="checkbox" class="flat" name="table_records"></td>';
+                           }
+                           inner_html += '<td class=" ">';
+                           inner_html += '<img src="'+pageData[i].avatar+'" class="avatar" alt="avatar">';
+                           inner_html += '</td>';
+                           inner_html += '<td class=" ">'+pageData[i].nickname+'</td>';
+                           inner_html += '<td class=" ">'+pageData[i].club.phone+'</td>';
+                           inner_html += '<td class=" "><span>'+pageData[i].club.name+'</span><br /></td>';
+                           inner_html += '<td class=" ">'+pageData[i].club.franchise_type+'</td>';
+                           inner_html += '<td class="status" id="status'+pageData[i]._id+'">';
+                             if(pageData[i]._status == 0){
+                               inner_html += '<span>待审批</span>';
+                             }else if(pageData[i]._status == 20){
+                               inner_html += '<span>通过</span>';
+                             }
+                             else if(pageData[i]._status == 10){
+                               inner_html += '<span>拒绝</span>';
+                             }
+
+                           inner_html += '</td>';
+                           inner_html += '<td class=" ">'+getLocalTime(pageData[i].create_time)+'</td>';
+                           inner_html += '<td class="last" id="'+pageData[i]._id+'">';
+                               if(pageData[i]._status == 0){
+                                 inner_html += '<a type="button" onclick="review(\''+ pageData[i]._id + '\')" class="btn btn-round btn-sm btn-info">查看详情</a>'
+                                 inner_html += '<a type="button" onclick="accept(\''+ pageData[i]._id + '\')" class="btn btn-round btn-sm btn-success">接受</a>';
+                                 inner_html += '<a type="button" onclick="reject(\''+ pageData[i]._id + '\')" class="btn btn-round btn-sm btn-danger">拒绝</a>';
+                               }else {
+                                 inner_html += '<a type="button" onclick="review(\''+ pageData[i]._id + '\')" class="btn btn-round btn-sm btn-info">查看详情</a>'
+                               }
+                           inner_html += '</td>';
+                           inner_html += '</tr>';
+
+                           $('#x_Box').append(inner_html);
+                           // member_num += 1;
+                         };
+
+                         pageNext = parseInt((currentPage-1)/5) + 1;
+
+                           start = (pageNext-1)*5+1;
+                           end = pageNext*5;
+                           if(end > total_page){
+                             end = total_page;
+                           }
+
+                           $(".pageBox").html("");
+                           for (var k=start;k<=end;k++){
+                             var inner_html = '<button class="btn btn-info" type="button" id="num'+k+'">'+k+'</button>';
+
+                             $(".pageBox").append(inner_html);
+                           };
+                            $("#num"+currentPage).addClass("on").siblings().removeClass("on");
+
+                       }
+                  };
+                };
+            };
             $.ajax({
               type: "GET",
-              url: "{{api_domain}}/api/leagues/{{ admin['league_id'] }}/franchises?filter=league&page="+ pageNum +"&limit="+limit+"",
+              url: "{{api_domain}}/api/leagues/{{ admin['league_id'] }}/franchises?filter=league&page="+ pageNum +"&limit="+limit,
               contentType: 'application/json',
               headers: {"Authorization":"Bearer {{access_token}}"},
               success: function(data, status, xhr) {
@@ -232,7 +324,6 @@
 
           };
 
-          $(function(){
             gotoPage("1");
             $(document).on('click','.pageBox > button',function(){
               var num = $(this).text();
@@ -257,86 +348,81 @@
                     // $("#num"+currentPage).addClass("current").siblings().removeClass("current");
                 }
             })
+
+        function accept(id){
+
+          var _self = this;
+          data = {
+            "action": "accept"
+          }
+          var json = JSON.stringify(data);
+
+          $.ajax({
+            type: "PUT",
+            url: "{{api_domain}}/api/leagues/{{ admin['league_id'] }}/franchises/"+id,
+            dataType: "json",
+            data: json,
+            contentType: 'application/json',
+            headers: {"Authorization":"Bearer {{access_token}}"},
+            success: function(data, status, xhr) {
+              console.log("XMLHttpRequest.xhr:" + xhr);
+              if (status == "success") {
+                $("#"+id).html('<a type="button" id="newSetBtn" class="btn btn-round btn-sm btn-info">查看详情</a>');
+                $("#status"+id).html('<span>通过</span>');
+                $("#checkbox"+id).html('<input type="checkbox" checked class="flat" name="table_records">');
+              }
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+              // console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
+              // if (XMLHttpRequest.status == 200) {
+              //   _self.franchise._status = 20
+              // }
+            },
+            complete: function(XMLHttpRequest, textStatus) {
+              this; // 调用本次AJAX请求时传递的options参数
+            }
           });
-  </script>
+        };
 
-<script type="text/javascript">
+        function reject(id){
+          var _self = this;
+          data = {
+            "action": "reject"
+          }
+          var json = JSON.stringify(data);
 
-  function accept(id){
+          $.ajax({
+            type: "PUT",
+            url: "{{api_domain}}/api/leagues/{{ admin['league_id'] }}/franchises/"+ id,
+            dataType: "json",
+            data: json,
+            contentType: 'application/json',
+            headers: {"Authorization":"Bearer {{access_token}}"},
+            success: function(data, status, xhr) {
+              console.log("XMLHttpRequest.xhr:" + xhr);
+              if (status == "success") {
+                $("#"+id).html('<a type="button" id="newSetBtn" class="btn btn-round btn-sm btn-info">查看详情</a>');
+                $("#status"+id).html('<span>拒绝</span>');
+                $("#checkbox"+id).html('<input type="checkbox" checked class="flat" name="table_records">');
+              }
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+              console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
+            },
+            complete: function(XMLHttpRequest, textStatus) {
+              this; // 调用本次AJAX请求时传递的options参数
+            }
+          });
 
-    var _self = this;
-    data = {
-      "action": "accept"
-    }
-    var json = JSON.stringify(data);
-
-    $.ajax({
-      type: "PUT",
-      url: "{{api_domain}}/api/leagues/{{ admin['league_id'] }}/franchises/"+id,
-      dataType: "json",
-      data: json,
-      contentType: 'application/json',
-      headers: {"Authorization":"Bearer {{access_token}}"},
-      success: function(data, status, xhr) {
-        console.log("XMLHttpRequest.xhr:" + xhr);
-        if (status == "success") {
-          $("#"+id).html('<a type="button" id="newSetBtn" class="btn btn-round btn-sm btn-info">查看详情</a>');
-          $("#status"+id).html('<span>通过</span>');
-          $("#checkbox"+id).html('<input type="checkbox" checked class="flat" name="table_records">');
-        }
-      },
-      error: function(XMLHttpRequest, textStatus, errorThrown) {
-        // console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
-        // if (XMLHttpRequest.status == 200) {
-        //   _self.franchise._status = 20
-        // }
-      },
-      complete: function(XMLHttpRequest, textStatus) {
-        this; // 调用本次AJAX请求时传递的options参数
-      }
+        };
+        function review(id){
+          location.href="/admin/todo-detail?id="+id  //详情
+        };
+        $(document).on("click","#newSetBtn",function(){
+          var id = $(this).parent().attr("id");
+          review(id)
+        });
     });
-  };
-
-  function reject(id){
-
-    var _self = this;
-    data = {
-      "action": "reject"
-    }
-    var json = JSON.stringify(data);
-
-    $.ajax({
-      type: "PUT",
-      url: "{{api_domain}}/api/leagues/{{ admin['league_id'] }}/franchises/"+ id,
-      dataType: "json",
-      data: json,
-      contentType: 'application/json',
-      headers: {"Authorization":"Bearer {{access_token}}"},
-      success: function(data, status, xhr) {
-        console.log("XMLHttpRequest.xhr:" + xhr);
-        if (status == "success") {
-          $("#"+id).html('<a type="button" id="newSetBtn" class="btn btn-round btn-sm btn-info">查看详情</a>');
-          $("#status"+id).html('<span>拒绝</span>');
-          $("#checkbox"+id).html('<input type="checkbox" checked class="flat" name="table_records">');
-        }
-      },
-      error: function(XMLHttpRequest, textStatus, errorThrown) {
-        console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
-      },
-      complete: function(XMLHttpRequest, textStatus) {
-        this; // 调用本次AJAX请求时传递的options参数
-      }
-    });
-
-  };
-  function review(id){
-    location.href="/admin/todo-detail?id="+id  //详情
-  };
-  $(document).on("click","#newSetBtn",function(){
-    var id = $(this).parent().attr("id");
-    review(id)
-  });
-
 </script>
 
 </body>
