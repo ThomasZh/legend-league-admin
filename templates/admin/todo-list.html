@@ -175,9 +175,9 @@
             var xhr = getXMLHttpRequest();
             // console.log(xhr)
             xhr.open("get", "{{api_domain}}/api/leagues/{{ admin['league_id'] }}/franchises?filter=league&page=" + pageNum + "&limit=" + limit, true);
-            xhr.send(headers: {
-              "Authorization": "Bearer {{access_token}}"
-            });
+            // xhr.send(headers: {
+            //   "Authorization": "Bearer {{access_token}}"
+            // });
             xhr.onreadystatechange = function() {
               if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 304)) {
                 console.log(xhr.responseText);
@@ -258,7 +258,7 @@
             "Authorization": "Bearer {{access_token}}"
           },
           success: function(data, status, xhr) {
-            // console.log(data);
+            console.log(data);
             data_obj = JSON.parse(data);
             data = data_obj.rs;
             currentPage = pageNum;
