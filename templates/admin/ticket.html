@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <!-- Meta, title, CSS, favicons, etc. -->
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Cache-Control" content="no-cache">
+
+  <title>{{ club['name'] }} | 门票配置</title>
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="{{ static_url('weui/css/weui.min.css') }}">
+  <link rel="stylesheet" href="{{ static_url('weui/css/jquery-weui.min.css') }}">
+  <link href="{{ static_url('gentelella/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
+  <link href="{{ static_url('gentelella/fontawesome/css/font-awesome.min.css') }}" rel="stylesheet">
+  <link href="{{ static_url('gentelella/animate.css/animate.min.css') }}" rel="stylesheet">
+  <!-- bootstrap-wysiwyg -->
+  <link href="{{ static_url('gentelella/google-code-prettify/bin/prettify.min.css') }}" rel="stylesheet">
+  <!-- Custom Theme Style -->
+  <link rel="stylesheet" href="{{ static_url('upyun/css/fileinput.min.css') }}" />
+  <link href="{{ static_url('css/custom.css') }}" rel="stylesheet">
+  <!-- Custom styling plus plugins -->
+  <link href="{{ static_url('gentelella/iCheck/skins/flat/green.css') }}" rel="stylesheet">
+  <script src="{{ static_url('gentelella/jquery/dist/jquery.min.js') }}"></script>
+
+</head>
+<style>
+  select{
+    width: 120px;
+    height: 30px;
+  }
+</style>
+<body class="nav-md">
+  <div class="container body">
+    <div class="main_container">
+      <div class="col-md-3 left_col">
+        <div class="left_col scroll-view">
+          <!-- menu profile quick info -->
+          {% module Template("admin/block-menu-prile-quick-info.html", admin=admin) %}
+          <!-- /menu profile quick info -->
+          <br />
+
+          <!-- sidebar menu -->
+          {% module Template("admin/block-sidebar-menu.html", counter=counter) %}
+          <!-- /sidebar menu -->
+          <br />
+
+          <!-- /menu footer buttons -->
+          {% module Template("admin/block-menu-footer.html") %}
+          <!-- /menu footer buttons -->
+        </div>
+      </div>
+
+      <!-- top navigation -->
+      {% module Template("admin/block-top-nav.html", admin=admin) %}
+      <!-- page content -->
+      <div class="right_col" role="main">
+
+        <div class="">
+          <div style="height:auto;" class="page-title">
+            <div class="title_left">
+              <h3>配置</h3>
+            </div>
+            <div class="clearfix"></div>
+            <div class="row">
+                <div class="col-md-8 col-sm-8 col-xs-12">
+                  <div class="x_panel">
+                    <div class="x_title">
+                      <h2>门票配置<small><a href="/admin/franchises">返回景区列表</a></small></h2>
+                      <ul class="nav navbar-right panel_toolbox">
+                      	<li><a href="javascript:;" id="add-btn" class="btn btn-success btn-xs">
+                          <i class="fa fa-plus"></i> 添加 </a>
+                      	</li>
+                      </ul>
+                      <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+                      <table class="table table-striped">
+                        <thead>
+                          <tr>
+                            <th>门票分类</th>
+                            <th>门票价格(元)</th>
+                            <th>操作</th>
+                          </tr>
+                        </thead>
+                        <tbody></tbody>
+                      </table>
+                    </div>
+                </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- footer content -->
+        {% module Template("admin/block-footer.html", admin=admin) %}
+        <!-- /footer content -->
+
+      </div>
+      <!-- /page content -->
+
+    </div>
+  </div>
+
+  <script src="{{ static_url('gentelella/bootstrap/dist/js/bootstrap.min.js') }}" type="text/javascript"></script>
+  <!-- bootstrap progress js -->
+  <script src="{{ static_url('gentelella/bootstrap-progressbar/bootstrap-progressbar.min.js') }}" type="text/javascript"></script>
+  <!-- icheck -->
+  <script src="{{ static_url('gentelella/iCheck/icheck.min.js') }}" type="text/javascript"></script>
+  <!-- bootstrap-wysiwyg -->
+  <script src="{{ static_url('gentelella/bootstrap-wysiwyg/src/bootstrap-wysiwyg.js') }}"></script>
+  <script src="{{ static_url('gentelella/jquery.hotkeys/jquery.hotkeys.js') }}"></script>
+  <script src="{{ static_url('gentelella/google-code-prettify/src/prettify.js') }}"></script>
+  <script src="{{ static_url('js/custom.js') }}" type="text/javascript"></script>
+  <script src="{{ static_url('weui/js/jquery-weui.min.js') }}"></script>
+  <script type="text/javascript">
+  $(function(){
+    getJson(1);
+    // 初始化列表
+    function getJson(pageNum){
+      var limit = 10;
+      $.ajax({
+        type: "GET",
+        url: "{{ api_domain }}/api/items?filter=club&club_id={{ club_id }}&page="+pageNum+"&limit="+limit,
+        dataType: "json",
+        headers: {"Authorization":"Bearer {{access_token}}"},
+        contentType: 'application/json',
+        success: function(data, status, xhr) {
+          // console.log(data);
+          var dataObj = data.rs.data;
+          if(data.err_code == 200){
+            for (var i=0; i<dataObj.length;i++){
+              var html = '<tr>';
+                  html +=  '<td>'+dataObj[i]['title']+'</td>';
+                  html +=  '<td>'+parseFloat(dataObj[i]['amount'])/100+'</td>';
+                  html +=  '<td>';
+                  html +=  '<a data_id = "'+ dataObj[i]['_id'] +'" class="btn btn-info btn-xs cate-edit">';
+                  html +=  '<i class="fa fa-pencil"></i> 编辑 </a>';
+                  html +=  '<a data_id = "'+ dataObj[i]['_id'] +'" class="btn btn-danger btn-xs cate-dele">';
+                  html +=  '<i class="fa fa-trash-o"></i> 删除 </a>';
+                  html +=  '</td></tr>';
+                $('.table tbody').append(html);
+            }
+          }
+
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+          console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
+          $('.lostpwd-form-main-message').addClass('error').html(XMLHttpRequest.status + ": 服务器异常,请稍后重试!");
+        },
+        complete: function(XMLHttpRequest, textStatus) {
+          this; // 调用本次AJAX请求时传递的options参数
+        }
+      });
+    };
+    // 添加操作
+      $(document).on('click','#add-btn',function(){
+        var html = '<tr>';
+            html +=  '<td><input type="text" /></td>';
+            html +=  '<td><input type="text" /></td>';
+            html +=  '<td>';
+            html +=  '<a class="btn btn-info btn-xs new-edit">';
+            html +=  '<i class="fa fa-pencil"></i> 保存 </a>';
+            html +=  '<a class="btn btn-danger btn-xs cate-dele">';
+            html +=  '<i class="fa fa-trash-o"></i> 删除 </a>';
+            html +=  '</td></tr>';
+          $('.table tbody').append(html);
+      }).on('click','.new-edit',function(){
+        var _this = $(this);
+        var _title = $(this).parent().prev().prev().children().val();
+        var price = $(this).parent().prev().children().val();
+        var ticket_price = price*100;
+        // var _minNum = minNum*100;
+        // var _maxNum = maxNum*100;
+        if(_title == '' || price == ''){
+          $.alert("填写不完整!");
+        }else{
+          var data = {
+                  "club_id":"{{ club_id }}",
+                  "title":_title,
+                  "img":"https://tripc2c-club-title.b0.upaiyun.com/avatar/2017/8/30/f57de0e3-7177-4b39-8136-1feb2a12c8d9.jpg",
+                  "category_id":"00000000000000000000000000000000",
+                  "level2_category_id":"00000000000000000000000000000000",
+                  "brand_id":"00000000000000000000000000000000"
+              }
+          var name_json = JSON.stringify(data);
+            $.ajax({
+              type: "POST",
+              url: "{{ api_domain }}/api/items",
+              dataType: "json",
+              data:name_json,
+              headers: {"Authorization":"Bearer {{access_token}}"},
+              contentType: 'application/json',
+              success: function(data, status, xhr) {
+                var ticket_id = data.rs._id;
+                if(data.err_code == 200){
+                  var _json = [{'spec_id':"00000000000000000000000000000000", 'amount':ticket_price}]
+                  var price_json = JSON.stringify(_json);
+                    $.ajax({
+                      type: "PUT",
+                      url: "{{ api_domain }}/api/items/"+ ticket_id +"/specs",
+                      dataType: "json",
+                      data:price_json,
+                      headers: {"Authorization":"Bearer {{access_token}}"},
+                      contentType: 'application/json',
+                      success: function(data, status, xhr) {
+                        // console.log(data);
+                        // var data_id = data.rs._id;
+                        if(data.err_code == 200){
+                          _this.parent().prev().prev().html(_title);
+                          _this.parent().prev().html(price);
+                          _this.attr('data_id',ticket_id);
+                          _this.next().attr('data_id',ticket_id);
+                          _this.removeClass('new-edit').addClass('cate-edit');
+                          _this.html('<i class="fa fa-pencil">编辑');
+                        }
+
+                      },
+                      error: function(XMLHttpRequest, textStatus, errorThrown) {
+                        console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
+                        $('.lostpwd-form-main-message').addClass('error').html(XMLHttpRequest.status + ": 服务器异常,请稍后重试!");
+                      },
+                      complete: function(XMLHttpRequest, textStatus) {
+                        this; // 调用本次AJAX请求时传递的options参数
+                      }
+                    });
+                }
+
+              },
+              error: function(XMLHttpRequest, textStatus, errorThrown) {
+                console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
+                $('.lostpwd-form-main-message').addClass('error').html(XMLHttpRequest.status + ": 服务器异常,请稍后重试!");
+              },
+              complete: function(XMLHttpRequest, textStatus) {
+                this; // 调用本次AJAX请求时传递的options参数
+              }
+            });
+        }
+
+      })
+
+    // 门票删除
+      function dele(ticket_id){
+        $.ajax({
+          type: "DELETE",
+          url: "{{ api_domain }}/api/items/"+ticket_id,
+          dataType: "json",
+          headers: {"Authorization":"Bearer {{access_token}}"},
+          contentType: 'application/json',
+          success: function(data, status, xhr) {
+              // console.log(data);
+          },
+          error: function(XMLHttpRequest, textStatus, errorThrown) {
+            console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
+            $('.lostpwd-form-main-message').addClass('error').html(XMLHttpRequest.status + ": 服务器异常,请稍后重试!");
+          },
+          complete: function(XMLHttpRequest, textStatus) {
+            this; // 调用本次AJAX请求时传递的options参数
+          }
+        });
+      };
+      // 门票编辑
+      function cateEidt(ticket_id,title,price){
+        var data = {
+                "club_id":"{{ club_id }}",
+                "title":title,
+                "img":"https://tripc2c-club-title.b0.upaiyun.com/avatar/2017/8/30/f57de0e3-7177-4b39-8136-1feb2a12c8d9.jpg",
+                "category_id":"00000000000000000000000000000000",
+                "level2_category_id":"00000000000000000000000000000000",
+                "brand_id":"00000000000000000000000000000000"
+            }
+        var name_json = JSON.stringify(data);
+        $.ajax({
+          type: "PUT",
+          url: "{{ api_domain }}/api/items/"+ticket_id,
+          dataType: "json",
+          data:name_json,
+          headers: {"Authorization":"Bearer {{access_token}}"},
+          contentType: 'application/json',
+          success: function(data, status, xhr) {
+              var _json = [{'spec_id':"00000000000000000000000000000000", 'amount':price}]
+              var price_json = JSON.stringify(_json);
+              // console.log(price_json);
+              $.ajax({
+                type: "PUT",
+                url: "{{ api_domain }}/api/items/"+ ticket_id +"/specs",
+                dataType: "json",
+                data:price_json,
+                headers: {"Authorization":"Bearer {{access_token}}"},
+                contentType: 'application/json',
+                success: function(data, status, xhr) {
+                  // console.log(data);
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                  console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
+                  $('.lostpwd-form-main-message').addClass('error').html(XMLHttpRequest.status + ": 服务器异常,请稍后重试!");
+                },
+                complete: function(XMLHttpRequest, textStatus) {
+                  this; // 调用本次AJAX请求时传递的options参数
+                }
+              });
+          },
+          error: function(XMLHttpRequest, textStatus, errorThrown) {
+            console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
+            $('.lostpwd-form-main-message').addClass('error').html(XMLHttpRequest.status + ": 服务器异常,请稍后重试!");
+          },
+          complete: function(XMLHttpRequest, textStatus) {
+            this; // 调用本次AJAX请求时传递的options参数
+          }
+        });
+      };
+
+      $(document).on('click','.cate-dele',function(){
+        ticket_id = $(this).attr('data_id');
+        var _this = $(this);
+        $.confirm('确定删除该门票配置吗？',function(){
+          dele(ticket_id);
+          _this.parent().parent().remove();
+        },function(){
+            // 取消操作
+        })
+
+      });
+      // 修改操作
+      $(document).on('click','.cate-edit',function(){
+        $(this).html('<i class="fa fa-save"></i> 保存');
+        var old_title = $(this).parent().prev().prev().text();
+        var old_price = $(this).parent().prev().text();
+        var _title = $('<input type="text" class="max-edit" value="'+old_title+'" style="width:100px;" />');
+        var _price = $('<input type="number" class="cost-edit" value="'+old_price+'" style="width:100px;" />');
+        $(this).parent().prev().prev().html(_title);
+        $(this).parent().prev().html(_price);
+        $(this).removeClass('cate-edit').addClass('cate-save');
+      }).on('click','.cate-save',function(){
+        var new_title = $(this).parent().prev().prev().children().val();
+        var new_price = $(this).parent().prev().children().val();
+        var sw_price = new_price*100;
+        // var _min = min*100;
+        // var _max = max*100;
+        if(new_title == "" || new_price == ""){
+          $.alert('填写不完整！');
+          return false;
+        }
+        var _id = $(this).attr('data_id');
+        cateEidt(_id,new_title,sw_price);
+        $(this).parent().prev().html(new_price);
+        $(this).parent().prev().prev().html(new_title);
+        $(this).html('<i class="fa fa-pencil"></i> 编辑');
+        $(this).removeClass('cate-save').addClass('cate-edit');
+      });
+
+  })
+  </script>
+</body>
+
+</html>

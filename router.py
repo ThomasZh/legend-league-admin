@@ -37,6 +37,8 @@ def map():
         (r'/admin/setup/binding-wx', getattr(work_sheet, 'VendorBindingWxHandler')),
         (r'/admin/administrators', getattr(work_sheet, 'AdministratorsHandler')),
         (r'/admin/franchises', getattr(work_sheet, 'FranchisesHandler')),
+        (r'/admin/position', getattr(work_sheet, 'PositionHandler')),
+        (r'/admin/ticket', getattr(work_sheet, 'TicketHandler')),
         (r'/admin/suppliers', getattr(work_sheet, 'SuppliersHandler')),
         (r'/admin/todo-list', getattr(work_sheet, 'TodoListHandler')),
         (r'/admin/todo-detail', getattr(work_sheet, 'TodoDetailHandler')),

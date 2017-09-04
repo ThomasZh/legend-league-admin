@@ -167,6 +167,8 @@
                 inner_html += '<td>'+pageData[i].province+ '&nbsp'+ pageData[i].city+'</td>';
                 inner_html += '<td>'+getLocalTime(pageData[i].create_time)+'</td>';
                 inner_html += '<td><a type="button" data_id="'+ pageData[i].club_id +'" class="btn btn-round btn-sm btn-info detail-btn">查看详情</a>';
+                inner_html += '<a href="/admin/position?club_id='+pageData[i].club_id+'" type="button" class="btn btn-round btn-sm btn-primary">位置</a>';
+                inner_html += '<a href="/admin/ticket?club_id='+pageData[i].club_id+'" type="button" class="btn btn-round btn-sm btn-warning">门票</a>';
                 inner_html += '<a type="button" data_id="'+ pageData[i].club_id +'" class="btn btn-round btn-sm btn-danger dele-btn">删除</a></td>';
                 inner_html += '</tr>';
 

@@ -128,6 +128,71 @@ class FranchisesHandler(AuthorizationHandler):
                 api_domain=API_DOMAIN)
 
 
+# 地理位置
+class PositionHandler(AuthorizationHandler):
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def get(self):
+        logging.info(self.request)
+        access_token = self.get_secure_cookie("access_token")
+        admin = self.get_admin_info()
+        league_id = admin['league_id']
+        counter = self.get_counter(league_id)
+
+        club_id = self.get_argument('club_id',"")
+        logging.info("got club_id",club_id)
+
+        params = {"filter":"detail"}
+        url = url_concat(API_DOMAIN+"/api/clubs/"+club_id,params)
+        http_client = HTTPClient()
+        response = http_client.fetch(url, method="GET")
+        logging.info("got response %r", response.body)
+        data = json_decode(response.body)
+        club = data['rs']
+        geo_x = club['gcj02']['x']
+        geo_y = club['gcj02']['y']
+
+        self.render('admin/position.html',
+                admin=admin,
+                counter=counter,
+                club_id=club_id,
+                club=club,
+                access_token=access_token,
+                api_domain=API_DOMAIN,
+                geo_x=geo_x,
+                geo_y=geo_y)
+
+
+# 门票配置
+class TicketHandler(AuthorizationHandler):
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def get(self):
+        logging.info(self.request)
+        access_token = self.get_secure_cookie("access_token")
+        admin = self.get_admin_info()
+        league_id = admin['league_id']
+        counter = self.get_counter(league_id)
+
+        club_id = self.get_argument('club_id',"")
+        logging.info("got club_id",club_id)
+
+        params = {"filter":"detail"}
+        url = url_concat(API_DOMAIN+"/api/clubs/"+club_id,params)
+        http_client = HTTPClient()
+        response = http_client.fetch(url, method="GET")
+        logging.info("got response %r", response.body)
+        data = json_decode(response.body)
+        club = data['rs']
+
+        self.render('admin/ticket.html',
+                admin=admin,
+                counter=counter,
+                club_id=club_id,
+                club=club,
+                access_token=access_token,
+                api_domain=API_DOMAIN)
+
+
+
 class SuppliersHandler(AuthorizationHandler):
     @tornado.web.authenticated  # if no session, redirect to login page
     def get(self):
