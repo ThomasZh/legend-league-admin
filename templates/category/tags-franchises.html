@@ -73,8 +73,8 @@
                     &nbsp><small>景区列表</small></h2>
 
                   <ul class="nav navbar-right panel_toolbox">
-                  	<li><a href="#" class="btn btn-success btn-xs">
-                      <i class="fa fa-plus"></i> 添加景区 </a>
+                  	<li>
+                      <a class="btn btn-success btn-xs dis-btn" data-toggle="modal" data-target=".bs-example-modal-sm"><i class="fa fa-plus"></i> 添加景区 </a>
                   	</li>
                     <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                     </li>
@@ -89,8 +89,7 @@
                     <thead>
                       <tr>
                         <th>序号</th>
-                        <th>名称</th>
-                        <th>状态</th>
+                        <th>景区名称</th>
                         <th>操作</th>
                       </tr>
                     </thead>
@@ -110,6 +109,28 @@
             </div> <!-- column -->
 
           </div> <!-- row -->
+        </div>
+
+        <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+          <div class="modal-dialog modal-sm" style="margin:14rem auto;">
+            <div class="modal-content">
+              <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+              </button>
+              <h4 class="modal-title">景区选择</h4>
+              </div>
+              <div class="modal-body col-md-9 col-sm-9 col-xs-12">
+                  <select class="select2_single form-control" id="fran-list" tabindex="-1">
+                    {% for franchise in franchises %}
+                      <option value="{{ franchise['club_id'] }}">{{ franchise['name'] }}</option>
+                    {% end %}
+                  </select>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="add-btn">添加</button>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- footer content -->
@@ -133,15 +154,15 @@
   <script src="{{ static_url('weui/js/jquery-weui.min.js') }}"></script>
   <script type="text/javascript">
   $(function(){
-    // 商品分页显示
 
+    // 商品分页显示
     var limit = 8;//每页显示数
     var currentPage = 0;//当前页
     var total_page = 0;//总页数
 
     function gotoPage(pageNum) {
-      $.get("{{ API_DOMAIN }}/api/def/categories/{{second_categorys_id}}/items?_status=all&page="+pageNum+"&limit="+limit+"",function(data,status){
-            console.log(data);
+      $.get("{{ API_DOMAIN }}/api/categories/{{ second_categorys_id }}/clubs?page="+pageNum+"&limit="+limit,function(data,status){
+            // console.log(data);
             data_obj = JSON.parse(data);
             data = data_obj.rs;
             currentPage = pageNum;
@@ -154,19 +175,14 @@
 
           var inner_html = '<tr>';
               inner_html += '<th scope="row">'+ pageData[i]._seq +'</th>';
-              inner_html += '<td><a href="">'+ pageData[i].title +'</a></td>';
+              inner_html += '<td><a href="">'+ pageData[i].name +'</a></td>';
               inner_html += '<td>';
-               if (pageData[i]._status > 10){
-                inner_html += '销售中';}
-               else{
-                 inner_html += '草稿箱'
-               }
-              inner_html += '</td>';
-              inner_html += '<td>';
-              inner_html += '<a data_id = "'+ pageData[i]._id +'" class="btn btn-info btn-xs prod-edit">';
+              inner_html += '<a data_id = "'+ pageData[i].club_id +'" class="btn btn-info btn-xs prod-edit">';
               inner_html += '<i class="fa fa-pencil"></i> 编辑 </a>';
-              inner_html += '<a data_id = "'+ pageData[i]._id +'" class="btn btn-danger btn-xs prod-dele">';
+              inner_html += '<a data_id = "'+ pageData[i].club_id +'" class="btn btn-danger btn-xs prod-dele">';
               inner_html += '<i class="fa fa-trash-o"></i> 删除 </a>';
+              // inner_html += '<a href = "/admin/todo-detail?id='+pageData[i].club_id+'" data_id = "'+ pageData[i].club_id +'" class="btn btn-success btn-xs">';
+              // inner_html += '<i class="fa fa-eye"></i> 查看 </a>';
               inner_html += '</td></tr>';
 
           $('#prod-wrap').append(inner_html);
@@ -194,7 +210,7 @@
 
     };
 
-      gotoPage("1");
+      gotoPage(1);
       $(document).on('click','.pageBox > button',function(){
         var num = $(this).text();
         gotoPage(num);
@@ -219,107 +235,39 @@
           }
       });
 
-    // 上架商品操作
-    $(document).on('click','.prod-pub',function(){
-      var _id = $(this).attr('data_id');
-      var _this = $(this);
-      $.confirm('确定上架该商品吗？',function(){
-        publish(_id);
-        _this.parent().prev().html('销售中');
-        _this.removeClass('btn-success prod-pub').addClass('btn-primary prod-unpub').html('<i class="fa fa-pause"></i> 下架商品');
-      },function(){
-          // 取消操作
+      // 添加景区到tag操作
+      $(document).on('click','#add-btn',function(){
+        // console.log(or_id);
+        var club_id = $('#fran-list option:checked').val();
+        // var club_name = $('#fran-list option:checked').text();
+        var data = {"category_id":"{{ second_category_info['parent_id'] }}","level2_category_id":"{{ second_categorys_id }}","_seq":0}
+        var _json = JSON.stringify(data);
+        // console.log(_json);
+        $.ajax({
+          type: "PUT",
+          url: "{{ API_DOMAIN }}/api/clubs/"+club_id+"/categories",
+          headers: {"Authorization": "Bearer {{ access_token }}"},
+          dataType: "json",
+          data:_json,
+          contentType: 'application/json',
+          success: function(data, status, xhr) {
+            // console.log(data);
+              // if(data.err_code == 200){
+              // }
+          }
+        })
       })
-    });
-
-    $(document).on('click','.prod-unpub',function(){
-      var _id = $(this).attr('data_id');
-      var _this = $(this);
-      $.confirm('确定下架该商品吗？',function(){
-        unpublish(_id);
-        _this.parent().prev().html('草稿箱');
-        _this.removeClass('btn-primary prod-unpub').addClass('btn-success prod-pub').html('<i class="fa fa-play"></i> 上架商品');
-      },function(){
-          // 取消操作
-      })
-    });
-    // 上架操作
-    function publish(id){
-      console.log(id);
-      $.ajax({
-        type: "POST",
-        url: "{{ API_DOMAIN }}/api/items/"+id+"/publish",
-        dataType: "json",
-        headers: {"Authorization":"Bearer {{access_token}}"},
-        contentType: 'application/json',
-        success: function(data, status, xhr) {
-        },
-        error: function(XMLHttpRequest, textStatus, errorThrown) {
-          console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
-          $('.lostpwd-form-main-message').addClass('error').html(XMLHttpRequest.status + ": 服务器异常,请稍后重试!");
-        },
-        complete: function(XMLHttpRequest, textStatus) {
-          this; // 调用本次AJAX请求时传递的options参数
-        }
-      });
-    };
-
-    // 下架操作
-    function unpublish(id){
-      console.log(id);
-      $.ajax({
-        type: "POST",
-        url: "{{ API_DOMAIN }}/api/items/"+id+"/unpublish",
-        dataType: "json",
-        headers: {"Authorization":"Bearer {{access_token}}"},
-        contentType: 'application/json',
-        success: function(data, status, xhr) {
-        },
-        error: function(XMLHttpRequest, textStatus, errorThrown) {
-          console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
-          $('.lostpwd-form-main-message').addClass('error').html(XMLHttpRequest.status + ": 服务器异常,请稍后重试!");
-        },
-        complete: function(XMLHttpRequest, textStatus) {
-          this; // 调用本次AJAX请求时传递的options参数
-        }
-      });
-    };
 
     // 删除操作
     function dele(_id){
       $.ajax({
         type: "DELETE",
-        url: "{{ API_DOMAIN }}/api/items/"+_id,
+        url: "{{ API_DOMAIN }}/api/clubs/"+_id+"/categories/{{ second_categorys_id }}",
         dataType: "json",
         headers: {"Authorization":"Bearer {{access_token}}"},
         contentType: 'application/json',
         success: function(data, status, xhr) {
-
-        },
-        error: function(XMLHttpRequest, textStatus, errorThrown) {
-          console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
-          $('.lostpwd-form-main-message').addClass('error').html(XMLHttpRequest.status + ": 服务器异常,请稍后重试!");
-        },
-        complete: function(XMLHttpRequest, textStatus) {
-          this; // 调用本次AJAX请求时传递的options参数
-        }
-      });
-    };
-
-    // 分类编辑
-    function cateEidt(category_id,seq_num){
-      var data= {"_seq":seq_num};
-      var _json = JSON.stringify(data);
-      console.log(_json);
-      $.ajax({
-        type: "PUT",
-        url: "{{ API_DOMAIN }}/api/items/"+category_id,
-        dataType: "json",
-        data:_json,
-        headers: {"Authorization":"Bearer {{access_token}}"},
-        contentType: 'application/json',
-        success: function(data, status, xhr) {
-
+            console.log(data);
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
           console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
@@ -332,32 +280,56 @@
     };
 
     $(document).on('click','.prod-dele',function(){
-      spec_id = $(this).attr('data_id');
+      club_id = $(this).attr('data_id');
       var _this = $(this);
-      $.confirm('确定删除该商品吗？',function(){
-        dele(spec_id);
+      $.confirm('确定移除该景区吗？',function(){
+        dele(club_id);
         _this.parent().parent().remove();
       },function(){
           // 取消操作
       })
     });
+    // 分类编辑
+    function cateEidt(club_id,seq_num){
+      var data= {"category_id":"{{ second_category_info['parent_id'] }}","level2_category_id":"{{ second_categorys_id }}","_seq":seq_num};
+      var _json = JSON.stringify(data);
+      console.log(_json);
+      $.ajax({
+        type: "PUT",
+        url: "{{ API_DOMAIN }}/api/clubs/"+club_id+"/categories",
+        dataType: "json",
+        data:_json,
+        headers: {"Authorization":"Bearer {{access_token}}"},
+        contentType: 'application/json',
+        success: function(data, status, xhr) {
+          // console.log(data);
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+          console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
+          $('.lostpwd-form-main-message').addClass('error').html(XMLHttpRequest.status + ": 服务器异常,请稍后重试!");
+        },
+        complete: function(XMLHttpRequest, textStatus) {
+          this; // 调用本次AJAX请求时传递的options参数
+        }
+      });
+    };
 
     // 修改操作
     $(document).on('click','.prod-edit',function(){
       $(this).html('<i class="fa fa-save"></i> 保存')
-      var old_num = $(this).parent().prev().prev().prev().text();
+      var old_num = $(this).parent().prev().prev().text();
       var seq_input = $('<input type="number" class="seq-edit" value="'+old_num+'" style="width:100px;" />');
-      $(this).parent().prev().prev().prev().html(seq_input);
+      $(this).parent().prev().prev().html(seq_input);
       $(this).removeClass('prod-edit').addClass('prod-save');
     }).on('click','.prod-save',function(){
-      var seq_num = $(this).parent().prev().prev().prev().children().val();
+      var seq_num = $(this).parent().prev().prev().children().val();
       if(seq_num == ""){
         $.alert('序号填写不完整！');
         return false;
       }
       var _id = $(this).attr('data_id');
       cateEidt(_id,seq_num);
-      $(this).parent().prev().prev().prev().html(seq_num);
+      $(this).parent().prev().prev().html(seq_num);
       $(this).html('<i class="fa fa-pencil"></i> 编辑');
       $(this).removeClass('prod-save').addClass('prod-edit');
     });

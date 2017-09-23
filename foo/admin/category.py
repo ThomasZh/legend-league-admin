@@ -132,15 +132,15 @@ class CategoriesTagsFranchisesHandler(AuthorizationHandler):
         data = json_decode(response.body)
         second_category_info = data['rs']
 
-        # 获取商品列表
-        # params = {"_status":"all","page":1, "limit":200}
-        # url = url_concat(API_DOMAIN + "/api/def/categories/"+ second_categorys_id +"/items", params)
-        # http_client = HTTPClient()
-        # headers = {"Authorization":"Bearer " + access_token}
-        # response = http_client.fetch(url, method="GET", headers=headers,)
-        # logging.info("got response.body %r", response.body)
-        # data = json_decode(response.body)
-        # second_products = data['rs']['data']
+        # 获取景区列表
+        params = {"filter":"league", "franchise_type":"景区", "page":1, "limit":200}
+        url = url_concat(API_DOMAIN + "/api/leagues/"+ league_id +"/clubs", params)
+        http_client = HTTPClient()
+        headers = {"Authorization":"Bearer " + access_token}
+        response = http_client.fetch(url, method="GET", headers=headers,)
+        logging.info("got response.body %r", response.body)
+        data = json_decode(response.body)
+        franchises = data['rs']['data']
 
         counter = self.get_counter(league_id)
         self.render('category/tags-franchises.html',
@@ -149,7 +149,8 @@ class CategoriesTagsFranchisesHandler(AuthorizationHandler):
                 API_DOMAIN=API_DOMAIN,
                 counter=counter,
                 second_categorys_id=second_categorys_id,
-                second_category_info=second_category_info)
+                second_category_info=second_category_info,
+                franchises=franchises)
 
 
 class CategoriesIndexHandler(AuthorizationHandler):
