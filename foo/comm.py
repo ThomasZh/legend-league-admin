@@ -359,6 +359,23 @@ class BaseHandler(tornado.web.RequestHandler):
 
 
 class AuthorizationHandler(BaseHandler):
+    def get_access_token(self):
+        access_token = self.get_secure_cookie("access_token")
+        if access_token:
+            logging.info("got access_token=[%r] from cookie", access_token)
+        else:
+            try:
+                access_token = self.request.headers['Authorization']
+                access_token = access_token.replace('Bearer ','')
+            except:
+                logging.warn("got access_token=[null] from headers")
+                self.set_status(401) # Unauthorized
+                self.write('Unauthorized')
+                self.finish()
+                return
+            logging.info("got access_token=[%r] from headers", access_token)
+        return access_token
+        
     def get_current_user(self):
         self.set_secure_cookie("login_next", self.request.uri)
 

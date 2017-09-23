@@ -53,6 +53,9 @@ def map():
         (r'/admin/notice-edit', getattr(work_sheet, 'NoticeEditHandler')),
         (r'/admin/notice-edit', getattr(work_sheet, 'NoticeEditHandler')),
 
+        (r'/admin/categories/franchises', getattr(category, 'CategoriesFranchisesHandler')),
+        (r'/admin/categories/tags', getattr(category, 'CategoriesTagsHandler')),
+        (r'/admin/categories/tags/franchises', getattr(category, 'CategoriesTagsFranchisesHandler')),
         (r'/admin/categories/create', getattr(category, 'CategoriesCreateHandler')),
         (r'/admin/categories/index', getattr(category, 'CategoriesIndexHandler')),
         (r'/admin/categories/edit', getattr(category, 'CategoriesEditHandler')),

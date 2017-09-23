@@ -40,6 +40,117 @@ from bson import json_util
 from comm import *
 from global_const import *
 
+# 景区分类列表页
+class CategoriesFranchisesHandler(AuthorizationHandler):
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def get(self):
+        admin = self.get_admin_info()
+        league_id = admin['league_id']
+
+        access_token = self.get_access_token()
+        logging.info("GET access_token %r", access_token)
+
+        params = {"_type":"scenery"}
+        url = url_concat(API_DOMAIN + "/api/def/leagues/"+ LEAGUE_ID +"/categories",params)
+        http_client = HTTPClient()
+        headers = {"Authorization":"Bearer " + access_token}
+        response = http_client.fetch(url, method="GET", headers=headers)
+        logging.info("got response.body %r", response.body)
+        data = json_decode(response.body)
+        categorys = data['rs']
+
+        counter = self.get_counter(league_id)
+        self.render('category/category-franchises.html',
+                admin=admin,
+                access_token=access_token,
+                API_DOMAIN=API_DOMAIN,
+                counter=counter,
+                categorys=categorys,
+                league_id=league_id)
+
+
+# 二级分类
+class CategoriesTagsHandler(AuthorizationHandler):
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def get(self):
+        admin = self.get_admin_info()
+        league_id = admin['league_id']
+
+        access_token = self.get_access_token()
+        logging.info("GET access_token %r", access_token)
+
+        category_id = self.get_argument('category_id','')
+        logging.info("get category_id",category_id)
+
+        # TODO: get second_category info
+        url = API_DOMAIN + "/api/def/categories/"+ category_id
+        http_client = HTTPClient()
+        headers = {"Authorization":"Bearer " + access_token}
+        response = http_client.fetch(url, method="GET", headers=headers)
+        logging.info("got response.body %r", response.body)
+        data = json_decode(response.body)
+        second_category_info = data['rs']
+
+        url = API_DOMAIN + "/api/def/categories/"+ category_id +"/level2"
+        http_client = HTTPClient()
+        headers = {"Authorization":"Bearer " + access_token}
+        response = http_client.fetch(url, method="GET", headers=headers)
+        logging.info("got response.body %r", response.body)
+        data = json_decode(response.body)
+        second_categorys = data['rs']
+
+        counter = self.get_counter(league_id)
+        self.render('category/tags.html',
+                admin=admin,
+                access_token=access_token,
+                API_DOMAIN=API_DOMAIN,
+                counter=counter,
+                category_id=category_id,
+                second_category_info=second_category_info,
+                second_categorys=second_categorys,
+                league_id=league_id)
+
+
+# /tag下的商品
+class CategoriesTagsFranchisesHandler(AuthorizationHandler):
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def get(self):
+        admin = self.get_admin_info()
+        league_id = admin['league_id']
+        access_token = self.get_access_token()
+        logging.info("GET access_token %r", access_token)
+
+        second_categorys_id = self.get_argument('second_categorys_id','')
+        logging.info("get second_categorys_id",second_categorys_id)
+
+        # TODO: get second_category info
+        url = API_DOMAIN + "/api/def/categories/"+ second_categorys_id
+        http_client = HTTPClient()
+        headers = {"Authorization":"Bearer " + access_token}
+        response = http_client.fetch(url, method="GET", headers=headers)
+        logging.info("got response.body %r", response.body)
+        data = json_decode(response.body)
+        second_category_info = data['rs']
+
+        # 获取商品列表
+        # params = {"_status":"all","page":1, "limit":200}
+        # url = url_concat(API_DOMAIN + "/api/def/categories/"+ second_categorys_id +"/items", params)
+        # http_client = HTTPClient()
+        # headers = {"Authorization":"Bearer " + access_token}
+        # response = http_client.fetch(url, method="GET", headers=headers,)
+        # logging.info("got response.body %r", response.body)
+        # data = json_decode(response.body)
+        # second_products = data['rs']['data']
+
+        counter = self.get_counter(league_id)
+        self.render('category/tags-franchises.html',
+                admin=admin,
+                access_token=access_token,
+                API_DOMAIN=API_DOMAIN,
+                counter=counter,
+                second_categorys_id=second_categorys_id,
+                second_category_info=second_category_info)
+
 
 class CategoriesIndexHandler(AuthorizationHandler):
     @tornado.web.authenticated  # if no session, redirect to login page
