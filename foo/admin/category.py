@@ -133,7 +133,7 @@ class CategoriesTagsFranchisesHandler(AuthorizationHandler):
         second_category_info = data['rs']
 
         # 获取景区列表
-        params = {"filter":"league", "franchise_type":"景区", "page":1, "limit":200}
+        params = {"filter":"league", "franchise_type":"scenery", "page":1, "limit":200}
         url = url_concat(API_DOMAIN + "/api/leagues/"+ league_id +"/clubs", params)
         http_client = HTTPClient()
         headers = {"Authorization":"Bearer " + access_token}

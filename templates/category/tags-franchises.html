@@ -252,8 +252,9 @@
           contentType: 'application/json',
           success: function(data, status, xhr) {
             // console.log(data);
-              // if(data.err_code == 200){
-              // }
+              if(data.err_code == 200){
+                location.reload();
+              }
           }
         })
       })
