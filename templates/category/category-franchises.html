@@ -172,7 +172,7 @@
                 _this.attr('data_id',data_id);
                 _this.next().attr('data_id',data_id);
                 _this.removeClass('new-edit').addClass('cate-edit');
-                _this.parent().children("a:last-child").attr("href","/admin/categories/tags?recommend_category_id="+data_id);
+                _this.parent().children("a:last-child").attr("href","/admin/categories/tags?category_id="+data_id);
                 _this.html('<i class="fa fa-pencil">编辑');
               }
 
