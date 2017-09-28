@@ -84,6 +84,7 @@
                           <tr>
                             <th>门票分类</th>
                             <th>门票价格(元)</th>
+                            <th>会员价格(元)</th>
                             <th>操作</th>
                           </tr>
                         </thead>
@@ -130,13 +131,14 @@
         headers: {"Authorization":"Bearer {{access_token}}"},
         contentType: 'application/json',
         success: function(data, status, xhr) {
-          // console.log(data);
+          console.log(data);
           var dataObj = data.rs.data;
           if(data.err_code == 200){
             for (var i=0; i<dataObj.length;i++){
               var html = '<tr>';
                   html +=  '<td>'+dataObj[i]['title']+'</td>';
                   html +=  '<td>'+parseFloat(dataObj[i]['amount'])/100+'</td>';
+                  html +=  '<td>'+parseFloat(dataObj[i]['discount_amount'])/100+'</td>';
                   html +=  '<td>';
                   html +=  '<a data_id = "'+ dataObj[i]['_id'] +'" class="btn btn-info btn-xs cate-edit">';
                   html +=  '<i class="fa fa-pencil"></i> 编辑 </a>';
@@ -161,7 +163,8 @@
       $(document).on('click','#add-btn',function(){
         var html = '<tr>';
             html +=  '<td><input type="text" /></td>';
-            html +=  '<td><input type="text" /></td>';
+            html +=  '<td><input type="number" /></td>';
+            html +=  '<td><input type="number" /></td>';
             html +=  '<td>';
             html +=  '<a class="btn btn-info btn-xs new-edit">';
             html +=  '<i class="fa fa-pencil"></i> 保存 </a>';
@@ -171,9 +174,11 @@
           $('.table tbody').append(html);
       }).on('click','.new-edit',function(){
         var _this = $(this);
-        var _title = $(this).parent().prev().prev().children().val();
-        var price = $(this).parent().prev().children().val();
+        var _title = $(this).parent().prev().prev().prev().children().val();
+        var price = $(this).parent().prev().prev().children().val();
+        var discount_price = $(this).parent().prev().children().val();
         var ticket_price = price*100;
+        var discount_ticket_price = discount_price*100;
         // var _minNum = minNum*100;
         // var _maxNum = maxNum*100;
         if(_title == '' || price == ''){
@@ -198,7 +203,7 @@
               success: function(data, status, xhr) {
                 var ticket_id = data.rs._id;
                 if(data.err_code == 200){
-                  var _json = [{'spec_id':"00000000000000000000000000000000", 'amount':ticket_price}]
+                  var _json = [{'spec_id':"00000000000000000000000000000000", 'amount':ticket_price, 'discount_amount':discount_ticket_price}]
                   var price_json = JSON.stringify(_json);
                     $.ajax({
                       type: "PUT",
@@ -211,8 +216,9 @@
                         // console.log(data);
                         // var data_id = data.rs._id;
                         if(data.err_code == 200){
-                          _this.parent().prev().prev().html(_title);
-                          _this.parent().prev().html(price);
+                          _this.parent().prev().prev().prev().html(_title);
+                          _this.parent().prev().prev().html(price);
+                          _this.parent().prev().html(discount_price);
                           _this.attr('data_id',ticket_id);
                           _this.next().attr('data_id',ticket_id);
                           _this.removeClass('new-edit').addClass('cate-edit');
@@ -264,7 +270,7 @@
         });
       };
       // 门票编辑
-      function cateEidt(ticket_id,title,price){
+      function cateEidt(ticket_id,title,price,discount_price){
         var data = {
                 "club_id":"{{ club_id }}",
                 "title":title,
@@ -282,7 +288,7 @@
           headers: {"Authorization":"Bearer {{access_token}}"},
           contentType: 'application/json',
           success: function(data, status, xhr) {
-              var _json = [{'spec_id':"00000000000000000000000000000000", 'amount':price}]
+              var _json = [{'spec_id':"00000000000000000000000000000000", 'amount':price, 'discount_amount':discount_price}]
               var price_json = JSON.stringify(_json);
               // console.log(price_json);
               $.ajax({
@@ -328,27 +334,33 @@
       // 修改操作
       $(document).on('click','.cate-edit',function(){
         $(this).html('<i class="fa fa-save"></i> 保存');
-        var old_title = $(this).parent().prev().prev().text();
-        var old_price = $(this).parent().prev().text();
+        var old_title = $(this).parent().prev().prev().prev().text();
+        var old_price = $(this).parent().prev().prev().text();
+        var old_discount_price = $(this).parent().prev().text();
         var _title = $('<input type="text" class="max-edit" value="'+old_title+'" style="width:100px;" />');
         var _price = $('<input type="number" class="cost-edit" value="'+old_price+'" style="width:100px;" />');
-        $(this).parent().prev().prev().html(_title);
-        $(this).parent().prev().html(_price);
+        var _discount_price = $('<input type="number" class="cost-edit" value="'+old_discount_price+'" style="width:100px;" />');
+        $(this).parent().prev().prev().prev().html(_title);
+        $(this).parent().prev().prev().html(_price);
+        $(this).parent().prev().html(_discount_price);
         $(this).removeClass('cate-edit').addClass('cate-save');
       }).on('click','.cate-save',function(){
-        var new_title = $(this).parent().prev().prev().children().val();
-        var new_price = $(this).parent().prev().children().val();
+        var new_title = $(this).parent().prev().prev().prev().children().val();
+        var new_price = $(this).parent().prev().prev().children().val();
+        var new_discount_price = $(this).parent().prev().children().val();
         var sw_price = new_price*100;
+        var dis_sw_price = new_discount_price*100;
         // var _min = min*100;
         // var _max = max*100;
-        if(new_title == "" || new_price == ""){
+        if(new_title == "" || new_price == "" || new_discount_price == "" ){
           $.alert('填写不完整！');
           return false;
         }
         var _id = $(this).attr('data_id');
-        cateEidt(_id,new_title,sw_price);
-        $(this).parent().prev().html(new_price);
-        $(this).parent().prev().prev().html(new_title);
+        cateEidt(_id,new_title,sw_price,dis_sw_price);
+        $(this).parent().prev().html(new_discount_price);
+        $(this).parent().prev().prev().html(new_price);
+        $(this).parent().prev().prev().prev().html(new_title);
         $(this).html('<i class="fa fa-pencil"></i> 编辑');
         $(this).removeClass('cate-save').addClass('cate-edit');
       });
