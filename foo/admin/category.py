@@ -51,7 +51,7 @@ class CategoriesFranchisesHandler(AuthorizationHandler):
         logging.info("GET access_token %r", access_token)
 
         params = {"_type":"scenery"}
-        url = url_concat(API_DOMAIN + "/api/def/leagues/"+ LEAGUE_ID +"/categories",params)
+        url = url_concat(API_DOMAIN + "/api/def/leagues/"+ league_id +"/categories",params)
         http_client = HTTPClient()
         headers = {"Authorization":"Bearer " + access_token}
         response = http_client.fetch(url, method="GET", headers=headers)
