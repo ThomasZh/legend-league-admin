@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <!-- Meta, title, CSS, favicons, etc. -->
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Cache-Control" content="no-cache">
+
+  <title>{{ admin['league_name'] }}</title>
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="{{ static_url('weui/lib/weui.min.css') }}">
+  <link rel="stylesheet" href="{{ static_url('weui/css/jquery-weui.css') }}">
+  <link href="{{ static_url('gentelella/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
+  <link href="{{ static_url('gentelella/fontawesome/css/font-awesome.min.css') }}" rel="stylesheet">
+  <link href="{{ static_url('gentelella/animate.css/animate.min.css') }}" rel="stylesheet">
+
+  <!-- Custom styling plus plugins -->
+  <link href="{{ static_url('css/custom.css') }}" rel="stylesheet">
+  <link href="{{ static_url('gentelella/iCheck/skins/flat/green.css') }}" rel="stylesheet">
+  <script src="{{ static_url('gentelella/jquery/dist/jquery.min.js') }}"></script>
+
+  <link rel="stylesheet" href="{{ static_url('upyun/css/fileinput.min.css') }}" />
+
+  <!-- fileinput -->
+  <script src="{{ static_url('upyun/js/fileinput.min.js') }}"></script>
+  <script src="{{ static_url('upyun/js/spark-md5.min.js') }}"></script>
+  <script src="{{ static_url('upyun/js/async.js') }}"></script>
+  <script src="{{ static_url('upyun/js/upyun-mu.js') }}"></script>
+
+</head>
+
+<body class="nav-md">
+  <div class="container body">
+    <div class="main_container">
+      <div class="col-md-3 left_col">
+        <div class="left_col scroll-view">
+
+          <!-- menu profile quick info -->
+          {% module Template("admin/block-menu-prile-quick-info.html", admin=admin) %}
+          <!-- /menu profile quick info -->
+          <br />
+
+          <!-- sidebar menu -->
+          {% module Template("admin/block-sidebar-menu.html", counter=counter) %}
+          <!-- /sidebar menu -->
+          <br />
+
+          <!-- /menu footer buttons -->
+          {% module Template("admin/block-menu-footer.html") %}
+          <!-- /menu footer buttons -->
+        </div>
+      </div>
+
+      <!-- top navigation -->
+      {% module Template("admin/block-top-nav.html", admin=admin) %}
+      <!-- /top navigation -->
+
+      <!-- page content -->
+      <div class="right_col" role="main">
+
+        <div class="">
+          <div style="height:auto;" class="page-title">
+            <div class="title_left">
+              <h3>加盟管理</h3>
+            </div>
+            <div class="clearfix"></div>
+            <div class="row">
+              <div class="col-md-12 col-sm-12 col-xs-12">
+              <!-- 景区级别以及热度 -->
+              <div class="x_panel">
+                <div class="x_title">
+                  <h2>加盟商标签修改<small>{{ club['name'] }}</small></h2>
+                  <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                  <form id="categories-form" action="" method="" onsubmit="return false;" class="form-horizontal form-label-left">
+                      <label>热游榜:</label>
+                      <div class="form-group">
+                          <div class="col-md-12 col-sm-12 col-xs-12">
+                            {% for hot_palce_tag in hot_palce_tags %}
+                              {% if hot_palce_tag['selected'] %}
+                                <div class="checkbox">
+                                  <input type="checkbox" id="hot_palce_tag" checked="true" data-id="{{ hot_palce_tag['category_id'] }}" value="{{ hot_palce_tag['_id'] }}" style="margin-left: 0px;">
+                                  <label for="categories" style="padding-left: 30px;">{{ hot_palce_tag['title'] }}</label>
+                                </div>
+                              {% else %}
+                                <div class="checkbox">
+                                  <input type="checkbox" id="hot_palce_tag" data-id="{{ hot_palce_tag['category_id'] }}" value="{{ hot_palce_tag['_id'] }}" style="margin-left: 0px;">
+                                  <label for="categories" style="padding-left: 30px;">{{ hot_palce_tag['title'] }}</label>
+                                </div>
+                              {% end %}
+                            {% end %}
+                          </div>
+                      </div>
+                      <label>热门景区:</label>
+                      <div class="form-group">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                          {% for hot_franchise_tag in hot_franchise_tags %}
+                            {% if hot_franchise_tag['selected'] %}
+                              <div class="checkbox">
+                                <input type="checkbox" id="hot_franchise_tag" checked="true" data-id="{{ hot_franchise_tag['category_id'] }}" value="{{ hot_franchise_tag['_id'] }}" style="margin-left: 0px;">
+                                <label for="categories" style="padding-left: 30px;">{{ hot_franchise_tag['title'] }}</label>
+                              </div>
+                            {% else %}
+                              <div class="checkbox">
+                                <input type="checkbox" id="hot_franchise_tag" data-id="{{ hot_franchise_tag['category_id'] }}" value="{{ hot_franchise_tag['_id'] }}" style="margin-left: 0px;">
+                                <label for="categories" style="padding-left: 30px;">{{ hot_franchise_tag['title'] }}</label>
+                              </div>
+                            {% end %}
+                          {% end %}
+                        </div>
+                      </div>
+                      <label>精彩推荐:</label>
+                      <div class="form-group">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                          {% for recommend_tag in recommend_tags %}
+                            {% if recommend_tag['selected'] %}
+                              <div class="checkbox">
+                                <input type="checkbox" id="recommend_tag" checked="true" data-id="{{ recommend_tag['category_id'] }}" value="{{ recommend_tag['_id'] }}" style="margin-left: 0px;">
+                                <label for="categories" style="padding-left: 30px;">{{ recommend_tag['title'] }}</label>
+                              </div>
+                            {% else %}
+                              <div class="checkbox">
+                                <input type="checkbox" id="recommend_tag" data-id="{{ recommend_tag['category_id'] }}" value="{{ recommend_tag['_id'] }}" style="margin-left: 0px;">
+                                <label for="categories" style="padding-left: 30px;">{{ recommend_tag['title'] }}</label>
+                              </div>
+                            {% end %}
+                          {% end %}
+                        </div>
+                      </div>
+                      <label>特色产品:</label>
+                      <div class="form-group">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                          {% for product_tag in product_tags %}
+                            {% if product_tag['selected'] %}
+                              <div class="checkbox">
+                                <input type="checkbox" id="product_tag" data-id="{{ product_tag['category_id'] }}" checked="true" value="{{ product_tag['_id'] }}" style="margin-left: 0px;">
+                                <label for="categories" style="padding-left: 30px;">{{ product_tag['title'] }}</label>
+                              </div>
+                            {% else %}
+                              <div class="checkbox">
+                                <input type="checkbox" id="product_tag" data-id="{{ product_tag['category_id'] }}" value="{{ product_tag['_id'] }}" style="margin-left: 0px;">
+                                <label for="categories" style="padding-left: 30px;">{{ product_tag['title'] }}</label>
+                              </div>
+                            {% end %}
+                          {% end %}
+                        </div>
+                      </div>
+                      <label>特色路线:</label>
+                      <div class="form-group">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                          {% for line_tag in line_tags %}
+                            {% if line_tag['selected'] %}
+                              <div class="checkbox">
+                                <input type="checkbox" id="line_tag" data-id="{{ line_tag['category_id'] }}" checked="true" value="{{ line_tag['_id'] }}" style="margin-left: 0px;">
+                                <label for="categories" style="padding-left: 30px;">{{ line_tag['title'] }}</label>
+                              </div>
+                            {% else %}
+                              <div class="checkbox">
+                                <input type="checkbox" id="line_tag" data-id="{{ line_tag['category_id'] }}" value="{{ line_tag['_id'] }}" style="margin-left: 0px;">
+                                <label for="categories" style="padding-left: 30px;">{{ line_tag['title'] }}</label>
+                              </div>
+                            {% end %}
+                          {% end %}
+                        </div>
+                      </div>
+                      <label>当季热门:</label>
+                      <div class="form-group">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                          {% for hot_now_tag in hot_now_tags %}
+                            {% if hot_now_tag['selected'] %}
+                              <div class="checkbox">
+                                <input type="checkbox" id="hot_now_tag" data-id="{{ hot_now_tag['category_id'] }}" checked="true" value="{{ hot_now_tag['_id'] }}" style="margin-left: 0px;">
+                                <label for="categories" style="padding-left: 30px;">{{ hot_now_tag['title'] }}</label>
+                              </div>
+                            {% else %}
+                              <div class="checkbox">
+                                <input type="checkbox" id="hot_now_tag" data-id="{{ hot_now_tag['category_id'] }}" value="{{ hot_now_tag['_id'] }}" style="margin-left: 0px;">
+                                <label for="categories" style="padding-left: 30px;">{{ hot_now_tag['title'] }}</label>
+                              </div>
+                            {% end %}
+                          {% end %}
+                        </div>
+                      </div>
+
+                  </form>
+                </div>
+              </div>
+          </div>
+
+          </div>
+        </div>
+
+        <!-- footer content -->
+        {% module Template("admin/block-footer.html", admin=admin) %}
+        <!-- /footer content -->
+
+      </div>
+      <!-- /page content -->
+
+    </div>
+  </div>
+
+  <script src="{{ static_url('gentelella/bootstrap/dist/js/bootstrap.min.js') }}" type="text/javascript"></script>
+  <!-- bootstrap progress js -->
+  <script src="{{ static_url('gentelella/bootstrap-progressbar/bootstrap-progressbar.min.js') }}" type="text/javascript"></script>
+  <!-- icheck -->
+  <script src="{{ static_url('gentelella/iCheck/icheck.min.js') }}" type="text/javascript"></script>
+
+  <script src="{{ static_url('js/custom.js') }}" type="text/javascript"></script>
+  <!-- pace -->
+  <script src="{{ static_url('gentelella/pace/pace.min.js') }}"></script>
+  <!-- alert Scripts -->
+  <script src="{{ static_url('weui/lib/fastclick.js') }}"></script>
+  <script type="text/javascript">
+    $(function(){
+      // 添加标签
+      function addTag(parent_id,level2_category_id){
+        var data = {"category_id":parent_id,"level2_category_id":level2_category_id,"_seq":0}
+        var _json = JSON.stringify(data);
+        $.ajax({
+          type: "PUT",
+          url: "{{api_domain}}/api/clubs/{{club_id}}/categories",
+          dataType: "json",
+          data:_json,
+          contentType: 'application/json',
+          headers: {"Authorization":"Bearer {{access_token}}"},
+          success: function(data, status, xhr) {
+            console.log(data);
+          },
+          error: function(XMLHttpRequest, textStatus, errorThrown) {
+            console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
+          },
+          complete: function(XMLHttpRequest, textStatus) {
+            this; // 调用本次AJAX请求时传递的options参数
+          }
+        });
+      };
+      // 删除标签
+      function delTag(level2_category_id){
+        $.ajax({
+          type: "DELETE",
+          url: "{{api_domain}}/api/clubs/{{club_id}}/categories/"+level2_category_id,
+          dataType: "json",
+          contentType: 'application/json',
+          headers: {"Authorization":"Bearer {{access_token}}"},
+          success: function(data, status, xhr) {
+            console.log(data);
+          },
+          error: function(XMLHttpRequest, textStatus, errorThrown) {
+            console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
+          },
+          complete: function(XMLHttpRequest, textStatus) {
+            this; // 调用本次AJAX请求时传递的options参数
+          }
+        });
+      };
+
+      $('input[type="checkbox"]').on('change',function(){
+          var parent_id = $(this).attr('data-id');
+          var level2_category_id = $(this).val();
+          if($(this).prop("checked")){
+              addTag(parent_id,level2_category_id);
+          }else{
+              delTag(level2_category_id);
+          }
+      })
+    })
+  </script>
+</body>
+</html>

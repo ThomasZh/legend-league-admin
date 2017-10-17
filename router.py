@@ -38,6 +38,7 @@ def map():
         (r'/admin/administrators', getattr(work_sheet, 'AdministratorsHandler')),
         (r'/admin/franchises', getattr(work_sheet, 'FranchisesHandler')),
         (r'/admin/position', getattr(work_sheet, 'PositionHandler')),
+        (r'/admin/tags', getattr(work_sheet, 'TagsHandler')),
         (r'/admin/ticket', getattr(work_sheet, 'TicketHandler')),
         (r'/admin/suppliers', getattr(work_sheet, 'SuppliersHandler')),
         (r'/admin/todo-list', getattr(work_sheet, 'TodoListHandler')),
