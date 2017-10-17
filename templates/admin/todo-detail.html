@@ -135,7 +135,123 @@
 
                 </div>
               </div>
-            </div>
+              <!-- 景区级别以及热度 -->
+              <div class="x_panel">
+                <div class="x_title">
+                  <h2>景区信息修改</h2>
+                  <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                  <form class="form-horizontal form-label-left" action="/admin/todo-detail" method="POST">
+                    <input type="hidden" name="club_id" value="{{ club_id }}">
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="level">景区级别 <span class="required">*</span>
+                        </label>
+                      <div class="col-md-3 col-sm-6 col-xs-12">
+                        <select class="select2_single form-control" name="level">
+                          {% if franchise['club']['scenery'] == '1' %}
+                            <option value="1" name="level" selected="true">1</option>
+                          {% else %}
+                            <option value="1" name="level">1</option>
+                          {% end %}
+                          {% if franchise['club']['scenery'] == '2' %}
+                            <option value="2" name="level" selected="true">2</option>
+                          {% else %}
+                            <option value="2" name="level">2</option>
+                          {% end %}
+                          {% if franchise['club']['scenery'] == '3' %}
+                            <option value="3" name="level" selected="true">3</option>
+                          {% else %}
+                            <option value="3" name="level">3</option>
+                          {% end %}
+                          {% if franchise['club']['scenery'] == '4' %}
+                            <option value="4" name="level" selected="true">4</option>
+                          {% else %}
+                            <option value="4" name="level">4</option>
+                          {% end %}
+                          {% if franchise['club']['scenery'] == '5' %}
+                            <option value="5" name="level" selected="true">5</option>
+                          {% else %}
+                            <option value="5" name="level">5</option>
+                          {% end %}
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="hot">景区热度 <span class="required">*</span>
+                        </label>
+                      <div class="col-md-3 col-sm-6 col-xs-12">
+                        <select class="select2_single form-control" name="hot">
+                          {% if franchise['club']['popular'] == '1' %}
+                            <option value="1" name="hot" selected="true">1</option>
+                          {% else %}
+                            <option value="1" name="hot">1</option>
+                          {% end %}
+                          {% if franchise['club']['popular'] == '2' %}
+                            <option value="2" name="hot" selected="true">2</option>
+                          {% else %}
+                            <option value="2" name="hot">2</option>
+                          {% end %}
+                          {% if franchise['club']['popular'] == '3' %}
+                            <option value="3" name="hot" selected="true">3</option>
+                          {% else %}
+                            <option value="3" name="hot">3</option>
+                          {% end %}
+                          {% if franchise['club']['popular'] == '4' %}
+                            <option value="4" name="hot" selected="true">4</option>
+                          {% else %}
+                            <option value="4" name="hot">4</option>
+                          {% end %}
+                          {% if franchise['club']['popular'] == '5' %}
+                            <option value="5" name="hot" selected="true">5</option>
+                          {% else %}
+                            <option value="5" name="hot">5</option>
+                          {% end %}
+                          {% if franchise['club']['popular'] == '6' %}
+                            <option value="6" name="hot" selected="true">6</option>
+                          {% else %}
+                            <option value="6" name="hot">6</option>
+                          {% end %}
+                          {% if franchise['club']['popular'] == '7' %}
+                            <option value="7" name="hot" selected="true">7</option>
+                          {% else %}
+                            <option value="7" name="hot">7</option>
+                          {% end %}
+                          {% if franchise['club']['popular'] == '8' %}
+                            <option value="8" name="hot" selected="true">8</option>
+                          {% else %}
+                            <option value="8" name="hot">8</option>
+                          {% end %}
+                          {% if franchise['club']['popular'] == '9' %}
+                            <option value="9" name="hot" selected="true">9</option>
+                          {% else %}
+                            <option value="9" name="hot">9</option>
+                          {% end %}
+                          {% if franchise['club']['popular'] == '10' %}
+                            <option value="10" name="hot" selected="true">10</option>
+                          {% else %}
+                            <option value="10" name="hot">10</option>
+                          {% end %}
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="address">景区地址 <span class="required">*</span>
+                        </label>
+                      <div class="col-md-3 col-sm-6 col-xs-12">
+                        <input type="text" name="address" value="{{ franchise['club']['_addr'] }}" class="form-control">
+                      </div>
+                    </div>
+                    <!-- <div class="ln_solid"></div> -->
+                    <div class="form-group">
+                      <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                        <button type="submit" id="f-btn" class="btn btn-success">修改</button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+          </div>
 
           </div>
         </div>

@@ -232,13 +232,13 @@ class TodoDetailHandler(AuthorizationHandler):
     def get(self):
         logging.info(self.request)
         access_token = self.get_secure_cookie("access_token")
-        id = self.get_argument("id","")
+        club_id = self.get_argument("id","")
 
         admin = self.get_admin_info()
         league_id = admin['league_id']
         counter = self.get_counter(league_id)
 
-        url = API_DOMAIN+"/api/leagues/"+admin['league_id']+"/franchises/"+id
+        url = API_DOMAIN+"/api/leagues/"+admin['league_id']+"/franchises/"+club_id
         http_client = HTTPClient()
         headers={"Authorization":"Bearer "+access_token}
         response = http_client.fetch(url, method="GET", headers=headers)
@@ -252,9 +252,32 @@ class TodoDetailHandler(AuthorizationHandler):
         self.render('admin/todo-detail.html',
                 admin=admin,
                 counter=counter,
+                club_id = club_id,
                 access_token=access_token,
                 franchise=franchise,
                 api_domain=API_DOMAIN)
+
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def post(self):
+        logging.info(self.request)
+        access_token = self.get_secure_cookie("access_token")
+        club_id = self.get_argument("club_id", "")
+        logging.info("club_id",club_id)
+        level = self.get_argument("level", "")
+        hot = self.get_argument("hot", "")
+        address = self.get_argument("address", "")
+        logging.info("try update myinfo level:[%r] hot:[%r] address:[%r]", level, hot, address)
+
+        franchise_json = {"scenery":level, "popular":hot, "_addr":address}
+        headers = {"Authorization":"Bearer "+access_token}
+        url = API_DOMAIN+"/api/clubs/" + club_id
+        _json = json_encode(franchise_json)
+        http_client = HTTPClient()
+        response = http_client.fetch(url, method="PUT", headers=headers, body=_json)
+        logging.info("got response.body %r", response.body)
+        # data = json_decode(response.body)
+
+        self.redirect("/admin/todo-detail?id="+club_id)
 
 
 class ArticlesIndexHandler(AuthorizationHandler):
