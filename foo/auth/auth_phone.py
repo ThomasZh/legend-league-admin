@@ -129,7 +129,7 @@ class AuthPhoneLoginHandler(BaseHandler):
 class AuthPhoneRegisterHandler(BaseHandler):
     def get(self):
         err_msg = ""
-        self.render('auth/phone-register.html', err_msg=err_msg)
+        self.render('auth/phone-register.html', err_msg=err_msg, api_domain = API_DOMAIN)
 
     def post(self):
         logging.info(self.request)
