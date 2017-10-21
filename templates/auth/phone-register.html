@@ -24,7 +24,7 @@
     <div class="logo">注册</div>
     <!-- Main Form -->
     <div class="login-form-1">
-      <form id="register-form" class="text-left" method="POST" action="/admin/auth/phone/register">
+      <form id="register-form" class="text-left" onsubmit="return false;">
         {% if err_msg %}
         <div class="login-form-main-message show error">
           {{ err_msg }}
@@ -53,7 +53,7 @@
               <label for="reg_agree">同意 <a href="#">协议</a></label>
             </div>
           </div>
-          <button type="submit" class="login-button"><i class="fa fa-chevron-right"></i></button>
+          <button id="register-button" class="login-button"><i class="fa fa-chevron-right"></i></button>
         </div>
         <div class="etc-login-form">
           <p>已经拥有帐号? <a href="/admin/auth/phone/login">登录</a></p>
@@ -152,7 +152,12 @@
         }
       }
 
-  $(function() {
+      // 发送注册
+      $('#register-button').on('click',function(){
+        var validator = $("#register-form").validate();
+        console.log(validator);
+      })
+
       // Login Form
       //----------------------------------------------
       // Validation
@@ -167,8 +172,7 @@
           reset_verify_code: {
             required: true,
             minlength: 4,
-            maxlength: 4,
-            code: true
+            maxlength: 4
           },
           reg_pwd: {
             required: true,
@@ -178,16 +182,17 @@
         errorClass: "form-invalid",
         submitHandler: function(form) {
           var email = $("#reg_phone").val();
-          var verify_code = $('#register-code').val();
+          var verify_code = $('#reset_verify_code').val();
           var pwd = $("#reg_pwd").val();
           var md5pwd = SparkMD5.hash(pwd);
+          $("#reg_pwd").val(md5pwd);
 
           var data = {
   					action: 'register',
   					login_type: 'phone',
   					phone: email,
   					pwd: md5pwd,
-  					verify_code:verify_code,
+  					// verify_code:verify_code,
   				};
   				var json = JSON.stringify(data);
 
@@ -202,6 +207,7 @@
   					contentType: 'application/json',
   					success: function(data, status, xhr) {
   						// var rs_data = JSON.parse(data);
+              console.log(data);
   						if (data.err_code == 409) {
   							$('.register-form-main-message').show().addClass('error').html('该手机号已经注册, 请直接登录或更换手机号码!');
   							setTimeout(hider,3000);
@@ -226,10 +232,8 @@
   						this; // 调用本次AJAX请求时传递的options参数
   					}
   				});
-
         }
       });
-    });
   </script>
 
 </body>

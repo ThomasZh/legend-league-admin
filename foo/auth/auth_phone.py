@@ -129,7 +129,9 @@ class AuthPhoneLoginHandler(BaseHandler):
 class AuthPhoneRegisterHandler(BaseHandler):
     def get(self):
         err_msg = ""
-        self.render('auth/phone-register.html', err_msg=err_msg, api_domain = API_DOMAIN)
+        self.render('auth/phone-register.html',
+            err_msg=err_msg,
+            api_domain=API_DOMAIN)
 
     def post(self):
         logging.info(self.request)
@@ -153,6 +155,12 @@ class AuthPhoneRegisterHandler(BaseHandler):
             response = http_client.fetch(url, method="POST", headers=headers, body=_json)
             logging.info("got response %r", response.body)
             data = json_decode(response.body)
+            if data['err_code'] == 409:
+                err_msg = "此手机号码已经注册!"
+                self.render('auth/phone-register.html',
+                    api_domain=API_DOMAIN,
+                    err_msg=err_msg)
+                return
             session_ticket = data['rs']
         except:
             err_title = str( sys.exc_info()[0] );
@@ -160,11 +168,15 @@ class AuthPhoneRegisterHandler(BaseHandler):
             logging.error("error: %r info: %r", err_title, err_detail)
             if err_detail == 'HTTP 409: Conflict':
                 err_msg = "此手机号码已经注册!"
-                self.render('auth/phone-register.html', err_msg=err_msg)
+                self.render('auth/phone-register.html',
+                    api_domain=API_DOMAIN,
+                    err_msg=err_msg)
                 return
 
         err_msg = "注册成功，请登录!"
-        self.render('auth/phone-register.html', err_msg=err_msg)
+        self.render('auth/phone-register.html',
+            api_domain=API_DOMAIN,
+            err_msg=err_msg)
 
 
 class AuthPhoneLostPwdHandler(BaseHandler):
