@@ -84,7 +84,6 @@
                         <thead>
                           <tr class="headings">
                             <th class="column-title">加盟名称 </th>
-                            <th class="column-title">联系人 </th>
                             <th class="column-title">联系电话 </th>
                             <th class="column-title">电子邮件 </th>
                             <th class="column-title">地址 </th>
@@ -159,9 +158,6 @@
 
                 var inner_html = '<tr class="even pointer">';
                 inner_html += '<td>'+pageData[i].name+'</td>';
-                inner_html += '<td class=" "><img src="'+pageData[i].avatar+'" class="avatar" alt="avatar">';
-                inner_html += '<span>'+pageData[i].nickname+'</span>';
-                inner_html += '</td>';
                 inner_html += '<td>'+pageData[i].phone+'</td>';
                 inner_html += '<td>'+pageData[i].email+'</td>';
                 inner_html += '<td>'+pageData[i].province+ '&nbsp'+ pageData[i].city+'</td>';
