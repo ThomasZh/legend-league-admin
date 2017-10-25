@@ -8,7 +8,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>{{ admin['league_name'] }} | Tag</title>
+  <title>{{ admin['league_name'] }} | Suppliers-Tags</title>
 
   <!-- Bootstrap core CSS -->
   <link rel="stylesheet" href="{{ static_url('weui/css/weui.min.css') }}">
@@ -54,7 +54,7 @@
           <div class="page-title">
             <div class="title_left">
               <h3>
-                    景区
+                    供应商
                     <small>
                         tag标签
                     </small>
@@ -101,8 +101,8 @@
                             <i class="fa fa-pencil"></i> 编辑 </a>
                           <a data_id = "{{ category['_id'] }}" class="btn btn-danger btn-xs s-cate-dele">
                             <i class="fa fa-trash-o"></i> 删除 </a>
-                          <a href="/admin/categories/tags/franchises?second_categorys_id={{ category['_id'] }}" class="btn btn-success btn-xs">
-                            <i class="fa fa-eye"></i> 查看景区 </a>
+                          <a href="/admin/categories/tags/suppliers?second_categorys_id={{ category['_id'] }}" class="btn btn-success btn-xs">
+                            <i class="fa fa-eye"></i> 查看供应商 </a>
                         </td>
                       </tr>
                     {% end %}
@@ -149,7 +149,7 @@
             html +=  '<a class="btn btn-danger btn-xs cate-dele">';
             html +=  '<i class="fa fa-trash-o"></i> 删除 </a>';
             html +=  '<a href="#" class="btn btn-success btn-xs">';
-            html +=  '<i class="fa fa-eye"></i> 查看景区 </a>';
+            html +=  '<i class="fa fa-eye"></i> 查看供应商 </a>';
             html +=  '</td></tr>';
           $('.table tbody').append(html);
           num +=1;
