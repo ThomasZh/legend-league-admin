@@ -146,33 +146,38 @@
                     <input type="hidden" name="club_id" value="{{ club_id }}">
                     <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="level">景区级别 <span class="required">*</span>
-                        </label>
+                      </label>
                       <div class="col-md-3 col-sm-6 col-xs-12">
-                        <select class="select2_single form-control" name="level">
+                        <select class="select2_single form-control" id="level" name="level">
                           {% if franchise['club']['scenery'] == '1' %}
-                            <option value="1" name="level" selected="true">1</option>
+                            <option value="1" name="level" selected="true">A景区</option>
                           {% else %}
-                            <option value="1" name="level">1</option>
+                            <option value="1" name="level">A景区</option>
                           {% end %}
                           {% if franchise['club']['scenery'] == '2' %}
-                            <option value="2" name="level" selected="true">2</option>
+                            <option value="2" name="level" selected="true">2A景区</option>
                           {% else %}
-                            <option value="2" name="level">2</option>
+                            <option value="2" name="level">2A景区</option>
                           {% end %}
                           {% if franchise['club']['scenery'] == '3' %}
-                            <option value="3" name="level" selected="true">3</option>
+                            <option value="3" name="level" selected="true">3A景区</option>
                           {% else %}
-                            <option value="3" name="level">3</option>
+                            <option value="3" name="level">3A景区</option>
                           {% end %}
                           {% if franchise['club']['scenery'] == '4' %}
-                            <option value="4" name="level" selected="true">4</option>
+                            <option value="4" name="level" selected="true">4A景区</option>
                           {% else %}
-                            <option value="4" name="level">4</option>
+                            <option value="4" name="level">4A景区</option>
                           {% end %}
                           {% if franchise['club']['scenery'] == '5' %}
-                            <option value="5" name="level" selected="true">5</option>
+                            <option value="5" name="level" selected="true">5A景区</option>
                           {% else %}
-                            <option value="5" name="level">5</option>
+                            <option value="5" name="level">5A景区</option>
+                          {% end %}
+                          {% if franchise['club']['scenery'] == '6' %}
+                            <option value="6" name="level" selected="true">其他景区</option>
+                          {% else %}
+                            <option value="6" name="level">其他景区</option>
                           {% end %}
                         </select>
                       </div>

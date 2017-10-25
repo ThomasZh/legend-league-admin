@@ -267,6 +267,60 @@ class TagsHandler(AuthorizationHandler):
                     tag['selected'] = True
                     break
 
+        # 旺季季节tags
+        category_id = '6955a40eb96911e7a70e00163e023e51'
+        url = API_DOMAIN + "/api/def/categories/"+ category_id +"/level2"
+        http_client = HTTPClient()
+        headers = {"Authorization":"Bearer " + access_token}
+        response = http_client.fetch(url, method="GET", headers=headers)
+        logging.info("got response.body %r", response.body)
+        data = json_decode(response.body)
+        hot_time_tags = data['rs']
+
+        for tag in hot_time_tags:
+            tag['category_id'] = category_id
+            tag['selected'] = False
+            for franchise_tag in franchise_tags:
+                if tag['_id'] == franchise_tag['level2_category_id']:
+                    tag['selected'] = True
+                    break
+
+        # 闭馆季节tags
+        category_id = 'dffc1ee4b96911e7a70e00163e023e51'
+        url = API_DOMAIN + "/api/def/categories/"+ category_id +"/level2"
+        http_client = HTTPClient()
+        headers = {"Authorization":"Bearer " + access_token}
+        response = http_client.fetch(url, method="GET", headers=headers)
+        logging.info("got response.body %r", response.body)
+        data = json_decode(response.body)
+        close_time_tags = data['rs']
+
+        for tag in close_time_tags:
+            tag['category_id'] = category_id
+            tag['selected'] = False
+            for franchise_tag in franchise_tags:
+                if tag['_id'] == franchise_tag['level2_category_id']:
+                    tag['selected'] = True
+                    break
+
+        # 旅游时长tags
+        category_id = '9a2f440eb96911e7a70e00163e023e51'
+        url = API_DOMAIN + "/api/def/categories/"+ category_id +"/level2"
+        http_client = HTTPClient()
+        headers = {"Authorization":"Bearer " + access_token}
+        response = http_client.fetch(url, method="GET", headers=headers)
+        logging.info("got response.body %r", response.body)
+        data = json_decode(response.body)
+        duration_tags = data['rs']
+
+        for tag in duration_tags:
+            tag['category_id'] = category_id
+            tag['selected'] = False
+            for franchise_tag in franchise_tags:
+                if tag['_id'] == franchise_tag['level2_category_id']:
+                    tag['selected'] = True
+                    break
+
         self.render('admin/tags.html',
                 admin=admin,
                 counter=counter,
@@ -278,6 +332,9 @@ class TagsHandler(AuthorizationHandler):
                 product_tags=product_tags,
                 line_tags=line_tags,
                 hot_now_tags=hot_now_tags,
+                hot_time_tags=hot_time_tags,
+                close_time_tags=close_time_tags,
+                duration_tags=duration_tags,
                 access_token=access_token,
                 api_domain=API_DOMAIN,
                 franchise_tags=franchise_tags)

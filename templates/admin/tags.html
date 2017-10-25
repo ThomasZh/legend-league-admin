@@ -187,7 +187,60 @@
                           {% end %}
                         </div>
                       </div>
-
+                      <label>旺季季节:</label>
+                      <div class="form-group">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                          {% for hot_time_tag in hot_time_tags %}
+                            {% if hot_time_tag['selected'] %}
+                              <div class="checkbox">
+                                <input type="checkbox" id="hot_time_tag" data-id="{{ hot_time_tag['category_id'] }}" checked="true" value="{{ hot_time_tag['_id'] }}" style="margin-left: 0px;">
+                                <label for="categories" style="padding-left: 30px;">{{ hot_time_tag['title'] }}</label>
+                              </div>
+                            {% else %}
+                              <div class="checkbox">
+                                <input type="checkbox" id="hot_time_tag" data-id="{{ hot_time_tag['category_id'] }}" value="{{ hot_time_tag['_id'] }}" style="margin-left: 0px;">
+                                <label for="categories" style="padding-left: 30px;">{{ hot_time_tag['title'] }}</label>
+                              </div>
+                            {% end %}
+                          {% end %}
+                        </div>
+                      </div>
+                      <label>闭馆季节:</label>
+                      <div class="form-group">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                          {% for close_time_tag in close_time_tags %}
+                            {% if close_time_tag['selected'] %}
+                              <div class="checkbox">
+                                <input type="checkbox" id="close_time_tag" data-id="{{ close_time_tag['category_id'] }}" checked="true" value="{{ close_time_tag['_id'] }}" style="margin-left: 0px;">
+                                <label for="categories" style="padding-left: 30px;">{{ close_time_tag['title'] }}</label>
+                              </div>
+                            {% else %}
+                              <div class="checkbox">
+                                <input type="checkbox" id="close_time_tag" data-id="{{ close_time_tag['category_id'] }}" value="{{ close_time_tag['_id'] }}" style="margin-left: 0px;">
+                                <label for="categories" style="padding-left: 30px;">{{ close_time_tag['title'] }}</label>
+                              </div>
+                            {% end %}
+                          {% end %}
+                        </div>
+                      </div>
+                      <label>旅游时长:</label>
+                      <div class="form-group">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                          {% for duration_tag in duration_tags %}
+                            {% if duration_tag['selected'] %}
+                              <div class="checkbox">
+                                <input type="checkbox" id="duration_tag" data-id="{{ duration_tag['category_id'] }}" checked="true" value="{{ duration_tag['_id'] }}" style="margin-left: 0px;">
+                                <label for="categories" style="padding-left: 30px;">{{ duration_tag['title'] }}</label>
+                              </div>
+                            {% else %}
+                              <div class="checkbox">
+                                <input type="checkbox" id="duration_tag" data-id="{{ duration_tag['category_id'] }}" value="{{ duration_tag['_id'] }}" style="margin-left: 0px;">
+                                <label for="categories" style="padding-left: 30px;">{{ duration_tag['title'] }}</label>
+                              </div>
+                            {% end %}
+                          {% end %}
+                        </div>
+                      </div>
                   </form>
                 </div>
               </div>
