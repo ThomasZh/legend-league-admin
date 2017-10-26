@@ -234,7 +234,7 @@
         contentType: 'application/json',
         headers: {"Authorization":"Bearer {{access_token}}"},
         success: function(data, status, xhr) {
-          location.href = "/admin/multimedias/publish";
+          location.href = "/admin/multimedias/draft";
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
           console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);

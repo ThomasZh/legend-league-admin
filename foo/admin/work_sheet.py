@@ -545,28 +545,41 @@ class ArticlesDetailHandler(AuthorizationHandler):
         league_id = admin['league_id']
         counter = self.get_counter(league_id)
 
+        # article
         url = API_DOMAIN+"/api/articles/"+article_id
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
         logging.info("got response %r", response.body)
         data = json_decode(response.body)
         article = data['rs']
+        article['publish_time'] = timestamp_friendly_date(article['publish_time'])
 
-        # article
-        url = API_DOMAIN+"/api/articles/"+article_id
+        # 获取文章所属加盟商
+        url = API_DOMAIN+"/api/clubs/"+article['club_id']
         http_client = HTTPClient()
         response = http_client.fetch(url, method="GET")
-        logging.info("got article response %r", response.body)
+        logging.info("got response %r", response.body)
         data = json_decode(response.body)
-        article_info = data['rs']
-        article_info['publish_time'] = timestamp_friendly_date(article_info['publish_time'])
+        club = data['rs']
+        if not club.has_key('img'):
+            club['img'] = ''
+        if not club.has_key('paragraphs'):
+            club['paragraphs'] = ''
+
+        url = API_DOMAIN+"/api/articles/" + article_id + "/categories"
+        http_client = HTTPClient()
+        response = http_client.fetch(url, method="GET")
+        logging.info("got response %r", response.body)
+        data = json_decode(response.body)
+        article_categories = data['rs']
 
         self.render('admin/articles-detail.html',
                 admin=admin,
+                club=club,
                 counter=counter,
                 access_token=access_token,
                 article=article,
-                article_info=article_info,
+                article_categories=article_categories,
                 api_domain=API_DOMAIN)
 
 
