@@ -200,7 +200,13 @@
                   inner_html += '</td>';
                   inner_html += '<td class=" ">' + pageData[i].club.phone + '</td>';
                   inner_html += '<td class=" "><span>' + pageData[i].club.name + '</span><br /></td>';
-                  inner_html += '<td class=" ">' + pageData[i].club.franchise_type + '</td>';
+                  if (pageData[i].club.franchise_type == 'scenery') {
+                    inner_html += '<td class=" ">景区</td>';
+                  } else if (pageData[i].club.franchise_type == 'supplier') {
+                    inner_html += '<td class=" ">供应商</td>';
+                  } else {
+                    inner_html += '<td class=" ">' + pageData[i].club.franchise_type + '</td>';
+                  }
                   inner_html += '<td class="status" id="status' + pageData[i]._id + '">';
                   if (pageData[i]._status == 0) {
                     inner_html += '<span>待审批</span>';
@@ -276,7 +282,13 @@
               inner_html += '</td>';
               inner_html += '<td class=" ">' + pageData[i].club.phone + '</td>';
               inner_html += '<td class=" "><span>' + pageData[i].club.name + '</span><br /></td>';
-              inner_html += '<td class=" ">' + pageData[i].club.franchise_type + '</td>';
+              if (pageData[i].club.franchise_type == 'scenery') {
+                inner_html += '<td class=" ">景区</td>';
+              } else if (pageData[i].club.franchise_type == 'supplier') {
+                inner_html += '<td class=" ">供应商</td>';
+              } else {
+                inner_html += '<td class=" ">' + pageData[i].club.franchise_type + '</td>';
+              }
               inner_html += '<td class="status" id="status' + pageData[i]._id + '">';
               if (pageData[i]._status == 0) {
                 inner_html += '<span>待审批</span>';

@@ -107,7 +107,15 @@
                         </tr>
                         <tr>
                           <td>加盟类型</td>
-                          <td>{{ franchise['club']['franchise_type'] }}</td>
+                          <td>
+                            {% if franchise['club']['franchise_type'] == 'scenery' %}
+                              景区
+                            {% elif franchise['club']['franchise_type'] == 'supplier' %}
+                              供应商
+                            {% else %}
+                              {{ franchise['club']['franchise_type'] }}
+                            {% end %}
+                          </td>
                         </tr>
                         <tr>
                           <td>联系电话</td>
