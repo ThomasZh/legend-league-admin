@@ -24,7 +24,17 @@
   <link href="{{ static_url('gentelella/iCheck/skins/flat/green.css') }}" rel="stylesheet">
   <script src="{{ static_url('gentelella/jquery/dist/jquery.min.js') }}"></script>
   <link rel="stylesheet" href="{{ static_url('upyun/css/fileinput.min.css') }}" />
-
+  <style media="screen">
+		.total-page-box,.select-page-box{
+			display: inline-block;
+	    font-size: 12px;
+	    line-height: 2.5;
+	    color: #949191;
+		}
+		.select-page-box{
+			margin-left: 10px;
+		}
+	</style>
 </head>
 
 <body class="nav-md">
@@ -80,9 +90,12 @@
                   <div class="col-md-5 col-sm-12 col-xs-12 center-margin">
                     <button class="btn btn-success" type="button" id="prev">上一页</button>
                     <span class="pageBox"></span>
-
                     <button class="btn btn-success" type="button" id="next">下一页</button>
-
+                    <p class="total-page-box">共<span id="total_page" style="padding:0 5px;"></span>页</p>
+                    <p class="select-page-box">到第
+                      <input type="text" id="page-input" style="width: 35px;margin: 0 5px;text-align:center;height: 24px;">页
+                      <button class="btn btn-success btn-xs" id="select-page-btn">确定</button>
+                    </p>
                   </div>
                 </div>
               </div>
@@ -118,7 +131,7 @@
   <script src="{{ static_url('jquery-weui/js/jquery-weui.min.js') }}"></script>
   <script>
   function publish(id){
-    console.log(id);
+    // console.log(id);
 
     $.ajax({
       type: "POST",
@@ -159,6 +172,7 @@
                   currentPage = pageNum;
               var pageData = data.data;
                   total_page = data.total_page;//总页
+                  $("#total_page").html(total_page);
               $('#x_Box').html("");
 
               for (var i in pageData) {
@@ -168,7 +182,7 @@
                 inner_html += '<div class="x_content">';
                 inner_html += '<div class="thumbnail">';
                 inner_html += '<div class="image view view-first">';
-                inner_html += '<a href="/admin/articles/detail?id='+pageData[i]._id+'">';
+                inner_html += '<a target="_blank" href="/admin/articles/detail?id='+pageData[i]._id+'">';
                 inner_html += '<img style="width: 100%; display: block;" src="'+pageData[i].img+'" alt="image" />';
                 inner_html += '</a></div></div>';
                 inner_html += '<p>'+pageData[i].title+'</p>';
@@ -184,7 +198,7 @@
                     if(pageData[i]._status == 0){
                       inner_html += '<a href="#" class="btn ap_del btn-default btn-xs">草稿箱 </a>';
                     }else if(pageData[i]._status == 100){
-                      inner_html += '<a href="/admin/articles/detail?id='+pageData[i]._id+'" class="btn btn-success btn-xs">查看 </a>';
+                      inner_html += '<a target="_blank" href="/admin/articles/detail?id='+pageData[i]._id+'" class="btn btn-success btn-xs">查看 </a>';
                     }
                 inner_html += '</p></div></div></div>';
 
@@ -254,12 +268,14 @@
 
             $("#next").on("click",function(){
                 if(currentPage>=total_page){
-
                 }else{
                     gotoPage(++currentPage);
-                    // $("#num"+currentPage).addClass("current").siblings().removeClass("current");
                 }
-            })
+            });
+            $('#select-page-btn').on('click',function(){
+    					var pageNum = $('#page-input').val();
+    							gotoPage(pageNum);
+    				});
           });
   </script>
 

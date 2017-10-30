@@ -26,7 +26,17 @@
   <!-- Custom styling plus plugins -->
   <script src="{{ static_url('gentelella/nprogress/nprogress.js') }}"></script>
   <link rel="stylesheet" href="{{ static_url('upyun/css/fileinput.min.css') }}" />
-
+  <style media="screen">
+		.total-page-box,.select-page-box{
+			display: inline-block;
+	    font-size: 12px;
+	    line-height: 2.5;
+	    color: #949191;
+		}
+		.select-page-box{
+			margin-left: 10px;
+		}
+	</style>
 </head>
 
 <body class="nav-md">
@@ -82,9 +92,12 @@
                   <div class="col-md-5 col-sm-12 col-xs-12 center-margin">
                     <button class="btn btn-success" type="button" id="prev">上一页</button>
                     <span class="pageBox"></span>
-
                     <button class="btn btn-success" type="button" id="next">下一页</button>
-
+                    <p class="total-page-box">共<span id="total_page" style="padding:0 5px;"></span>页</p>
+                    <p class="select-page-box">到第
+                      <input type="text" id="page-input" style="width: 35px;margin: 0 5px;text-align:center;height: 24px;">页
+                      <button class="btn btn-success btn-xs" id="select-page-btn">确定</button>
+                    </p>
                   </div>
 
                 </div>
@@ -136,6 +149,7 @@
                   currentPage = pageNum;
               var pageData = data.data;
                   total_page = data.total_page;//总页
+                  $("#total_page").html(total_page);
               $('#x_Box').html("");
 
               for (var i in pageData) {
@@ -204,7 +218,11 @@
                     gotoPage(++currentPage);
                     // $("#num"+currentPage).addClass("current").siblings().removeClass("current");
                 }
-            })
+            });
+            $('#select-page-btn').on('click',function(){
+    					var pageNum = $('#page-input').val();
+    							gotoPage(pageNum);
+    				});
           });
   </script>
 

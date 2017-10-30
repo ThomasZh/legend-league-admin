@@ -20,6 +20,17 @@
   <link href="{{ static_url('css/custom.css') }}" rel="stylesheet">
   <link href="{{ static_url('gentelella/iCheck/skins/flat/green.css') }}" rel="stylesheet">
   <script src="{{ static_url('gentelella/jquery/dist/jquery.min.js') }}"></script>
+  <style media="screen">
+		.total-page-box,.select-page-box{
+			display: inline-block;
+	    font-size: 12px;
+	    line-height: 2.5;
+	    color: #949191;
+		}
+		.select-page-box{
+			margin-left: 10px;
+		}
+	</style>
 </head>
 <body class="nav-md">
   <div class="container body">
@@ -99,10 +110,12 @@
                   <div class="col-md-5 col-sm-12 col-xs-12 center-margin">
                     <button class="btn btn-success" type="button" id="prev">上一页</button>
                     <span class="pageBox"></span>
-
                     <button class="btn btn-success" type="button" id="next">下一页</button>
-                    共<span id="total_page" style="padding:0 5px;"></span>页
-
+                    <p class="total-page-box">共<span id="total_page" style="padding:0 5px;"></span>页</p>
+                    <p class="select-page-box">到第
+                      <input type="text" id="page-input" style="width: 35px;margin: 0 5px;text-align:center;height: 24px;">页
+                      <button class="btn btn-success btn-xs" id="select-page-btn">确定</button>
+                    </p>
                   </div>
                 </div> <!-- x_content -->
               </div> <!-- x_panel -->
@@ -170,7 +183,6 @@
             total_page = data.total_page;//总页
             $("#total_page").html(total_page);
             $('#prod-wrap').html("");
-
         for (var i in pageData) {
 
           var inner_html = '<tr>';
@@ -234,7 +246,10 @@
               // $("#num"+currentPage).addClass("current").siblings().removeClass("current");
           }
       });
-
+      $('#select-page-btn').on('click',function(){
+        var pageNum = $('#page-input').val();
+            gotoPage(pageNum);
+      });
       // 添加景区到tag操作
       $(document).on('click','#add-btn',function(){
         // console.log(or_id);
