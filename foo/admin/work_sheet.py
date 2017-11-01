@@ -94,6 +94,69 @@ class ProfileEditHandler(AuthorizationHandler):
         self.redirect("/admin/profile/edit")
 
 
+# 轮播图列表页
+class BannerListHandler(AuthorizationHandler):
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def get(self):
+        logging.info(self.request)
+        access_token = self.get_secure_cookie("access_token")
+
+        admin = self.get_admin_info()
+        league_id = admin['league_id']
+        counter = self.get_counter(league_id)
+
+        self.render('admin/banners.html',
+                admin=admin,
+                counter=counter,
+                access_token=access_token,
+                api_domain=API_DOMAIN,
+                upyun_domain=UPYUN_DOMAIN,
+                upyun_notify_url=UPYUN_NOTIFY_URL,
+                upyun_form_api_secret=UPYUN_FORM_API_SECRET,
+                upyun_bucket=UPYUN_BUCKET)
+
+
+# 添加轮播图页面
+class AddBannerHandler(AuthorizationHandler):
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def get(self):
+        logging.info(self.request)
+
+        admin = self.get_admin_info()
+        league_id = admin['league_id']
+        counter = self.get_counter(league_id)
+
+        self.render('admin/add-banner.html',
+                admin=admin,
+                counter=counter,
+                api_domain=API_DOMAIN,
+                upyun_domain=UPYUN_DOMAIN,
+                upyun_notify_url=UPYUN_NOTIFY_URL,
+                upyun_form_api_secret=UPYUN_FORM_API_SECRET,
+                upyun_bucket=UPYUN_BUCKET)
+
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def post(self):
+        logging.info(self.request)
+        access_token = self.get_secure_cookie("access_token")
+        _url = self.get_argument("url", "")
+        img = self.get_argument("img_url", "")
+        _id = str(uuid.uuid1()).replace('-', '')
+        logging.info("try post img:[%r] url:[%r] _id:[%r]", img, _url, _id)
+
+        admin = self.get_admin_info()
+
+        url = API_DOMAIN+"/api/leagues/"+admin['league_id']+"/cover_img"
+        http_client = HTTPClient()
+        headers = {"Authorization":"Bearer "+access_token}
+        _json = json_encode({"_id":_id, "img":img, "url":_url})
+        logging.info("post _json %r", _json)
+        response = http_client.fetch(url, method="POST", headers=headers, body=_json)
+        logging.info("got response.body %r", response.body)
+
+        self.redirect("/admin/banner-list")
+
+
 class AdministratorsHandler(AuthorizationHandler):
     @tornado.web.authenticated  # if no session, redirect to login page
     def get(self):

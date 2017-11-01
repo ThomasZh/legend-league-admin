@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <!-- Meta, title, CSS, favicons, etc. -->
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Cache-Control" content="no-cache">
+
+  <title>{{ admin['league_name'] }}</title>
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="{{ static_url('weui/lib/weui.css') }}">
+  <link href="{{ static_url('gentelella/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
+  <link href="{{ static_url('gentelella/fontawesome/css/font-awesome.min.css') }}" rel="stylesheet">
+  <link href="{{ static_url('gentelella/animate.css/animate.min.css') }}" rel="stylesheet">
+
+  <!-- Custom styling plus plugins -->
+  <link href="{{ static_url('css/custom.css') }}" rel="stylesheet">
+  <link href="{{ static_url('gentelella/iCheck/skins/flat/green.css') }}" rel="stylesheet">
+  <script src="{{ static_url('gentelella/jquery/dist/jquery.min.js') }}"></script>
+
+  <!-- Custom styling plus plugins -->
+  <script src="{{ static_url('gentelella/nprogress/nprogress.js') }}"></script>
+  <link rel="stylesheet" href="{{ static_url('upyun/css/fileinput.min.css') }}" />
+  <style media="screen">
+		.total-page-box,.select-page-box{
+			display: inline-block;
+	    font-size: 12px;
+	    line-height: 2.5;
+	    color: #949191;
+		}
+		.select-page-box{
+			margin-left: 10px;
+		}
+	</style>
+</head>
+
+<body class="nav-md">
+  <div class="container body">
+    <div class="main_container">
+      <div class="col-md-3 left_col">
+        <div class="left_col scroll-view">
+
+          <!-- menu profile quick info -->
+          {% module Template("admin/block-menu-prile-quick-info.html", admin=admin) %}
+          <!-- /menu profile quick info -->
+          <br />
+
+          <!-- sidebar menu -->
+          {% module Template("admin/block-sidebar-menu.html", counter=counter) %}
+          <!-- /sidebar menu -->
+          <br />
+
+          <!-- /menu footer buttons -->
+          {% module Template("admin/block-menu-footer.html") %}
+          <!-- /menu footer buttons -->
+        </div>
+      </div>
+
+      <!-- top navigation -->
+      {% module Template("admin/block-top-nav.html", admin=admin) %}
+      <!-- /top navigation -->
+
+      <!-- page content -->
+      <div class="right_col" role="main">
+
+        <div class="">
+          <div style="height:auto;" class="page-title">
+            <div class="title_left">
+              <h3>首页轮播图</h3>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <div class="row">
+
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>图片列表</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                    	<li><a href="/admin/add/banner" class="btn btn-success btn-xs">
+                        <i class="fa fa-plus"></i> 添加轮播图 </a>
+                    	</li>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content" id="x_Box">
+                  </div>
+                  <div class="clearfix"></div>
+
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- footer content -->
+        {% module Template("admin/block-footer.html", admin=admin) %}
+        <!-- /footer content -->
+
+      </div>
+      <!-- /page content -->
+
+    </div>
+  </div>
+
+  <script src="{{ static_url('gentelella/bootstrap/dist/js/bootstrap.min.js') }}" type="text/javascript"></script>
+  <!-- bootstrap progress js -->
+  <script src="{{ static_url('gentelella/bootstrap-progressbar/bootstrap-progressbar.min.js') }}" type="text/javascript"></script>
+  <!-- icheck -->
+  <script src="{{ static_url('gentelella/iCheck/icheck.min.js') }}" type="text/javascript"></script>
+  <!-- daterangepicker -->
+  <script src="{{ static_url('gentelella/moment/min/moment.min.js') }}" type="text/javascript"></script>
+  <script src="{{ static_url('gentelella/bootstrap-daterangepicker/daterangepicker.js') }}" type="text/javascript"></script>
+  <!-- alert Scripts -->
+  <script src="{{ static_url('weui/lib/fastclick.js') }}"></script>
+  <script src="{{ static_url('weui/js/weui.js') }}"></script>
+  <script src="{{ static_url('js/custom.js') }}" type="text/javascript"></script>
+  <script type="text/javascript" src="{{ static_url('js/json2.js') }}"></script>
+  <script type="text/javascript" src="{{ static_url('js/jquery.validate.min.js') }}"></script>
+
+  <script>
+          function getLocalTime(nS) { //时间戳转换
+             return new Date(parseInt(nS) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
+          };
+          // 获取轮播图列表数据
+          function gotoPage() {
+            $.get("{{api_domain}}/api/leagues/{{ admin['league_id'] }}/cover_img",function(data,status){
+                  data_obj = JSON.parse(data);
+              var pageData = data_obj.rs;
+              for (var i in pageData) {
+                  var inner_html = '<div class="col-md-3 col-xs-12 widget widget_tally_box m-box">';
+                  inner_html += '<div class="x_panel ui-ribbon-container fixed_height_360">';
+                  inner_html += '<div class="x_content">';
+                  inner_html += '<div class="thumbnail">';
+                  inner_html += '<div class="image view view-first">';
+                  inner_html += '<a>';
+                  inner_html += '<img style="width: 100%; display: block;" src="'+pageData[i].img+'" alt="image" />';
+                  inner_html += '</a></div></div>';
+                  inner_html += '<div class="divider"></div>'
+                  inner_html += '<p>';
+                  inner_html += '<a data-id="'+pageData[i]._id+'" class="btn ap_del btn-danger btn-xs del-btn">删除 </a>';
+                  inner_html += '</p></div></div></div>';
+                  $('#x_Box').append(inner_html);
+              };
+            });
+          };
+          gotoPage();
+
+      // 删除轮播图操作
+      $(document).on('click',".del-btn",function(){
+        var id = $(this).attr("data-id");
+        var _this = $(this);
+        weui.confirm("确定删除该轮播图吗？","提示消息",function(r){
+          if(r == true){
+            dele(id,_this);
+          }
+        });
+      });
+      function dele(id,tag){    // 删除轮播图操作
+        $.ajax({
+          type: "DELETE",
+          url: "{{api_domain}}/api/leagues/{{ admin['league_id'] }}/cover_img/"+id,
+          dataType: "json",
+          contentType: 'application/json',
+          headers: {"Authorization":"Bearer {{access_token}}"},
+          success: function(data, status, xhr) {
+            tag.parents('.m-box').remove();
+          },
+          error: function(XMLHttpRequest, textStatus, errorThrown) {
+            console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
+              $('.lostpwd-form-main-message').addClass('show error').html(XMLHttpRequest.status + ": 服务器异常,请稍后重试!");
+          },
+          complete: function(XMLHttpRequest, textStatus) {
+              this; // 调用本次AJAX请求时传递的options参数
+          }
+        });
+      }
+  </script>
+</body>
+
+</html>

@@ -34,6 +34,8 @@ def map():
 
         (r'/admin', getattr(work_sheet, 'AdminIndexHandler')),
         (r'/admin/profile/edit', getattr(work_sheet, 'ProfileEditHandler')),
+        (r'/admin/banner-list', getattr(work_sheet, 'BannerListHandler')),
+        (r'/admin/add/banner', getattr(work_sheet, 'AddBannerHandler')),
         (r'/admin/setup/binding-wx', getattr(work_sheet, 'VendorBindingWxHandler')),
         (r'/admin/administrators', getattr(work_sheet, 'AdministratorsHandler')),
         (r'/admin/franchises', getattr(work_sheet, 'FranchisesHandler')),
@@ -51,7 +53,6 @@ def map():
         (r'/admin/guest-detail', getattr(work_sheet, 'GuestBookDetailHandler')),
         (r'/admin/notice-board', getattr(work_sheet, 'NoticeBoardHandler')),
         (r'/admin/notice-create', getattr(work_sheet, 'NoticeCreateHandler')),
-        (r'/admin/notice-edit', getattr(work_sheet, 'NoticeEditHandler')),
         (r'/admin/notice-edit', getattr(work_sheet, 'NoticeEditHandler')),
 
         (r'/admin/categories/franchises', getattr(category, 'CategoriesFranchisesHandler')),
