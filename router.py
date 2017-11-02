@@ -66,7 +66,10 @@ def map():
         (r'/admin/categories/edit', getattr(category, 'CategoriesEditHandler')),
 
         (r'/admin/articles', getattr(work_sheet, 'ArticlesIndexHandler')),
+        (r'/admin/article', getattr(work_sheet, 'ArticleOneHandler')),
+        (r'/admin/articles/create', getattr(work_sheet, 'ArticlesCreateHandler')),
         (r'/admin/articles/detail', getattr(work_sheet, 'ArticlesDetailHandler')),
+        (r'/admin/article-exchange/edit', getattr(work_sheet, 'ArticleExchangeEditHandler')),
 
         (r'/admin/api/apply-cash-out/([a-z0-9]*)/accept', getattr(api_point, 'ApiApplyCashoutAcceptXHR')),
         (r'/admin/api/apply-cash-out/([a-z0-9]*)/reject', getattr(api_point, 'ApiApplyCashoutRejectXHR')),

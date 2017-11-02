@@ -78,8 +78,11 @@
               <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2>{{ category['title'] }}</h2>
+                    <h2>{{ category['title'] }}<small>(点击图片可编辑)</small></h2>
                     <ul class="nav navbar-right panel_toolbox">
+                      <li><a href="/admin/articles/create" id="add-btn" class="btn btn-success btn-xs">
+                        <i class="fa fa-plus"></i> 添加文章 </a>
+                    	</li>
                     </ul>
                     <div class="clearfix"></div>
                   </div>
@@ -129,32 +132,8 @@
   <!-- alert Scripts -->
   <script src="{{ static_url('jquery-weui/js/jquery-weui.min.js') }}"></script>
   <script>
-  function publish(id){
-    // console.log(id);
+      $(function(){
 
-    $.ajax({
-      type: "POST",
-      url: "{{api_domain}}/api/articles/"+id+"/publish",
-      dataType: "json",
-      contentType: 'application/json',
-      success: function(data, status, xhr) {
-        location.href = "/ops/articles/publish";
-      },
-      error: function(XMLHttpRequest, textStatus, errorThrown) {
-        console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
-        if (XMLHttpRequest.status == 200) {
-          location.href = "/ops/articles/publish";
-        } else {
-          $('.lostpwd-form-main-message').addClass('show error').html(XMLHttpRequest.status + ": 服务器异常,请稍后重试!");
-        }
-      },
-      complete: function(XMLHttpRequest, textStatus) {
-        this; // 调用本次AJAX请求时传递的options参数
-      }
-    });
-  }
-  </script>
-  <script>
           function getLocalTime(nS) { //时间戳转换
              return new Date(parseInt(nS) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
           };
@@ -164,7 +143,7 @@
           var total_page = 0;//总页数;
 
           function gotoPage(pageNum) {
-            $.get("{{api_domain}}/api/articles-pagination?filter=league&league_id={{ admin['league_id'] }}&status=publish&category={{ category['_id'] }}&page="+pageNum+"&limit="+limit+"",function(data,status){
+            $.get("{{api_domain}}/api/articles-pagination?filter=league&league_id={{ admin['league_id'] }}&status=all&category={{ category['_id'] }}&page="+pageNum+"&limit="+limit+"",function(data,status){
                   // console.log(data);
                   data_obj = JSON.parse(data);
                   data = data_obj.rs;
@@ -181,7 +160,7 @@
                 inner_html += '<div class="x_content">';
                 inner_html += '<div class="thumbnail">';
                 inner_html += '<div class="image view view-first">';
-                inner_html += '<a target="_blank" href="/admin/articles/detail?id='+pageData[i]._id+'">';
+                inner_html += '<a target="_blank" href="/admin/article-exchange/edit?id='+pageData[i]._id+'">';
                 inner_html += '<img style="width: 100%; display: block;" src="'+pageData[i].img+'" alt="image" />';
                 inner_html += '</a></div></div>';
                 inner_html += '<p>'+pageData[i].title+'</p>';
@@ -193,11 +172,11 @@
                 inner_html += '<p>'+getLocalTime(pageData[i].publish_time)+'</p>';
                 inner_html += '<div class="divider"></div>'
                 inner_html += '<p>';
-                    inner_html += '<a href="#" data_id="'+ pageData[i]._id +'" class="btn ap_del btn-danger btn-xs dele-btn">删除 </a>';
+                    inner_html += '<a href="javascript:;" data_id="'+ pageData[i]._id +'" class="btn ap_del btn-danger btn-xs dele-btn">删除 </a>';
                     if(pageData[i]._status == 0){
-                      inner_html += '<a href="#" class="btn ap_del btn-default btn-xs">草稿箱 </a>';
+                      inner_html += '<a href="#" data_id="'+ pageData[i]._id +'" class="btn pub-btn btn-success btn-xs">发布 </a>';
                     }else if(pageData[i]._status == 100){
-                      inner_html += '<a target="_blank" href="/admin/articles/detail?id='+pageData[i]._id+'" class="btn btn-success btn-xs">查看 </a>';
+                      inner_html += '';
                     }
                 inner_html += '</p></div></div></div>';
 
@@ -220,42 +199,18 @@
                   $(".pageBox").append(inner_html);
                 };
                  $("#num"+currentPage).addClass("on").siblings().removeClass("on");
-
-              $(document).on('click','.dele-btn',function(){
-                var _this = $(this);
-                var _id = _this.attr('data_id');
-                $.confirm('确实删除吗？',function(){
-                    $.showLoading("删除中...");
-                    $.ajax({
-                      type: "DELETE",
-                      url: "{{api_domain}}/api/articles/"+_id,
-                      dataType: "json",
-                      headers: {"Authorization":"Bearer {{access_token}}"},
-                      contentType: 'application/json',
-                      success: function(data, status, xhr) {
-                          console.log(data);
-                          if (data.err_code == 200){
-                            $.hideLoading();
-                            _this.parents('.widget_tally_box').remove();
-                          }
-
-                      }
-                    });
-
-                });
               });
-            });
 
-          };
+            };
 
-          $(function(){
-            gotoPage("1");
+            gotoPage("1"); //初始化
+
+            // 分页点击操作
             $(document).on('click','.pageBox > button',function(){
               var num = $(this).text();
               gotoPage(num);
               //  $(this).addClass("current").siblings().removeClass("current");
             })
-
             $("#prev").on("click",function(){
                 if(currentPage<=1){
 
@@ -264,7 +219,6 @@
                     // $("#num"+currentPage).addClass("current").siblings().removeClass("current");
                 }
             });
-
             $("#next").on("click",function(){
                 if(currentPage>=total_page){
                 }else{
@@ -275,7 +229,61 @@
     					var pageNum = $('#page-input').val();
     							gotoPage(pageNum);
     				});
+
+            // 发布文章操作
+           function publish(id){
+             console.log(id);
+             $.ajax({
+               type: "POST",
+               url: "{{api_domain}}/api/articles/"+id+"/publish",
+               dataType: "json",
+               headers: {"Authorization":"Bearer {{access_token}}"},
+               contentType: 'application/json',
+               success: function(data, status, xhr) {
+                   $.toast("操作成功！");
+                   location.href = "/admin/article?category_id=404228663a1711e7b21000163e023e51";
+               },
+               error: function(XMLHttpRequest, textStatus, errorThrown) {
+                 console.log("XMLHttpRequest.status:" + XMLHttpRequest.status);
+                 $('.lostpwd-form-main-message').addClass('error').html(XMLHttpRequest.status + ": 服务器异常,请稍后重试!");
+               },
+               complete: function(XMLHttpRequest, textStatus) {
+                 this; // 调用本次AJAX请求时传递的options参数
+               }
+             });
+           };
+
+           $(document).on('click','.pub-btn',function(){
+             var _this = $(this);
+             var _id = _this.attr('data_id');
+             $.confirm('确实发布该文章吗？',function(){
+                 publish(_id);
+             });
+           });
+
+          $(document).on('click','.dele-btn',function(){
+            var _this = $(this);
+            var _id = _this.attr('data_id');
+            $.confirm('确定删除吗？',function(){
+                $.showLoading("删除中...");
+                $.ajax({
+                  type: "DELETE",
+                  url: "{{api_domain}}/api/articles/"+_id,
+                  dataType: "json",
+                  headers: {"Authorization":"Bearer {{access_token}}"},
+                  contentType: 'application/json',
+                  success: function(data, status, xhr) {
+                      console.log(data);
+                      if (data.err_code == 200){
+                        $.hideLoading();
+                        _this.parents('.widget_tally_box').remove();
+                      }
+
+                  }
+                });
+            });
           });
+      });
   </script>
 
 </body>

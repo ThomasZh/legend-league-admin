@@ -594,6 +594,123 @@ class ArticlesIndexHandler(AuthorizationHandler):
                 api_domain=API_DOMAIN)
 
 
+# 交流活动单独页面
+class ArticleOneHandler(AuthorizationHandler):
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def get(self):
+        logging.info(self.request)
+        category_id = self.get_argument("category_id", "")
+        logging.info("got category_id %r from argument", category_id)
+        access_token = self.get_secure_cookie("access_token")
+
+        admin = self.get_admin_info()
+        league_id = admin['league_id']
+        counter = self.get_counter(league_id)
+
+        # query category_name by category_id
+        url = API_DOMAIN+"/api/categories/" + category_id
+        http_client = HTTPClient()
+        response = http_client.fetch(url, method="GET")
+        logging.info("got response %r", response.body)
+        data = json_decode(response.body)
+        category = data['rs']
+
+        params = {"filter":"league", "league_id":admin['league_id'], "status":"publish", "category":category_id, "idx":0, "limit":20}
+        url = url_concat(API_DOMAIN+"/api/articles", params)
+        http_client = HTTPClient()
+        response = http_client.fetch(url, method="GET")
+        logging.info("got response %r", response.body)
+        data = json_decode(response.body)
+        articles = data['rs']
+        for article in articles:
+            article['publish_time'] = timestamp_friendly_date(article['publish_time'])
+
+        self.render('admin/articles-exchange.html',
+                admin=admin,
+                access_token = access_token,
+                counter=counter,
+                articles=articles,
+                category=category,
+                api_domain=API_DOMAIN)
+
+
+# 文章创建
+class ArticlesCreateHandler(AuthorizationHandler):
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def get(self):
+        logging.info(self.request)
+        access_token = self.get_secure_cookie("access_token")
+
+        admin = self.get_admin_info()
+        league_id = admin['league_id']
+        counter = self.get_counter(league_id)
+
+        self.render('admin/articles-creat.html',
+                admin=admin,
+                counter=counter,
+                access_token=access_token,
+                api_domain=API_DOMAIN,
+                upyun_domain=UPYUN_DOMAIN,
+                upyun_notify_url=UPYUN_NOTIFY_URL,
+                upyun_form_api_secret=UPYUN_FORM_API_SECRET,
+                upyun_bucket=UPYUN_BUCKET)
+
+# 交流活动编辑
+class ArticleExchangeEditHandler(AuthorizationHandler):
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def get(self):
+        logging.info(self.request)
+        category_id = self.get_argument("category_id", "")
+        logging.info("got category_id %r from argument", category_id)
+        article_id = self.get_argument("id", "")
+        logging.info("get article_id=[%r] from argument", article_id)
+        access_token = self.get_secure_cookie("access_token")
+
+        admin = self.get_admin_info()
+        league_id = admin['league_id']
+        counter = self.get_counter(league_id)
+
+        # article
+        url = API_DOMAIN+"/api/articles/"+article_id
+        http_client = HTTPClient()
+        response = http_client.fetch(url, method="GET")
+        logging.info("got response %r", response.body)
+        data = json_decode(response.body)
+        article = data['rs']
+        article['publish_time'] = timestamp_friendly_date(article['publish_time'])
+
+        # 获取文章所属加盟商
+        # url = API_DOMAIN+"/api/clubs/"+article['club_id']
+        # http_client = HTTPClient()
+        # response = http_client.fetch(url, method="GET")
+        # logging.info("got response %r", response.body)
+        # data = json_decode(response.body)
+        # club = data['rs']
+        # if not club.has_key('img'):
+        #     club['img'] = ''
+        # if not club.has_key('paragraphs'):
+        #     club['paragraphs'] = ''
+
+        url = API_DOMAIN+"/api/articles/" + article_id + "/categories"
+        http_client = HTTPClient()
+        response = http_client.fetch(url, method="GET")
+        logging.info("got response %r", response.body)
+        data = json_decode(response.body)
+        article_categories = data['rs']
+
+        self.render('admin/articles-exchange-edit.html',
+                admin=admin,
+                counter=counter,
+                access_token=access_token,
+                article=article,
+                article_categories=article_categories,
+                api_domain=API_DOMAIN,
+                upyun_domain=UPYUN_DOMAIN,
+                upyun_notify_url=UPYUN_NOTIFY_URL,
+                upyun_form_api_secret=UPYUN_FORM_API_SECRET,
+                upyun_bucket=UPYUN_BUCKET)
+
+
 class ArticlesDetailHandler(AuthorizationHandler):
     @tornado.web.authenticated  # if no session, redirect to login page
     def get(self):
