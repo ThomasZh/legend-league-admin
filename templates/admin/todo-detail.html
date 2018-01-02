@@ -158,9 +158,9 @@
                       <div class="col-md-3 col-sm-6 col-xs-12">
                         <select class="select2_single form-control" id="level" name="level">
                           {% if franchise['club']['scenery'] == '1' %}
-                            <option value="1" name="level" selected="true">A景区</option>
+                            <option value="1" name="level" selected="true">1A景区</option>
                           {% else %}
-                            <option value="1" name="level">A景区</option>
+                            <option value="1" name="level">1A景区</option>
                           {% end %}
                           {% if franchise['club']['scenery'] == '2' %}
                             <option value="2" name="level" selected="true">2A景区</option>
@@ -182,10 +182,10 @@
                           {% else %}
                             <option value="5" name="level">5A景区</option>
                           {% end %}
-                          {% if franchise['club']['scenery'] == '6' %}
-                            <option value="6" name="level" selected="true">其他景区</option>
+                          {% if franchise['club']['scenery'] == '0' %}
+                            <option value="0" name="level" selected="true">其他景区</option>
                           {% else %}
-                            <option value="6" name="level">其他景区</option>
+                            <option value="0" name="level">其他景区</option>
                           {% end %}
                         </select>
                       </div>
