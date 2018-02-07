@@ -45,6 +45,7 @@ def map():
         (r'/admin/suppliers', getattr(work_sheet, 'SuppliersHandler')),
         (r'/admin/todo-list', getattr(work_sheet, 'TodoListHandler')),
         (r'/admin/todo-detail', getattr(work_sheet, 'TodoDetailHandler')),
+        (r'/admin/todo-detail/edit', getattr(work_sheet, 'TodoDetailEditHandler')),
         (r'/admin/multimedias/draft', getattr(work_sheet, 'MultimediasDraftHandler')),
         (r'/admin/multimedias/publish', getattr(work_sheet, 'MultimediasPublishHandler')),
         (r'/admin/apply-cashout', getattr(work_sheet, 'ApplyCashoutHandler')),

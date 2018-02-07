@@ -555,6 +555,83 @@ class TodoDetailHandler(AuthorizationHandler):
         self.redirect("/admin/todo-detail?id="+club_id)
 
 
+class TodoDetailEditHandler(AuthorizationHandler):
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def get(self):
+        logging.info(self.request)
+        access_token = self.get_secure_cookie("access_token")
+        club_id = self.get_argument("club_id","")
+
+        admin = self.get_admin_info()
+        league_id = admin['league_id']
+        counter = self.get_counter(league_id)
+
+        url = API_DOMAIN+"/api/leagues/"+admin['league_id']+"/franchises/"+club_id
+        http_client = HTTPClient()
+        headers={"Authorization":"Bearer "+access_token}
+        response = http_client.fetch(url, method="GET", headers=headers)
+        logging.info("got response %r", response.body)
+        data = json_decode(response.body)
+        franchise = data['rs']
+        franchise['create_time'] = timestamp_datetime(franchise['create_time'])
+        if not franchise['club'].has_key('img'):
+            franchise['club']['img'] = ''
+
+        self.render('admin/todo-detail-edit.html',
+                admin=admin,
+                counter=counter,
+                club_id = club_id,
+                access_token=access_token,
+                franchise=franchise,
+                api_domain=API_DOMAIN,
+                upyun_domain=UPYUN_DOMAIN,
+                upyun_notify_url=UPYUN_NOTIFY_URL,
+                upyun_form_api_secret=UPYUN_FORM_API_SECRET,
+                upyun_bucket=UPYUN_BUCKET)
+
+    @tornado.web.authenticated  # if no session, redirect to login page
+    def post(self):
+        logging.info(self.request)
+        access_token = self.get_secure_cookie("access_token")
+        club_id = self.get_argument("club_id", "")
+        logging.info("club_id",club_id)
+        admin = self.get_admin_info()
+        league_id = admin['league_id']
+
+        name = self.get_argument("name", "")
+        phone = self.get_argument("phone", "")
+        email = self.get_argument("email", "")
+        franchise_type = self.get_argument("franchise_type", "")
+        province = self.get_argument("province", "")
+        city = self.get_argument("city", "")
+        img = self.get_argument("img", "")
+        introduction = self.get_argument("introduction", "")
+        logging.info("try update myinfo name:[%r] phone:[%r] email:[%r] franchise_type:[%r] province:[%r] city:[%r] img:[%r] introduction:[%r]",
+         name, phone, email,franchise_type,province,city,img,introduction)
+
+        franchise_json = {
+            'name': name,
+            'phone': phone,
+            'email': email,
+            'franchise_type': franchise_type,
+            'province': province,
+            'city': city,
+            'img': img,
+            '_addr':province,
+            'introduction': introduction
+        }
+        headers = {"Authorization":"Bearer "+access_token}
+        url = API_DOMAIN+"/api/clubs/" + club_id
+        _json = json_encode(franchise_json)
+        logging.info("franchise_json %r",_json)
+        http_client = HTTPClient()
+        response = http_client.fetch(url, method="PUT", headers=headers, body=_json)
+        logging.info("got response.body %r", response.body)
+        # data = json_decode(response.body)
+
+        self.redirect("/admin/todo-detail?id="+club_id)
+
+
 class ArticlesIndexHandler(AuthorizationHandler):
     @tornado.web.authenticated  # if no session, redirect to login page
     def get(self):

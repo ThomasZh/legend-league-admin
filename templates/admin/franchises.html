@@ -159,7 +159,7 @@
           // var type = encodeURI(encodeURI("景区"));
           function gotoPage(pageNum) {
             $.get("{{api_domain}}/api/leagues/{{ admin['league_id'] }}/clubs?filter=league&franchise_type=scenery&page="+ pageNum +"&limit="+limit,function(data,status){
-                  // console.log(data);
+                  console.log(data);
                   data_obj = JSON.parse(data);
                   data = data_obj.rs;
                   currentPage = pageNum;
